@@ -9,9 +9,14 @@
     "format": "prettier -w -u .",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "prepare": "husky install",
+    "prepare": "husky",
     "pre-commit": "lint-staged",
     "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix"
+    ]
   },
   "dependencies": {
     "pinia": "^2.1.7",
