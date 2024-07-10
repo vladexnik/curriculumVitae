@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  @apply font-sans;
+}
+
+.container {
+  @apply mb-5;
+}
+
+.field {
+  @apply h-14 w-full relative mt-5;
+}
+
+.field__inner {
+  @apply flex align-middle border border-secondaryLight h-[56px];
+}
+
+.field__inner:hover {
+  @apply border-darkText;
+}
+
+.field__inner:focus-within,
+.field__inner:valid {
+  @apply border-primary;
+}
+
+.field__inner .field__input {
+  @apply h-full w-full outline-none text-sm px-3.5 transition-all duration-300 ease-in-out;
+}
+
+.field .field__label {
+  @apply absolute top-1/2 left-3.5 text-secondary font-medium text-sm pointer-events-none -translate-y-1/2 transition-all duration-300 ease-in-out;
+}
+
+.field__input:focus ~ .field__label,
+.field__input:valid ~ .field__label {
+  @apply top-0 text-primary text-xs bg-white px-1 -translate-y-1/2;
+}
+
+/* .field__input:not(:focus):valid ~ .field__label {
+  @apply text-secondary;
+} */
+
+/* .field__input:not(:focus):not(:valid):hover,
+.field__input:not(:focus):valid:hover {
+  @apply border-darkText;
+} */
+
+/* .field .field__input:not(:focus) {
+  @apply border-secondaryLight;
+} */
