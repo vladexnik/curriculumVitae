@@ -19,8 +19,14 @@
     ]
   },
   "dependencies": {
+    "@apollo/client": "^3.10.8",
+    "@vue/apollo-composable": "^4.0.2",
+    "cv-graphql": "^2.6.1",
+    "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
+    "vue-apollo": "^3.1.2",
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.3"
   },
