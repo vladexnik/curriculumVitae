@@ -1,7 +1,8 @@
 <template>
   <button
+    v-ripple
     :class="buttonClass"
-    class="transition duration-300 ease-in-out h-[36.5px] w-full text-sm font-medium uppercase focus:outline-none"
+    class="h-12 w-full rounded-[40px] text-sm font-medium uppercase transition duration-300 ease-in-out focus:outline-none"
     :disabled="disabled"
   >
     <slot default="Button" />
@@ -27,17 +28,17 @@ const buttonClass = computed(() => {
   const colorClasses = {
     primary: {
       contained:
-        'bg-primary hover:bg-primaryHover disabled:bg-secondaryLight disabled:text-secondary',
+        'bg-primary hover:bg-primaryDark active:bg-primaryDarkActive disabled:bg-disabledPrimary disabled:text-disabledPrimaryText disabled:border-disabledPrimaryText',
       outlined:
-        'border-primary text-primary hover:bg-red-50 disabled:border-secondaryLight disabled:text-secondaryLight ',
-      text: 'text-primary hover:bg-red-50 disabled:text-secondaryLight'
+        'border-primary text-primary hover:bg-primaryLight active:bg-primaryLightActive disabled:bg-transparent disabled:text-disabledPrimaryText disabled:border-disabledPrimaryText',
+      text: 'text-primary hover:bg-primaryLight active:bg-primaryLightActive disabled:bg-transparent disabled:text-disabledPrimaryText'
     },
     secondary: {
       contained:
-        'bg-secondary hover:bg-secondaryHover disabled:bg-secondaryLight disabled:text-secondary',
+        'bg-secondary hover:bg-secondaryDark active:bg-secondary disabled:bg-disabledPrimary disabled:text-disabledPrimaryText',
       outlined:
-        'border-secondary text-secondary hover:bg-secondaryLight disabled:border-secondaryLight disabled:text-secondaryLight',
-      text: 'text-secondary hover:bg-secondaryLight disabled:text-secondaryLight'
+        'border-secondary text-secondary hover:bg-secondaryLight active:bg-secondaryLightActive disabled:bg-transparent disabled:border-disabledPrimaryText disabled:text-disabledPrimaryText',
+      text: 'text-secondary hover:bg-secondaryLight active:bg-secondaryLightActive disabled:bg-transparent disabled:text-disabledPrimaryText'
     }
   }
 

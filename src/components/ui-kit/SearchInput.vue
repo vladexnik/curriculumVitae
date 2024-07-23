@@ -1,50 +1,34 @@
-<!-- <template>
-  <div class="relative">
-    <div
-      class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none"
-    >
-      <svg
-        class="w-5 h-5 text-gray-500"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M12.9 14.32a8 8 0 111.414-1.414l4.3 4.3a1 1 0 01-1.414 1.414l-4.3-4.3zM8 14a6 6 0 100-12 6 6 0 000 12z"
-          clip-rule="evenodd"
-        ></path>
-      </svg>
-    </div>
-    <input
-      type="text"
-      class="block w-full pl-10 pr-3 py-2 border border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-      placeholder="Search"
-    />
-  </div>
-</template> -->
 <template>
   <div
-    class="flex items-center border border-secondaryLight hover:border-darkText focus-within:border-primary"
+    class="flex h-10 items-center rounded-[40px] border border-lightGrey text-sm font-medium focus-within:border-primary hover:border-textMain hover:focus-within:border-primary"
   >
     <div class="pl-3">
-      <svg
-        class="w-5 h-5 text-gray-500"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M12.9 14.32a8 8 0 111.414-1.414l4.3 4.3a1 1 0 01-1.414 1.414l-4.3-4.3zM8 14a6 6 0 100-12 6 6 0 000 12z"
-          clip-rule="evenodd"
-        ></path>
-      </svg>
+      <i class="pi pi-search text-textMain" style="font-size: 1rem"></i>
     </div>
     <input
       type="text"
-      class="py-[6.7px] px-[14px] focus:outline-none w-full box-border"
+      class="box-border w-full bg-transparent py-[6px] pl-3 text-textMain focus:outline-none"
       placeholder="Search"
+      v-model="modelInput"
     />
+    <i
+      v-if="modelInput"
+      class="pi pi-times mr-1 cursor-pointer rounded-2xl p-2 text-textMain duration-300 hover:bg-optionHover"
+      style="font-size: 1rem"
+      v-ripple
+      @click="clearInput"
+    ></i>
   </div>
 </template>
+<script setup>
+const modelInput = defineModel({ type: String })
+
+const clearInput = () => {
+  modelInput.value = ''
+}
+</script>
+<style scoped>
+::placeholder {
+  @apply text-textSec;
+}
+</style>

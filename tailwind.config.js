@@ -7,15 +7,31 @@ export default {
       sans: ['Roboto', 'Helvetica', 'Arial', 'sans-serif']
     },
     extend: {
+      boxShadow: {
+        dropdown:
+          '0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12)',
+        dropdownDark:
+          'rgba(0, 0, 0, 0.2) 0px 5px 5px -3px, rgba(0, 0, 0, 0.14) 0px 8px 10px 1px, rgba(0, 0, 0, 0.12) 0px 3px 14px 2px'
+      },
       colors: {
-        darkText: 'rgb(46, 46, 46)',
-        darkBg: 'rgb(53, 53, 53)',
-        lightBg: 'rgb(245, 245, 247)',
-        primary: 'rgb(198, 48, 49)',
-        primaryHover: 'rgb(138, 33, 34)',
+        lightGrey: 'var(--light-grey)',
+        textSec: 'var(--text-secondary)',
+        textMain: 'var(--text-main)',
+        bgColor: 'var(--bg-color)',
+        darkGrey: 'var(--dark-grey)',
+        optionHover: 'var(--option-hover)',
+        bgDropdown: 'var(--bg-dropdown)',
+        primary: 'var(--color-primary)',
+        primaryDark: 'rgb(138, 33, 34)',
+        primaryDarkActive: 'rgb(171, 45, 44)',
+        primaryLight: 'var(--primary-light)',
+        primaryLightActive: 'var(--primary-light-active)',
+        disabledPrimary: 'var(--disabled-primary)',
+        disabledPrimaryText: 'var(--disabled-primary-text)',
         secondary: 'rgb(118, 118, 118)',
-        secondaryHover: 'rgb(94, 92, 92)',
-        secondaryLight: 'rgb(220,220,220)'
+        secondaryDark: 'rgb(94, 92, 92)',
+        secondaryLight: 'var(--secondary-light)',
+        secondaryLightActive: 'var(--secondary-light-active)'
       }
     }
   },
