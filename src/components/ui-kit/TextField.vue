@@ -1,5 +1,5 @@
 <template>
-  <div class="field mt-3">
+  <div class="field">
     <div :class="['field__inner', { 'border-error': error }]">
       <input
         :type="isPasswordField && !showPassword ? 'password' : 'text'"

@@ -9,7 +9,13 @@ import Ripple from 'primevue/ripple'
 import App from './App.vue'
 import router from './router'
 
+// Apollo client
+import { DefaultApolloClient } from '@vue/apollo-composable'
+import apolloClient from './plugins/apollo'
+
 const app = createApp(App)
+
+app.provide(DefaultApolloClient, apolloClient)
 
 app.directive('ripple', Ripple)
 app.use(PrimeVue, {

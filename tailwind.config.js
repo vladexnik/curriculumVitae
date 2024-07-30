@@ -24,6 +24,7 @@ export default {
         primary: 'var(--color-primary)',
         primaryDark: 'rgb(138, 33, 34)',
         primaryDarkActive: 'rgb(171, 45, 44)',
+
         primaryLight: 'var(--primary-light)',
         primaryLightActive: 'var(--primary-light-active)',
         disabledPrimary: 'var(--disabled-primary)',
