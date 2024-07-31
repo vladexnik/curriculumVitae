@@ -1,3 +1,84 @@
+@import 'primeicons/primeicons.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  @apply font-sans box-border;
+}
+
+body {
+  @apply bg-bgColor;
+}
+
+@layer base {
+  :root {
+    --text-main: rgb(46 46 46); /* text, border:hover */
+    --text-secondary: rgba(0, 0, 0, 0.6); /* placeholder */
+    --light-grey: rgba(62, 62, 62, 0.307); /* border */
+    --bg-color: rgb(245, 245, 247); /* bg */
+    --option-hover: rgb(238, 237, 237);
+    --color-primary: rgb(198, 48, 49);
+    --disabled-primary: rgba(0, 0, 0, 0.12);
+    --disabled-primary-text: rgba(0, 0, 0, 0.26);
+    --primary-light: rgb(252, 237, 237);
+    --primary-light-active: rgb(255, 226, 226);
+    --secondary-light: rgb(235, 235, 235);
+    --secondary-light-active: rgb(212, 212, 212);
+  }
+
+  :root[class~='dark'] {
+    --text-main: rgb(255, 255, 255);
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --light-grey: rgba(190, 190, 190, 0.307);
+    --bg-color: rgb(53, 53, 53);
+    --option-hover: rgb(78, 78, 78);
+    --color-primary: rgb(198, 48, 49);
+    --bg-dropdown: rgb(36, 36, 36);
+    --disabled-primary: rgba(255, 255, 255, 0.12);
+    --disabled-primary-text: rgba(255, 255, 255, 0.3);
+    --primary-light: rgba(198, 48, 49, 0.16);
+    --primary-light-active: rgba(198, 48, 49, 0.32);
+    --secondary-light: rgba(118, 118, 118, 0.08);
+    --secondary-light-active: rgba(212, 212, 212, 0.2);
+  }
+}
+
+.container {
+  @apply mb-5;
+}
+
+.p-select-overlay {
+  @apply !border-none;
+}
+
+.p-select-list-container {
+  @apply bg-white dark:bg-bgDropdown shadow-dropdown rounded;
+  max-height: 80vh !important;
+}
+
+.p-select-list {
+  @apply !px-0;
+}
+
+.p-select-option:not(.p-select-option-selected):not(.p-disabled).p-focus {
+  @apply hover:!bg-optionHover;
+}
+
+.p-select-list-container .p-select-option.p-select-option-selected.p-focus,
+.p-select-list-container .p-select-option.p-select-option-selected {
+  @apply bg-primaryLight hover:bg-primaryLightActive;
+}
+
+.p-select-list-container .p-select-option {
+  @apply rounded-none hover:bg-optionHover active:bg-lightGrey py-2;
+}
+
+.p-select-option.p-select-option-selected {
+  @apply bg-primaryLight text-textMain;
+}
+
+.p-select-option-label {
+  @apply text-sm text-textMain;
+}

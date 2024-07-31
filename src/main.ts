@@ -8,12 +8,22 @@ import { createPinia } from 'pinia'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import apolloClient from './plugins/apollo'
 
+import PrimeVue from 'primevue/config'
+import Aura from '@primevue/themes/aura'
+import Ripple from 'primevue/ripple'
 import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
 
 app.provide(DefaultApolloClient, apolloClient)
+app.directive('ripple', Ripple)
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura
+  },
+  ripple: true
+})
 app.use(createPinia())
 app.use(router)
 
