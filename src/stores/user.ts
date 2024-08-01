@@ -1,18 +1,22 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
-
 import apolloClient from '../plugins/apollo'
 import { LOGIN_QUERY, SIGNUP } from '../graphQL/index'
+import type { AuthInput } from 'cv-graphql'
 
 export const useUserStore = defineStore('user', () => {
   const accessToken = ref('')
-  const authedUser = ref()
+  const authedUser = ref('')
 
-  const login = async () => {
+  const login = async (auth: AuthInput) => {
     const { data } = await apolloClient.query({
       query: LOGIN_QUERY,
+      variables: {
+        auth
+      },
       fetchPolicy: 'no-cache'
     })
+    console.log(data)
     accessToken.value = data.access_token
     authedUser.value = data.user
   }
@@ -25,7 +29,6 @@ export const useUserStore = defineStore('user', () => {
         auth
       }
     })
-    await login()
   }
 
   return { accessToken, login, signup }
