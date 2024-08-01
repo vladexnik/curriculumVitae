@@ -35,16 +35,22 @@
 <script setup lang="ts">
 import TextField from '@/components/ui-kit/TextField.vue'
 import Button from '@/components/ui-kit/Button.vue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useApolloClient } from '@vue/apollo-composable'
 import { LOGIN_QUERY } from '@/graphQL'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 const auth = reactive({
   email: '',
   password: ''
 })
+const userStore = useUserStore()
+const { authedUser, accessToken } = storeToRefs(userStore)
+const { login, signup } = userStore
+const router = useRouter()
 
 defineProps<{
   obj: {
@@ -56,29 +62,45 @@ defineProps<{
   }
 }>()
 
-const { client } = useApolloClient()
+// const { client } = useApolloClient()
 
-const handleSubmitLogin = async () => {
+// const handleSubmitLogin = async () => {
+//   try {
+//     const { data, errors } = await client.query({
+//       query: LOGIN_QUERY,
+//       variables: {
+//         auth
+//       }
+//     })
+
+//     if (errors) {
+//       console.error('Error during login:', errors)
+//     } else {
+//       console.log('Login successful', data.login)
+//     }
+//   } catch (e) {
+//     console.error('Unexpected error during login:', e)
+//   }
+// }
+
+async function handleSubmitLogin() {
   try {
-    const { data, errors } = await client.query({
-      query: LOGIN_QUERY,
-      variables: {
-        auth
-      }
-    })
-
-    if (errors) {
-      console.error('Error during login:', errors)
-    } else {
-      console.log('Login successful', data.login)
-    }
-  } catch (e) {
-    console.error('Unexpected error during login:', e)
+    await login(auth)
+  } catch (error) {
+    return
   }
+  if (accessToken.value) router.push({ path: '/' })
 }
 
-const handleSubmitSignUp = () => {
-  console.log('signup')
+async function handleSubmitSignUp() {
+  try {
+    console.log('signup form', auth)
+    await signup(auth)
+  } catch (error) {
+    return
+  }
+
+  if (accessToken.value) router.push({ path: '/' })
 }
 
 const handleAuth = () =>

@@ -21,9 +21,24 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+// const errorLink = onError(({ graphQLErrors, networkError }) => {
+//   if (graphQLErrors) {
+//     graphQLErrors.forEach(({ message }) => {
+//       console.error(message)
+//       if (message === 'Unauthorized') {
+//         authService.clearStorageAndLogout()
+//       }
+//     })
+//   }
+//   if (networkError) {
+//     console.error(networkError)
+//   }
+// })
+
 const cache = new InMemoryCache()
 
 const apolloClient = new ApolloClient({
+  // link: authLink.concat(httpLink),
   link: httpLink,
   cache
 })
