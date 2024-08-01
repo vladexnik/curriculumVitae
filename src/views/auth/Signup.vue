@@ -17,20 +17,6 @@
           </div>
           <form class="space-y-6" @submit.prevent="register">
             <div>
-              <label for="name" class="block mb-2 text-sm font-medium">
-                Your name</label
-              >
-              <input
-                id="name"
-                v-model="form.name"
-                type="text"
-                name="name"
-                class="border text-sm rounded-lg w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="John Smith"
-                required
-              />
-            </div>
-            <div>
               <label for="email" class="block mb-2 text-sm font-medium">
                 Your email</label
               >
@@ -80,12 +66,11 @@
 </template>
 <script setup lang="ts">
   import { storeToRefs } from "pinia";
-  // import { useAuthStore } from "../stores/modules/useAuth";
+  import { useUserStore } from "@/stores/user";
   import { reactive, ref } from "vue";
   import { useRouter } from "vue-router";
 
   const form = reactive({
-    name: "",
     email: "",
     password: "",
   });
@@ -94,9 +79,9 @@
   const alert_variant = ref<string>("bg-blue-500");
   const alert_msg = ref<string>("Please wait! Your account is being created.");
 
-  // const authStore = useAuthStore();
-  // const { user } = storeToRefs(authStore);
-  // const { createUser } = authStore;
+  const userStore = useUserStore();
+  const { authedUser, accessToken } = storeToRefs(userStore);
+  const { signup } = userStore;
   const router = useRouter();
 
   async function register() {
@@ -105,8 +90,8 @@
     alert_msg.value = "Please wait! Your account is being created.";
 
     try {
-      // await createUser(form);
-      console.log(form)
+      console.log("signup form", form)
+      await signup(form);
     } catch (error) {
       show_alert.value = true;
       alert_variant.value = "bg-red-500";
@@ -115,6 +100,6 @@
     }
     alert_variant.value = "bg-green-500";
     alert_msg.value = "Success! Your account is created.";
-    if (user.value) router.push({ path: "/" });
+    if (accessToken.value) router.push({ path: "/" });
   }
 </script>

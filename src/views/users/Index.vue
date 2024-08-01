@@ -6,29 +6,20 @@
 
 
 <script setup lang="ts">
-  // import { storeToRefs } from "pinia";
-  // import { useAuthStore } from "../stores/modules/useAuth";
   import { onMounted, reactive, ref } from "vue";
   import { useRoute, useRouter } from "vue-router";
+  import { storeToRefs } from "pinia";
+  import { useUserStore } from "@/stores/user";
 
-  // const form = reactive({
-  //   email: "",
-  //   password: "",
-  // });
-
-  // const show_alert = ref<boolean>(false);
-  // const alert_variant = ref<string>("bg-blue-500");
-  // const alert_msg = ref<string>("Please wait! We are logging you in");
-
-  // const authStore = useAuthStore();
-  // const { user } = storeToRefs(authStore);
-  // const { signInUser } = authStore;
+  const userStore = useUserStore();
+  const { accessToken } = storeToRefs(userStore);
   const router = useRouter();
   const route = useRoute();
 
 
   onMounted(() => {
     const id = route.params.idc;
+    console.log('accessToken', accessToken.value)
   }
   )
 

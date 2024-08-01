@@ -8,24 +8,30 @@ export const useUserStore = defineStore('user', () => {
   const accessToken = ref('')
   const authedUser = ref()
 
-  const login = async () => {
-    const { data } = await apolloClient.query({
+  const login = async (auth: any) => {
+    console.log("FORM", auth);
+     const {data} = await apolloClient.query({
       query: LOGIN_QUERY,
-      fetchPolicy: 'no-cache'
+      variables: {
+        auth
+      }
     })
-    accessToken.value = data.access_token
-    authedUser.value = data.user
+    accessToken.value = data.login.access_token
+    authedUser.value = data.login.user
+    console.log("RESULT", data)
   }
 
-  const signup = async (email: String, password: String) => {
-    const auth = { email, password };
-    await apolloClient.mutate({
+  const signup = async (auth: any) => {
+    console.log('auth', auth)
+    const {data} = await apolloClient.mutate({
       mutation: SIGNUP,
       variables: {
         auth
       }
     })
-    await login()
+    accessToken.value = data.signup.access_token
+    authedUser.value = data.signup.user
+    console.log("RESULT", data)
   }
 
 

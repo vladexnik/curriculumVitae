@@ -15,7 +15,7 @@
           >
             {{ alert_msg }}
           </div>
-          <form class="space-y-6" @submit.prevent="login">
+          <form class="space-y-6" @submit.prevent="loginUser">
             <div>
               <label for="email" class="block mb-2 text-sm font-medium">
                 Your email</label
@@ -67,31 +67,32 @@
 
 <script setup lang="ts">
   import { storeToRefs } from "pinia";
-  // import { useAuthStore } from "../stores/modules/useAuth";
+  import { useUserStore } from "@/stores/user";
   import { reactive, ref } from "vue";
   import { useRouter } from "vue-router";
 
   const form = reactive({
-    email: "",
-    password: "",
+    email: "ferdik@mail.ru",
+    password: "123456",
   });
 
   const show_alert = ref<boolean>(false);
   const alert_variant = ref<string>("bg-blue-500");
   const alert_msg = ref<string>("Please wait! We are logging you in");
 
-  // const authStore = useAuthStore();
-  // const { user } = storeToRefs(authStore);
-  // const { signInUser } = authStore;
+  const userStore = useUserStore();
+  console.log(userStore)
+  const { authedUser, accessToken } = storeToRefs(userStore);
+  const { login } = userStore;
   const router = useRouter();
 
-  async function login() {
+  async function loginUser() {
     show_alert.value = true;
     alert_variant.value = "bg-blue-500";
     alert_msg.value = "Please wait! We are logging you in.";
 
     try {
-      // await signInUser(form);
+      await login(form);
       console.log(form)
     } catch (error) {
       show_alert.value = true;
@@ -101,6 +102,6 @@
     }
     alert_variant.value = "bg-green-500";
     alert_msg.value = "Success! You are now logged in.";
-    if (user.value) router.push({ path: "/" });
+    if (accessToken.value) router.push({ path: "/" });
   }
 </script>
