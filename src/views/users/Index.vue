@@ -19,7 +19,7 @@
 
   onMounted(() => {
     const id = route.params.idc;
-    console.log('accessToken', accessToken.value)
+    console.log('accessToken INDEX', accessToken.value)
   }
   )
 
