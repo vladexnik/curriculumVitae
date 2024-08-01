@@ -44,6 +44,8 @@ export const useUserStore = defineStore('user', () => {
     console.log("RESULT", data)
   }
 
+
+  
   const setCookies = (data: string, keyName: string) => {
     const { cookies } = useCookies();
     cookies.set(keyName, data);
@@ -54,5 +56,16 @@ export const useUserStore = defineStore('user', () => {
     return cookies.get(keyName);
   };
 
-  return { accessToken, login, signup, getCookies }
+  const removeCookies = (keyName: string) => {
+    const { cookies } = useCookies();
+    cookies.remove(keyName);
+  }
+
+  const logout = () => {
+    removeCookies('accessToken');
+    removeCookies('refreshToken');
+
+  }
+
+  return { accessToken, login, signup, getCookies, logout }
 })
