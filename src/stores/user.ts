@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { useCookies } from "vue3-cookies";
 
 import apolloClient from '../plugins/apollo'
-import { LOGIN_QUERY, SIGNUP } from '../graphQL/index'
+import { LOGIN_QUERY, SIGNUP, UPDATE_ACCESS_TOKEN } from '../graphQL/index'
 
 export const useUserStore = defineStore('user', () => {
   const accessToken = ref('')
@@ -44,8 +44,6 @@ export const useUserStore = defineStore('user', () => {
     console.log("RESULT", data)
   }
 
-
-  
   const setCookies = (data: string, keyName: string) => {
     const { cookies } = useCookies();
     cookies.set(keyName, data);
@@ -64,8 +62,15 @@ export const useUserStore = defineStore('user', () => {
   const logout = () => {
     removeCookies('accessToken');
     removeCookies('refreshToken');
-
   }
 
   return { accessToken, login, signup, getCookies, logout }
 })
+
+
+export const updateAccessToken = async () => {
+  const {data} = await apolloClient.mutate({
+    mutation: UPDATE_ACCESS_TOKEN,
+  })
+  console.log("TOKEN", data)
+}

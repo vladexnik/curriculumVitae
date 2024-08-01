@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import { useCookies } from "vue3-cookies"; 
+import { updateAccessToken } from "../stores/user"
 //users routes
 import Users from '../views/users/Index.vue'
 import UserId from '../views/users/id/Index.vue'
@@ -38,17 +39,23 @@ const router = createRouter({
         { path: '/:id/skills', component: UserSkills },
         { path: '/:id/languages', component: UserLanguages },
       ],
+      meta: {
+        isAuth: true,
+      },
     },
     {
       path: '/cvs',
       name: 'cvs',
       children: [
-      { path: '', component: Cvs },
-      { path: '/:id', component: CvId },
-      { path: '/:id/preview', component: Preview },
-      { path: '/:id/projects', component: Projects },
-      { path: '/:id/skills', component: Skills },
-    ],
+        { path: '', component: Cvs },
+        { path: '/:id', component: CvId },
+        { path: '/:id/preview', component: Preview },
+        { path: '/:id/projects', component: Projects },
+        { path: '/:id/skills', component: Skills },
+      ],
+      meta: {
+        isAuth: true,
+      },
     },
     {
       path: '/login',
@@ -63,24 +70,73 @@ const router = createRouter({
     {
       path: '/skills',
       name: 'allSkills',
-      component: AllSkills
+      component: AllSkills,
+      meta: {
+        isAuth: true,
+      },
     },
     {
       path: '/settings',
       name: 'settings',
-      component: Settings
+      component: Settings,
+      meta: {
+        isAuth: true,
+      },
     },
     {
       path: '/positions',
       name: 'positions',
-      component: Positions
+      component: Positions,
+      meta: {
+        isAuth: true,
+      },
     },
     {
       path: '/departments',
       name: 'departments',
-      component: Departments
+      component: Departments,
+      meta: {
+        isAuth: true,
+      },
     },
   ]
 })
+
+
+router.beforeEach(async (to, from, next) => {
+  try {
+    const requireAuth = to.meta.isAuth;
+    const { cookies } = useCookies();
+    const accessToken = cookies.get('accessToken');
+    const refreshToken = cookies.get('refreshToken');
+
+    if (requireAuth) {
+      if (!accessToken && !refreshToken) next("/login")
+      // if (!accessToken && refreshToken) {
+      //     const updatedAccessToken = await updateAccessToken();
+      //     if (updatedAccessToken) {
+      //       next();
+      //       } else {
+      //       next(from.path);
+      //       }
+      // }
+      next();
+    } else {
+      if (!accessToken && !refreshToken) next();
+      // if (!accessToken && refreshToken) {
+      //   const updatedAccessToken = await updateAccessToken();
+      //   if (updatedAccessToken) {
+      //     next(from.path);
+      //     } else {
+      //     next();
+      //     }
+      // }
+      next(from.fullPath);
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 
 export default router
