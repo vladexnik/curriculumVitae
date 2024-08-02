@@ -26,6 +26,7 @@ body {
     --primary-light-active: rgb(245, 184, 184);
     --secondary-light: rgb(235, 235, 235);
     --secondary-light-active: rgb(212, 212, 212);
+    --p-tabs-active-bar-background: var(--color-primary) !important;
   }
 
   :root[class~='dark'] {
@@ -42,6 +43,7 @@ body {
     --primary-light-active: rgba(198, 48, 49, 0.32);
     --secondary-light: rgba(118, 118, 118, 0.08);
     --secondary-light-active: rgba(212, 212, 212, 0.2);
+    --p-tabs-active-bar-background: var(--color-primary);
   }
 }
 

@@ -23,8 +23,7 @@ export default {
         bgDropdown: 'var(--bg-dropdown)',
         primary: 'var(--color-primary)',
         primaryDark: 'rgb(138, 33, 34)',
-        primaryDarkActive: 'rgb(171, 45, 44)',
-
+        primaryDarkActive: 'rgb(220, 98, 98)',
         primaryLight: 'var(--primary-light)',
         primaryLightActive: 'var(--primary-light-active)',
         disabledPrimary: 'var(--disabled-primary)',
