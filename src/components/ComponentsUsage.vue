@@ -31,7 +31,7 @@ const rules = computed(() => {
     email: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
       minLength: minLength(5),
-      email
+      email: helpers.withMessage(REQUIRED_FIELD, email)
     },
     password: {
       required: helpers.withMessage(REQUIRED_FIELD, required),

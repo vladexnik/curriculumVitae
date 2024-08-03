@@ -9,7 +9,6 @@ export const useUserStore = defineStore('user', () => {
   const authedUser = ref('')
 
   const login = async (auth: AuthInput) => {
-    console.log('FORM', auth)
     const { data } = await apolloClient.query({
       query: LOGIN_QUERY,
       variables: {
@@ -34,5 +33,5 @@ export const useUserStore = defineStore('user', () => {
     console.log('RESULT', data)
   }
 
-  return { accessToken, login, signup }
+  return { accessToken, authedUser, login, signup }
 })
