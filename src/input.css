@@ -84,11 +84,3 @@ body {
 .p-select-option-label {
   @apply text-sm text-textMain;
 }
-
-.p-tab.p-tab-active p {
-  @apply border-primary text-primary;
-}
-
-.p-tablist-active-bar {
-  border-color: red !important;
-}
