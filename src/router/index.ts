@@ -112,7 +112,7 @@ router.beforeEach(async (to, from, next) => {
     const refreshToken = cookies.get('refreshToken')
 
     if (requireAuth) {
-      if (!accessToken && !refreshToken) next('/login')
+      if (!accessToken && !refreshToken) next('/auth/login')
       // if (!accessToken && refreshToken) {
       //     const updatedAccessToken = await updateAccessToken();
       //     if (updatedAccessToken) {

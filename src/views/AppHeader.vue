@@ -4,9 +4,9 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
-const { authedUser } = storeToRefs(userStore)
+const { authedUser, accessToken, refreshToken } = storeToRefs(userStore)
 </script>
 
 <template>
-  <TabsAuth v-if="!authedUser" />
+  <TabsAuth v-if="!accessToken" />
 </template>

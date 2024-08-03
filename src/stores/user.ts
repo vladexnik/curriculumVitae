@@ -62,6 +62,7 @@ export const useUserStore = defineStore('user', () => {
     removeCookies('accessToken')
     removeCookies('refreshToken')
     authedUser.value = ''
+    accessToken.value = ''
   }
 
   return { accessToken, authedUser, login, signup, getCookies, logout }
