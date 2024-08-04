@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useCookies } from "vue3-cookies"; 
-import { updateAccessToken } from "../stores/user"
+import { useUserStore } from "../stores/user"
 //users routes
 import Users from '../views/users/Index.vue'
 import UserId from '../views/users/id/Index.vue'
@@ -102,6 +102,9 @@ const router = createRouter({
   ]
 })
 
+const userStore = useUserStore();
+const { updateAccessToken } = userStore;
+
 
 router.beforeEach(async (to, from, next) => {
   try {
@@ -112,25 +115,25 @@ router.beforeEach(async (to, from, next) => {
 
     if (requireAuth) {
       if (!accessToken && !refreshToken) next("/login")
-      // if (!accessToken && refreshToken) {
-      //     const updatedAccessToken = await updateAccessToken();
-      //     if (updatedAccessToken) {
-      //       next();
-      //       } else {
-      //       next(from.path);
-      //       }
-      // }
+      if (!accessToken && refreshToken) {
+          const updatedAccessToken: string = await updateAccessToken();
+          if (updatedAccessToken) {
+            next();
+            } else {
+            next(from.path);
+            }
+      }
       next();
     } else {
       if (!accessToken && !refreshToken) next();
-      // if (!accessToken && refreshToken) {
-      //   const updatedAccessToken = await updateAccessToken();
-      //   if (updatedAccessToken) {
-      //     next(from.path);
-      //     } else {
-      //     next();
-      //     }
-      // }
+      if (!accessToken && refreshToken) {
+        const updatedAccessToken = await updateAccessToken();
+        if (updatedAccessToken) {
+          next(from.path);
+          } else {
+          next();
+          }
+      }
       next(from.fullPath);
     }
   } catch (e) {

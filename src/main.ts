@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 
 // Apollo client
 import { DefaultApolloClient } from '@vue/apollo-composable'
-import apolloClient from './plugins/apollo'
+// import apolloClient from './plugins/apollo'
 
 import VueCookies from 'vue3-cookies'
 
@@ -18,7 +18,8 @@ import router from './router'
 
 const app = createApp(App)
 
-app.provide(DefaultApolloClient, apolloClient)
+// app.provide(DefaultApolloClient, apolloClient)
+app.use(createPinia())
 app.directive('ripple', Ripple)
 app.use(PrimeVue, {
   theme: {
@@ -26,7 +27,6 @@ app.use(PrimeVue, {
   },
   ripple: true
 })
-app.use(createPinia())
 app.use(router)
 app.use(VueCookies, {
   expireTimes: "9min",
@@ -37,3 +37,5 @@ app.use(VueCookies, {
 
 
 app.mount('#app')
+import apolloClient from './plugins/apollo'
+app.provide(DefaultApolloClient, apolloClient)
