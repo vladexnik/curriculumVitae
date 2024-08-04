@@ -5,16 +5,16 @@ import {
   InMemoryCache
 } from '@apollo/client/core'
 import { setContext } from '@apollo/client/link/context'
-import { useUserStore } from "../stores/user"
+import { useCookies } from "vue3-cookies";
 
 const httpLink = createHttpLink({
   uri: 'https://cv-project-js.inno.ws/api/graphql'
 })
 
-const userStore = useUserStore();
-const { getCookies } = userStore;
-const accessToken = getCookies('accessToken');
-const refreshToken = getCookies('refreshToken');
+
+const { cookies } = useCookies();
+const accessToken = cookies.get('accessToken');
+const refreshToken = cookies.get('refreshToken');
 
 
 const authLink = setContext((_, { headers }) => {

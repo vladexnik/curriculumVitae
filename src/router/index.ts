@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useCookies } from "vue3-cookies"; 
-import { useUserStore } from "../stores/user"
+import { useCookies } from "vue3-cookies";
+
+import apolloClient from '../plugins/apollo'
+import { UPDATE_ACCESS_TOKEN } from '../graphQL/index'
 //users routes
 import Users from '../views/users/Index.vue'
 import UserId from '../views/users/id/Index.vue'
@@ -24,6 +26,7 @@ import Departments from '../views/Departments.vue'
 import Positions from '../views/Positions.vue'
 import Settings from '../views/Settings.vue'
 import AllSkills from '../views/AllSkills.vue'
+
 
 
 const router = createRouter({
@@ -102,8 +105,7 @@ const router = createRouter({
   ]
 })
 
-const userStore = useUserStore();
-const { updateAccessToken } = userStore;
+
 
 
 router.beforeEach(async (to, from, next) => {
@@ -112,11 +114,16 @@ router.beforeEach(async (to, from, next) => {
     const { cookies } = useCookies();
     const accessToken = cookies.get('accessToken');
     const refreshToken = cookies.get('refreshToken');
-
+    const updateAccessToken = async () => {
+      const {data} = await apolloClient.mutate({
+        mutation: UPDATE_ACCESS_TOKEN,
+      })
+      cookies.set('accessToken', data.updateToken?.access_token)
+    }
     if (requireAuth) {
       if (!accessToken && !refreshToken) next("/login")
       if (!accessToken && refreshToken) {
-          const updatedAccessToken: string = await updateAccessToken();
+          const updatedAccessToken: unknown = await updateAccessToken();
           if (updatedAccessToken) {
             next();
             } else {
@@ -127,7 +134,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       if (!accessToken && !refreshToken) next();
       if (!accessToken && refreshToken) {
-        const updatedAccessToken = await updateAccessToken();
+        const updatedAccessToken: unknown = await updateAccessToken();
         if (updatedAccessToken) {
           next(from.path);
           } else {
