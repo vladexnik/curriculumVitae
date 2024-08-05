@@ -9,7 +9,6 @@ import { DefaultApolloClient } from '@vue/apollo-composable'
 import apolloClient from './plugins/apollo'
 
 import VueCookies from 'vue3-cookies'
-
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import Ripple from 'primevue/ripple'
@@ -29,11 +28,10 @@ app.use(PrimeVue, {
 app.use(createPinia())
 app.use(router)
 app.use(VueCookies, {
-  expireTimes: "9min",
-  path: "",
-  domain: "",
-  secure: true,
-});
-
+  expireTimes: '9min',
+  path: '',
+  domain: '',
+  secure: true
+})
 
 app.mount('#app')
