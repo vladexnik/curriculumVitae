@@ -21,13 +21,9 @@ export const useUserStore = defineStore('user', () => {
     authedUser.value = data.login.user
     setCookies(data.login.access_token, 'accessToken')
     setCookies(data.login.refresh_token, 'refreshToken')
-    console.log('Cookies - accessToken', getCookies('accessToken'))
-    console.log('Cookies - refreshToken', getCookies('refreshToken'))
-    console.log('RESULT', data)
   }
 
   const signup = async (auth: AuthInput) => {
-    console.log('auth', auth)
     const { data } = await apolloClient.mutate({
       mutation: SIGNUP,
       variables: {
@@ -38,9 +34,6 @@ export const useUserStore = defineStore('user', () => {
     authedUser.value = data.signup.user
     setCookies(data.login.access_token, 'accessToken')
     setCookies(data.login.refresh_token, 'refreshToken')
-    console.log('Cookies - accessToken', getCookies('accessToken'))
-    console.log('Cookies - refreshToken', getCookies('refreshToken'))
-    console.log('RESULT', data)
   }
 
   const setCookies = (data: string, keyName: string) => {
