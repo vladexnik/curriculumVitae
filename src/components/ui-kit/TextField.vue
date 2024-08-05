@@ -1,8 +1,9 @@
 <template>
-  <div class="field mt-3">
+  <div class="field">
     <div :class="['field__inner', { 'border-error': error }]">
       <input
         :type="isPasswordField && !showPassword ? 'password' : 'text'"
+        ref="input"
         v-model="modelInput"
         class="field__input"
         :required="required"
@@ -19,7 +20,7 @@
         <slot default="Name" />
       </label>
       <button
-        class="mr-2 flex items-center"
+        class="field__button mr-2 flex items-center focus:outline-none"
         v-if="isPasswordField"
         type="button"
         @click="togglePasswordVisibility"
@@ -52,6 +53,14 @@ const modelInput = defineModel({ type: String })
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
+
+const input = ref<HTMLInputElement | null>(null)
+
+defineExpose({
+  focus: () => {
+    input.value?.focus()
+  }
+})
 </script>
 <style scoped>
 .field {
@@ -94,5 +103,12 @@ const togglePasswordVisibility = () => {
 
 .border-error {
   @apply border-primary hover:border-primary;
+}
+
+.field__button:focus i {
+  @apply bg-secondaryLight;
+}
+.field__button:active i {
+  @apply bg-secondaryLightActive;
 }
 </style>

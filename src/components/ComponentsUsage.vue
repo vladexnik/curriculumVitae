@@ -4,7 +4,7 @@ import TextField from './ui-kit/TextField.vue'
 import SearchInput from './ui-kit/SearchInput.vue'
 import SelectComp from '../components/ui-kit/SelectComp.vue'
 import type { Option } from '../components/ui-kit/SelectComp.vue'
-import { reactive, ref, watchEffect, computed } from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, email, minLength, helpers } from '@vuelidate/validators'
 import { REQUIRED_FIELD } from './ui-kit/constants/constants'
@@ -31,7 +31,7 @@ const rules = computed(() => {
     email: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
       minLength: minLength(5),
-      email
+      email: helpers.withMessage(REQUIRED_FIELD, email)
     },
     password: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
@@ -42,8 +42,16 @@ const rules = computed(() => {
 
 const v$ = useVuelidate(rules, formData)
 
-watchEffect(() => {
-  console.log(inputString.value)
+onMounted(() => {
+  emailField.value?.focus()
+})
+
+const emailField = ref<HTMLInputElement | null>(null)
+
+onMounted(() => {
+  if (emailField.value) {
+    emailField.value.focus()
+  }
 })
 
 const submitForm = async () => {
@@ -60,7 +68,9 @@ const submitForm = async () => {
 
 <template>
   <form @submit.prevent="submitForm" class="d-flex w-max-[400px] mx-4 gap-4">
-    <TextField v-model="formData.name" type="text">Name</TextField>
+    <TextField ref="emailField" v-model="formData.name" type="text"
+      >Name</TextField
+    >
     <TextField
       v-model="formData.email"
       type="text"

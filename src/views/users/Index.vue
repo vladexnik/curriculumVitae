@@ -2,7 +2,7 @@
   <div class="about">
     <h1>Users List</h1>
     <button
-      class="w-full bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      class="w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-800"
       @click="signOut"
     >
       Log out
@@ -10,29 +10,25 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-  import { onMounted, reactive, ref } from "vue";
-  import { useRoute, useRouter } from "vue-router";
-  import { storeToRefs } from "pinia";
-  import { useUserStore } from "@/stores/user";
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/user'
 
-  const userStore = useUserStore();
-  const { accessToken } = storeToRefs(userStore);
-  const { logout } = userStore;
-  const router = useRouter();
-  const route = useRoute();
+const userStore = useUserStore()
+const { accessToken } = storeToRefs(userStore)
+const { logout } = userStore
+const router = useRouter()
+const route = useRoute()
 
-  const signOut = () => {
-    logout();
-    router.push({ path: "/login" });
-  }
+const signOut = () => {
+  logout()
+  router.push({ path: '/login' })
+}
 
-
-  onMounted(() => {
-    const id = route.params.idc;
-    console.log('accessToken INDEX', accessToken.value)
-  }
-  )
-
+onMounted(() => {
+  const id = route.params.idc
+  console.log('accessToken ', accessToken.value)
+})
 </script>

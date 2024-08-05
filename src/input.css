@@ -5,11 +5,11 @@
 @tailwind utilities;
 
 * {
-  @apply font-sans box-border;
+  @apply box-border font-sans;
 }
 
 body {
-  @apply bg-bgColor;
+  @apply bg-bgColor text-textMain;
 }
 
 @layer base {
@@ -23,9 +23,10 @@ body {
     --disabled-primary: rgba(0, 0, 0, 0.12);
     --disabled-primary-text: rgba(0, 0, 0, 0.26);
     --primary-light: rgb(252, 237, 237);
-    --primary-light-active: rgb(255, 226, 226);
+    --primary-light-active: rgb(245, 184, 184);
     --secondary-light: rgb(235, 235, 235);
     --secondary-light-active: rgb(212, 212, 212);
+    --p-tabs-active-bar-background: var(--color-primary) !important;
   }
 
   :root[class~='dark'] {
@@ -42,6 +43,7 @@ body {
     --primary-light-active: rgba(198, 48, 49, 0.32);
     --secondary-light: rgba(118, 118, 118, 0.08);
     --secondary-light-active: rgba(212, 212, 212, 0.2);
+    --p-tabs-active-bar-background: var(--color-primary);
   }
 }
 
@@ -54,7 +56,7 @@ body {
 }
 
 .p-select-list-container {
-  @apply bg-white dark:bg-bgDropdown shadow-dropdown rounded;
+  @apply rounded bg-white shadow-dropdown dark:bg-bgDropdown;
   max-height: 80vh !important;
 }
 
@@ -72,7 +74,7 @@ body {
 }
 
 .p-select-list-container .p-select-option {
-  @apply rounded-none hover:bg-optionHover active:bg-lightGrey py-2;
+  @apply rounded-none py-2 hover:bg-optionHover active:bg-lightGrey;
 }
 
 .p-select-option.p-select-option-selected {

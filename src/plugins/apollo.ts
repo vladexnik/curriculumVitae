@@ -10,6 +10,8 @@ const httpLink = createHttpLink({
   uri: 'https://cv-project-js.inno.ws/api/graphql'
 })
 
+const access_token = ''
+
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
@@ -36,8 +38,8 @@ const authLink = setContext((_, { headers }) => {
 const cache = new InMemoryCache()
 
 const apolloClient = new ApolloClient({
-  // link: authLink.concat(httpLink),
-  link: httpLink,
+  link: authLink.concat(httpLink),
+  // link: httpLink,
   cache
 })
 
