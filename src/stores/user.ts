@@ -58,12 +58,13 @@ export const useUserStore = defineStore('user', () => {
     accessToken.value = ''
   }
 
-  return { accessToken, authedUser, login, signup, getCookies, logout }
-})
+  const updateAccessToken = async () => {
+    const { data } = await apolloClient.mutate({
+      mutation: UPDATE_ACCESS_TOKEN
+    })
+    setCookies(data.updateToken?.access_token, 'accessToken')
+    console.log('TOKEN', data)
+  }
 
-export const updateAccessToken = async () => {
-  const { data } = await apolloClient.mutate({
-    mutation: UPDATE_ACCESS_TOKEN
-  })
-  console.log('TOKEN', data)
-}
+  return { accessToken, login, signup, getCookies, logout, updateAccessToken }
+})

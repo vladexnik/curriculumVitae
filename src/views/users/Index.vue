@@ -24,7 +24,7 @@ const route = useRoute()
 
 const signOut = () => {
   logout()
-  router.push({ path: '/login' })
+  router.push({ path: '/auth/login' })
 }
 
 onMounted(() => {

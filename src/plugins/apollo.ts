@@ -5,18 +5,21 @@ import {
   InMemoryCache
 } from '@apollo/client/core'
 import { setContext } from '@apollo/client/link/context'
+import { useCookies } from 'vue3-cookies'
 
 const httpLink = createHttpLink({
   uri: 'https://cv-project-js.inno.ws/api/graphql'
 })
 
-const access_token = ''
+const { cookies } = useCookies()
+const accessToken = cookies.get('accessToken')
+const refreshToken = cookies.get('refreshToken')
 
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: `Bearer ${access_token}`
+      Authorization: `Bearer ${accessToken ? accessToken : refreshToken}`
     }
   }
 })
@@ -24,7 +27,7 @@ const authLink = setContext((_, { headers }) => {
 // const errorLink = onError(({ graphQLErrors, networkError }) => {
 //   if (graphQLErrors) {
 //     graphQLErrors.forEach(({ message }) => {
-//       console.error(message)
+//       .error(message)
 //       if (message === 'Unauthorized') {
 //         authService.clearStorageAndLogout()
 //       }
@@ -39,7 +42,6 @@ const cache = new InMemoryCache()
 
 const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  // link: httpLink,
   cache
 })
 
