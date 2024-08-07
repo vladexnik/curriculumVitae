@@ -9,6 +9,7 @@ import { LOGIN_QUERY, SIGNUP, UPDATE_ACCESS_TOKEN } from '../graphQL/index'
 export const useUserStore = defineStore('user', () => {
   const accessToken = ref('')
   const authedUser = ref('')
+  const isAuthed = ref(false)
 
   const login = async (auth: AuthInput) => {
     const { data } = await apolloClient.query({
@@ -37,12 +38,14 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const setCookies = (data: string, keyName: string) => {
+    console.log(data)
     const { cookies } = useCookies()
     cookies.set(keyName, data)
   }
 
   const getCookies = (keyName: string) => {
     const { cookies } = useCookies()
+    accessToken.value = cookies.get(keyName)
     return cookies.get(keyName)
   }
 
@@ -66,5 +69,32 @@ export const useUserStore = defineStore('user', () => {
     console.log('TOKEN', data)
   }
 
-  return { accessToken, login, signup, getCookies, logout, updateAccessToken }
+  const initializeAuth = () => {
+    const token = getCookies('accessToken')
+    const refreshToken = getCookies('refreshToken')
+
+    if (token && refreshToken) {
+      accessToken.value = token
+      isAuthed.value = true
+    }
+    if (!token && refreshToken) {
+      updateAccessToken()
+      console.log('update access-token', accessToken)
+      accessToken.value = token
+      isAuthed.value = true
+    } else {
+      isAuthed.value = false
+    }
+  }
+
+  return {
+    accessToken,
+    authedUser,
+    login,
+    signup,
+    getCookies,
+    logout,
+    updateAccessToken,
+    initializeAuth
+  }
 })

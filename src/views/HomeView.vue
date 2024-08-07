@@ -14,14 +14,19 @@ const Logout = () => {
 </script>
 
 <template>
-  <main>
-    <Button
-      class="my-5 w-40"
-      variant="outlined"
-      color="secondary"
-      @click="Logout"
-      >Logout</Button
-    >
-    <ComponentsUsage />
-  </main>
+  <div class="wrappera">
+    <section class="main h-full bg-bgColor px-6">
+      <Button
+        class="my-5 mr-5 w-40"
+        variant="outlined"
+        color="secondary"
+        @click="Logout"
+        >Logout</Button
+      >
+    </section>
+  </div>
 </template>
+<style scoped></style>
+<!-- grid-template-rows: 1fr;
+  grid-template-columns: max-content 1fr;
+  grid-template-areas: 'navigation page'; -->

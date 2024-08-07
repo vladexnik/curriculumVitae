@@ -111,7 +111,6 @@ onMounted(() => {
 })
 
 async function handleAuth() {
-  // accessToken.value = ''
   try {
     const result = await v$.value.$validate()
 

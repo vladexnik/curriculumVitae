@@ -19,6 +19,7 @@ import CvId from '../views/cvs/id/Index.vue'
 import Preview from '../views/cvs/id/Preview.vue'
 import Projects from '../views/cvs/id/Projects.vue'
 import Skills from '../views/cvs/id/Skills.vue'
+import ProjectsAll from '@/views/ProjectsAll.vue'
 
 //common routes
 import Departments from '../views/Departments.vue'
@@ -26,6 +27,7 @@ import Positions from '../views/Positions.vue'
 import Settings from '../views/Settings.vue'
 import AllSkills from '../views/AllSkills.vue'
 import apolloClient from '@/plugins/apollo'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +43,14 @@ const router = createRouter({
         { path: '/:id/skills', component: UserSkills },
         { path: '/:id/languages', component: UserLanguages }
       ],
+      meta: {
+        isAuth: true
+      }
+    },
+    {
+      path: '/projects',
+      name: 'projects',
+      component: ProjectsAll,
       meta: {
         isAuth: true
       }
@@ -106,6 +116,8 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   try {
+    const userStore = useUserStore()
+    userStore.initializeAuth()
     const requireAuth = to.meta.isAuth
     const { cookies } = useCookies()
     const accessToken = cookies.get('accessToken')
