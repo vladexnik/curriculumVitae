@@ -4,7 +4,7 @@ import TextField from './ui-kit/TextField.vue'
 import SearchInput from './ui-kit/SearchInput.vue'
 import SelectComp from '../components/ui-kit/SelectComp.vue'
 import type { Option } from '../components/ui-kit/SelectComp.vue'
-import { reactive, ref, computed, onMounted } from 'vue'
+import { reactive, ref, watchEffect, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, email, minLength, helpers } from '@vuelidate/validators'
 import { REQUIRED_FIELD } from './ui-kit/constants/constants'
@@ -31,7 +31,7 @@ const rules = computed(() => {
     email: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
       minLength: minLength(5),
-      email: helpers.withMessage(REQUIRED_FIELD, email)
+      email
     },
     password: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
@@ -44,6 +44,10 @@ const v$ = useVuelidate(rules, formData)
 
 onMounted(() => {
   emailField.value?.focus()
+})
+
+watchEffect(() => {
+  console.log(inputString.value)
 })
 
 const emailField = ref<HTMLInputElement | null>(null)

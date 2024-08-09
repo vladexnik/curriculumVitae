@@ -37,7 +37,7 @@
         variant="text"
         color="primary"
         type="submit"
-        @click.prevent="$router.push(obj.link)"
+        @click.prevent="router.push(obj.link)"
       >
         {{ obj.actionRedirect }}
       </Button>

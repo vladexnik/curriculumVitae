@@ -5,6 +5,7 @@ import { useCookies } from 'vue3-cookies'
 
 import apolloClient from '../plugins/apollo'
 import { LOGIN_QUERY, SIGNUP, UPDATE_ACCESS_TOKEN } from '../graphQL/index'
+import router from '@/router'
 
 export const useUserStore = defineStore('user', () => {
   const accessToken = ref('')
@@ -59,6 +60,7 @@ export const useUserStore = defineStore('user', () => {
     removeCookies('refreshToken')
     authedUser.value = ''
     accessToken.value = ''
+    router.push('/auth/login')
   }
 
   const updateAccessToken = async () => {

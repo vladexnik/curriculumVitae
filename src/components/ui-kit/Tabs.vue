@@ -32,13 +32,14 @@
 import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
 import Tab from 'primevue/tab'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import type { TabsAuthT } from '@/models/models'
 
 const route = useRoute()
 const router = useRouter()
-const activeTab = ref<string>(route.path)
+
+const activeTab = computed(() => route.path)
 
 defineProps<{
   tabsAuth: TabsAuthT[]
@@ -47,10 +48,6 @@ defineProps<{
 const changeTab = () => {
   router.push(activeTab.value)
 }
-
-watch(route, (newRoute) => {
-  activeTab.value = newRoute.path
-})
 </script>
 <style scoped>
 :deep(.p-tab) {

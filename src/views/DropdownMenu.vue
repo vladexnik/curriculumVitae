@@ -16,7 +16,7 @@
           :isCollapsed="isCollapsed"
           @click="setActiveItem(item)"
         />
-        <hr />
+        <hr class="m-2" />
         <MenuItem
           v-for="item in secondaryMenuItems"
           :key="item.label"
@@ -29,21 +29,57 @@
       </ul>
     </nav>
     <div class="flex flex-col gap-4">
-      <MenuItem
-        class="flex items-center gap-2 pl-[10px] !text-textMain hover:bg-optionHover"
-        label="Vladislav"
-        :isCollapsed="isCollapsed"
+      <Button
+        type="button"
+        :class="[
+          'rounded-br-3xl rounded-tr-3xl',
+          isCollapsed ? 'w-14' : 'w-[200px]'
+        ]"
+        @click="openModal"
+        aria-haspopup="true"
+        aria-controls="overlay_menu"
+        unstyled
       >
-        <template #avatar>
-          <Avatar
-            label="V"
-            class="text-bgColor"
-            style="background-color: var(--color-primary)"
-            shape="circle"
-          />
+        <MenuItem
+          ref="profileUser"
+          class="profileuser flex items-center gap-2 pl-[10px] !text-textMain hover:bg-optionHover"
+          label="Vladislav"
+          :isCollapsed="isCollapsed"
+        >
+          <template #avatar>
+            <Avatar
+              label="V"
+              class="text-bgColor"
+              style="background-color: var(--color-primary)"
+              shape="circle"
+            />
+          </template>
+        </MenuItem>
+      </Button>
+      <Menu
+        class="!left-5 w-[200px] rounded-md border-none bg-bgColor py-1 shadow-md shadow-secondary"
+        ref="menu"
+        id="overlay_menu"
+        :model="modalMenuItems"
+        :popup="true"
+        unstyled
+      >
+        <template #item="{ item }">
+          <template v-if="item.label === 'Logout'">
+            <hr class="m-2" />
+          </template>
+          <li
+            v-ripple
+            class="active:bg-optionHoverActive cursor-pointer px-4 py-2 text-textMain hover:bg-optionHover"
+            @click="
+              item.label === 'Logout' ? handleLogout() : router.push(item.route)
+            "
+          >
+            <span :class="item.icon"></span>
+            <span class="ml-2">{{ item.label }}</span>
+          </li>
         </template>
-      </MenuItem>
-
+      </Menu>
       <div
         class="ml-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full hover:bg-optionHover"
         @click="toggleCollapse"
@@ -58,15 +94,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MenuItem from '@/components/ui-kit/MenuItem.vue'
 import Avatar from 'primevue/avatar'
+import Menu from 'primevue/menu'
+import Button from 'primevue/button'
+import { useUserStore } from '@/stores/user'
 
+const menu = ref()
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
 const isCollapsed = ref(false)
 
 const mainMenuItems = ref([
-  { label: 'Employees', icon: 'pi pi-users', route: '/' },
+  { label: 'Employees', icon: 'pi pi-users', route: '/users' },
   { label: 'Projects', icon: 'pi pi-folder', route: '/projects' },
   { label: 'CVs', icon: 'pi pi-file', route: '/cvs' }
 ])
@@ -78,19 +121,46 @@ const secondaryMenuItems = ref([
   { label: 'Languages', icon: 'pi pi-globe', route: '/languages' }
 ])
 
+const modalMenuItems = ref([
+  {
+    route: '/users',
+    label: 'Profile',
+    icon: 'pi pi-user'
+  },
+  {
+    route: '/settings',
+    label: 'Settings',
+    icon: 'pi pi-cog'
+  },
+  {
+    label: 'Logout',
+    icon: 'pi pi-sign-out'
+  }
+])
+
 const activeItem = computed(() => {
   const allMenuItems = [...mainMenuItems.value, ...secondaryMenuItems.value]
   return allMenuItems.find((item) => item.route === route.path) || null
 })
 
-const router = useRouter()
-const route = useRoute()
-
-function setActiveItem(item: { label: string; icon: string; route: string }) {
+const setActiveItem = (item: {
+  label: string
+  icon: string
+  route: string
+}) => {
   router.push(item.route)
 }
 
-function toggleCollapse() {
+const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
 }
+
+const handleLogout = () => {
+  userStore.logout()
+}
+
+const openModal = (event) => {
+  menu.value.toggle(event)
+}
 </script>
+<style scoped></style>

@@ -3,6 +3,7 @@
     :class="{
       active: isActive
     }"
+    ref="menuItemRoot"
     class="flex h-14 cursor-pointer items-center gap-4 rounded-br-3xl rounded-tr-3xl p-3 px-4 py-[9px] text-textSec hover:bg-optionHover"
     @click="$emit('click')"
   >
@@ -18,7 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { ref, defineExpose } from 'vue'
+
+const menuItemRoot = ref<HTMLElement | null>(null)
+const emit = defineEmits(['click'])
 
 defineProps({
   label: String,
@@ -27,7 +31,9 @@ defineProps({
   isActive: Boolean
 })
 
-const emit = defineEmits(['click'])
+defineExpose({
+  menuItemRoot
+})
 </script>
 
 <style scoped>

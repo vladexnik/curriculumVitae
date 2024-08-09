@@ -4,18 +4,14 @@ import AppHeader from './views/AppHeader.vue'
 import DropdownMenu from './views/DropdownMenu.vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
-import { onMounted, watchEffect } from 'vue'
+import { onBeforeMount } from 'vue'
 
 const userStore = useUserStore()
-
-onMounted(() => {
-  userStore.initializeAuth()
-})
-
 const { accessToken } = storeToRefs(userStore)
 
-watchEffect(() => {
-  console.log(accessToken)
+onBeforeMount(() => {
+  // userStore.initializeAuth()
+  console.log(accessToken.value)
 })
 </script>
 

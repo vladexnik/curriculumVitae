@@ -33,7 +33,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/users',
       name: 'users',
       component: HomeView,
       children: [
@@ -128,6 +128,11 @@ router.beforeEach(async (to, from, next) => {
       })
       cookies.set('accessToken', data.updateToken?.access_token)
     }
+
+    if (to.path === '/') {
+      return next('/users')
+    }
+
     if (requireAuth) {
       if (!accessToken && !refreshToken) next('/auth/login')
       if (!accessToken && refreshToken) {
