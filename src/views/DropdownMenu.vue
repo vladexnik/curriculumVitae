@@ -41,6 +41,7 @@
         unstyled
       >
         <MenuItem
+          v-if="userData"
           ref="profileUser"
           class="profileuser flex items-center gap-2 whitespace-nowrap pl-[10px] !text-textMain hover:bg-optionHover"
           :label="
@@ -61,6 +62,15 @@
             <Avatar v-else :image="avatar" shape="circle" />
           </template>
         </MenuItem>
+        <div
+          v-else
+          ref="profileUser"
+          class="profileuser mb-1 flex items-center gap-2 pl-[10px]"
+          :isCollapsed="isCollapsed"
+        >
+          <Skeleton shape="circle" size="2rem"></Skeleton>
+          <Skeleton height="1.5rem" width="8rem" />
+        </div>
       </Button>
       <Menu
         class="!left-5 w-[200px] rounded-md border-none bg-bgColor py-1 shadow-md shadow-secondary"
@@ -104,6 +114,7 @@ import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MenuItem from '@/components/ui-kit/MenuItem.vue'
 import Avatar from 'primevue/avatar'
+import Skeleton from 'primevue/skeleton'
 import Menu from 'primevue/menu'
 import Button from 'primevue/button'
 import { useUserStore } from '@/stores/user'
@@ -115,7 +126,9 @@ const userStore = useUserStore()
 const isCollapsed = ref(false)
 
 const userData = computed(() => userStore.authedUser?.user)
-const fullName = computed(() => userData.value?.profile?.full_name || 'Unknown')
+const fullName = computed(
+  () => userData.value?.profile?.full_name || userData.value?.email || null
+)
 const avatar = computed(() => userData.value?.profile?.avatar || '')
 
 const mainMenuItems = ref([
