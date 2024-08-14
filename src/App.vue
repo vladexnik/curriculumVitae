@@ -2,24 +2,25 @@
 import { RouterView } from 'vue-router'
 import AppHeader from './views/AppHeader.vue'
 import DropdownMenu from './views/DropdownMenu.vue'
-import { useUserStore } from '@/stores/user'
-import { storeToRefs } from 'pinia'
-import { onBeforeMount } from 'vue'
+import AppTabs from './views/AppTabs.vue'
+import { useCookie } from './composables/cookies'
+import { useRoute } from 'vue-router'
 
-const userStore = useUserStore()
-const { accessToken } = storeToRefs(userStore)
+const { getCookies } = useCookie()
 
-onBeforeMount(() => {
-  // userStore.initializeAuth()
-  console.log(accessToken.value)
-})
+const route = useRoute()
 </script>
 
 <template>
-  <div class="h-screen" :class="{ wrapper: accessToken }">
-    <AppHeader v-if="!accessToken" />
-    <DropdownMenu v-if="accessToken" />
-    <RouterView />
+  <div :class="{ wrapper: route.meta.isAuth }">
+    <AppHeader v-if="!route.meta.isAuth && !getCookies('refreshToken')" />
+    <DropdownMenu v-if="route.meta.isAuth" />
+    <main class="h-screen">
+      <header v-if="route.meta.isAuth">
+        <AppTabs />
+      </header>
+      <RouterView />
+    </main>
   </div>
 </template>
 

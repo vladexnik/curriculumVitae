@@ -8,7 +8,7 @@
     @click="$emit('click')"
   >
     <div class="flex justify-center">
-      <i :class="icon" style="font-size: 1.5rem">
+      <i :class="icon" style="font-size: 1.5rem" class="flex items-center">
         <slot name="avatar"></slot>
       </i>
     </div>

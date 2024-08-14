@@ -1,23 +1,15 @@
-<script setup lang="ts">
-import { useUserStore } from '@/stores/user'
-import Button from '@/components/ui-kit/Button.vue'
-
-const userStore = useUserStore()
-
-const Logout = () => {
-  userStore.logout()
-}
-</script>
-
 <template>
-  <section class="main h-full bg-bgColor px-6">
-    <Button
-      class="my-5 mr-5 w-40"
-      variant="outlined"
-      color="secondary"
-      @click="Logout"
-      >Logout</Button
-    >
-  </section>
+  <div class="about">
+    <h1>Users</h1>
+  </div>
 </template>
-<style scoped></style>
+<script setup lang="ts"></script>
+<style>
+@media (min-width: 1024px) {
+  .about {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+}
+</style>

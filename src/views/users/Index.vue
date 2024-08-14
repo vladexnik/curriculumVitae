@@ -11,24 +11,22 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-const { accessToken } = storeToRefs(userStore)
 const { logout } = userStore
 const router = useRouter()
-const route = useRoute()
 
 const signOut = () => {
   logout()
   router.push({ path: '/auth/login' })
 }
-
-onMounted(() => {
-  const id = route.params.idc
-  console.log('accessToken ', accessToken.value)
-})
 </script>
+<style scoped>
+.about {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+</style>

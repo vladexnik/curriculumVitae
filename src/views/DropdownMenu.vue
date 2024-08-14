@@ -42,17 +42,23 @@
       >
         <MenuItem
           ref="profileUser"
-          class="profileuser flex items-center gap-2 pl-[10px] !text-textMain hover:bg-optionHover"
-          label="Vladislav"
+          class="profileuser flex items-center gap-2 whitespace-nowrap pl-[10px] !text-textMain hover:bg-optionHover"
+          :label="
+            fullName?.length >= 17
+              ? fullName.slice(0, 17) + '...'
+              : fullName || 'user'
+          "
           :isCollapsed="isCollapsed"
         >
           <template #avatar>
             <Avatar
+              v-if="!avatar"
               label="V"
               class="text-bgColor"
               style="background-color: var(--color-primary)"
               shape="circle"
             />
+            <Avatar v-else :image="avatar" shape="circle" />
           </template>
         </MenuItem>
       </Button>
@@ -70,7 +76,7 @@
           </template>
           <li
             v-ripple
-            class="active:bg-optionHoverActive cursor-pointer px-4 py-2 text-textMain hover:bg-optionHover"
+            class="cursor-pointer px-4 py-2 text-textMain hover:bg-optionHover active:bg-optionHoverActive"
             @click="
               item.label === 'Logout' ? handleLogout() : router.push(item.route)
             "
@@ -107,6 +113,10 @@ const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 const isCollapsed = ref(false)
+
+const userData = computed(() => userStore.authedUser?.user)
+const fullName = computed(() => userData.value?.profile?.full_name || 'Unknown')
+const avatar = computed(() => userData.value?.profile?.avatar || '')
 
 const mainMenuItems = ref([
   { label: 'Employees', icon: 'pi pi-users', route: '/users' },

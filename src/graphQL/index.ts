@@ -4,11 +4,30 @@ export const LOGIN_QUERY = gql`
   query LOGIN($auth: AuthInput!) {
     login(auth: $auth) {
       user {
-        id
         email
+        id
+        position_name
+        profile {
+          full_name
+          avatar
+        }
       }
       access_token
       refresh_token
+    }
+  }
+`
+
+export const GET_USER_DATA_BY_ID = gql`
+  query USER($userId: ID!) {
+    user(userId: $userId) {
+      id
+      email
+      position_name
+      profile {
+        full_name
+        avatar
+      }
     }
   }
 `

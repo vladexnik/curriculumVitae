@@ -64,7 +64,7 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 
-const { authedUser, accessToken } = storeToRefs(userStore)
+const { authedUser } = storeToRefs(userStore)
 const { login, signup } = userStore
 
 const auth = reactive({
@@ -130,7 +130,7 @@ async function handleAuth() {
     const error = err as ApolloError
     showErrorAfterSubmit(error, errorMessage, emailField)
   } finally {
-    if (accessToken.value) router.push({ path: '/' })
+    if (authedUser.value) router.push({ path: '/users' })
   }
 }
 </script>
