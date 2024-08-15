@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-11 mt-4 text-textSec">
+  <div class="mt-4 pl-5 text-textSec">
     <h1>{{ route.name }}</h1>
   </div>
 </template>
