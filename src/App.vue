@@ -1,50 +1,34 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import AppHeader from './views/AppHeader.vue'
+import DropdownMenu from './views/DropdownMenu.vue'
+import AppTabs from './views/AppTabs.vue'
+import { useCookie } from './composables/cookies'
+import { useRoute } from 'vue-router'
+
+const { getCookies } = useCookie()
+
+const route = useRoute()
 </script>
 
 <template>
-  <div class="h-screen">
-    <AppHeader />
-    <RouterView />
+  <div :class="{ wrapper: route.meta.isAuth }">
+    <AppHeader v-if="!route.meta.isAuth && !getCookies('refreshToken')" />
+    <DropdownMenu v-if="route.meta.isAuth" />
+    <main class="h-screen">
+      <header v-if="route.meta.isAuth">
+        <AppTabs />
+      </header>
+      <RouterView />
+    </main>
   </div>
 </template>
 
 <style scoped>
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+.wrapper {
   width: 100%;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-  color: white;
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+  height: 100%;
+  display: grid;
+  grid-template: 1fr / max-content 1fr;
 }
 </style>

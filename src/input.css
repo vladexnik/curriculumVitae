@@ -12,13 +12,27 @@ body {
   @apply bg-bgColor text-textMain;
 }
 
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(189, 189, 189);
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
 @layer base {
   :root {
     --text-main: rgb(46 46 46); /* text, border:hover */
     --text-secondary: rgba(0, 0, 0, 0.6); /* placeholder */
     --light-grey: rgba(62, 62, 62, 0.307); /* border */
     --bg-color: rgb(245, 245, 247); /* bg */
-    --option-hover: rgb(238, 237, 237);
+    --option-hover: rgba(0, 0, 0, 0.04);
+    --option-hoverActive: rgba(0, 0, 0, 0.2);
     --color-primary: rgb(198, 48, 49);
     --disabled-primary: rgba(0, 0, 0, 0.12);
     --disabled-primary-text: rgba(0, 0, 0, 0.26);
@@ -35,6 +49,7 @@ body {
     --light-grey: rgba(190, 190, 190, 0.307);
     --bg-color: rgb(53, 53, 53);
     --option-hover: rgb(78, 78, 78);
+    --option-hoverActive: rgb(106, 106, 106);
     --color-primary: rgb(198, 48, 49);
     --bg-dropdown: rgb(36, 36, 36);
     --disabled-primary: rgba(255, 255, 255, 0.12);

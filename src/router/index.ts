@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useCookies } from 'vue3-cookies'
-import { UPDATE_ACCESS_TOKEN } from '../graphQL/index'
 //users routes
 import Users from '../views/users/Index.vue'
 import UserId from '../views/users/id/Index.vue'
@@ -19,41 +17,57 @@ import CvId from '../views/cvs/id/Index.vue'
 import Preview from '../views/cvs/id/Preview.vue'
 import Projects from '../views/cvs/id/Projects.vue'
 import Skills from '../views/cvs/id/Skills.vue'
+import ProjectsAll from '@/views/ProjectsAll.vue'
 
 //common routes
 import Departments from '../views/Departments.vue'
 import Positions from '../views/Positions.vue'
 import Settings from '../views/Settings.vue'
 import AllSkills from '../views/AllSkills.vue'
-import apolloClient from '@/plugins/apollo'
+import Languages from '@/views/Languages.vue'
+import { useCookie } from '@/composables/cookies'
+import { useUserStore } from '@/stores/user'
+import { updateAccessToken } from '@/service/userData'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'users',
+      path: '/users',
+      name: 'Users',
       component: HomeView,
       children: [
-        { path: '', component: Users },
-        { path: '/:id', component: UserId },
-        { path: '/:id/cvs', component: UserCvs },
-        { path: '/:id/skills', component: UserSkills },
-        { path: '/:id/languages', component: UserLanguages }
+        { path: '', name: 'Users', component: Users },
+        { path: ':id', name: 'UserId', component: UserId },
+        { path: ':id/cvs', name: 'UserCvs', component: UserCvs },
+        { path: ':id/skills', name: 'UserSkills', component: UserSkills },
+        {
+          path: ':id/languages',
+          name: 'UserLanguages',
+          component: UserLanguages
+        }
       ],
       meta: {
         isAuth: true
       }
     },
     {
+      path: '/projects',
+      name: 'Projects',
+      component: ProjectsAll,
+      meta: {
+        isAuth: true
+      }
+    },
+    {
       path: '/cvs',
-      name: 'cvs',
+      name: 'CVs',
       children: [
-        { path: '', component: Cvs },
-        { path: '/:id', component: CvId },
-        { path: '/:id/preview', component: Preview },
-        { path: '/:id/projects', component: Projects },
-        { path: '/:id/skills', component: Skills }
+        { path: '', name: 'CVs', component: Cvs },
+        { path: ':id', name: 'CvId', component: CvId },
+        { path: ':id/preview', name: 'CvPreview', component: Preview },
+        { path: ':id/projects', name: 'CvProjects', component: Projects },
+        { path: ':id/skills', name: 'CvSkills', component: Skills }
       ],
       meta: {
         isAuth: true
@@ -62,16 +76,22 @@ const router = createRouter({
     {
       path: '/auth/login',
       name: 'login',
-      component: Login
+      component: Login,
+      meta: {
+        isAuth: false
+      }
     },
     {
       path: '/auth/signup',
       name: 'signup',
-      component: Signup
+      component: Signup,
+      meta: {
+        isAuth: false
+      }
     },
     {
       path: '/skills',
-      name: 'allSkills',
+      name: 'Skills',
       component: AllSkills,
       meta: {
         isAuth: true
@@ -79,7 +99,7 @@ const router = createRouter({
     },
     {
       path: '/settings',
-      name: 'settings',
+      name: 'Settings',
       component: Settings,
       meta: {
         isAuth: true
@@ -87,7 +107,7 @@ const router = createRouter({
     },
     {
       path: '/positions',
-      name: 'positions',
+      name: 'Positions',
       component: Positions,
       meta: {
         isAuth: true
@@ -95,8 +115,16 @@ const router = createRouter({
     },
     {
       path: '/departments',
-      name: 'departments',
+      name: 'Departments',
       component: Departments,
+      meta: {
+        isAuth: true
+      }
+    },
+    {
+      path: '/languages',
+      name: 'Languages',
+      component: Languages,
       meta: {
         isAuth: true
       }
@@ -106,38 +134,34 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   try {
+    const userStore = useUserStore()
+    userStore.initializeAuth()
+
     const requireAuth = to.meta.isAuth
-    const { cookies } = useCookies()
-    const accessToken = cookies.get('accessToken')
-    const refreshToken = cookies.get('refreshToken')
-    const updateAccessToken = async () => {
-      const { data } = await apolloClient.mutate({
-        mutation: UPDATE_ACCESS_TOKEN
-      })
-      cookies.set('accessToken', data.updateToken?.access_token)
+    const { getCookies } = useCookie()
+    const accessToken = getCookies('accessToken')
+    const refreshToken = getCookies('refreshToken')
+
+    if (to.path === '/') {
+      return next('/users')
     }
     if (requireAuth) {
       if (!accessToken && !refreshToken) next('/auth/login')
       if (!accessToken && refreshToken) {
-        const updatedAccessToken: unknown = await updateAccessToken()
-        if (updatedAccessToken) {
-          next()
-        } else {
-          next(from.path)
-        }
-      }
-      next()
+        next()
+      } else next()
     } else {
       if (!accessToken && !refreshToken) next()
       if (!accessToken && refreshToken) {
+        console.log('no access')
         const updatedAccessToken: unknown = await updateAccessToken()
         if (updatedAccessToken) {
-          next(from.path)
+          next(from.fullPath)
         } else {
           next()
         }
-      }
-      next(from.fullPath)
+        return
+      } else next(from.fullPath)
     }
   } catch (e) {
     console.log(e)

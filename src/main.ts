@@ -25,10 +25,10 @@ app.use(PrimeVue, {
   },
   ripple: true
 })
-app.use(createPinia())
 app.use(router)
+app.use(createPinia())
 app.use(VueCookies, {
-  expireTimes: '9min',
+  expireTimes: '7d',
   path: '',
   domain: '',
   secure: true
