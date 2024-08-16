@@ -9,7 +9,6 @@ import UserLanguages from '../views/users/id/UserLanguages.vue'
 //auth routes
 import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
-import HomeView from '@/views/HomeView.vue'
 
 //cvs routes
 import Cvs from '../views/cvs/Index.vue'
@@ -28,6 +27,7 @@ import Languages from '@/views/Languages.vue'
 import { useCookie } from '@/composables/cookies'
 import { useUserStore } from '@/stores/user'
 import { updateAccessToken } from '@/service/userData'
+import ComponentsUsage from '@/components/ComponentsUsage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +35,6 @@ const router = createRouter({
     {
       path: '/users',
       name: 'Users',
-      component: HomeView,
       children: [
         { path: '', name: 'Users', component: Users },
         { path: ':id', name: 'UserId', component: UserId },
@@ -127,6 +126,14 @@ const router = createRouter({
       component: Languages,
       meta: {
         isAuth: true
+      }
+    },
+    {
+      path: '/ui',
+      name: 'UI',
+      component: ComponentsUsage,
+      meta: {
+        isAuth: false
       }
     }
   ]

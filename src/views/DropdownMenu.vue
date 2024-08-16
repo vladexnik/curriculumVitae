@@ -143,10 +143,9 @@ const secondaryMenuItems = ref([
   { label: 'Skills', icon: 'pi pi-chart-line', route: '/skills' },
   { label: 'Languages', icon: 'pi pi-globe', route: '/languages' }
 ])
-
 const modalMenuItems = ref([
   {
-    route: '/users',
+    route: `users/${userStore.authedUser.user.id}`,
     label: 'Profile',
     icon: 'pi pi-user'
   },
