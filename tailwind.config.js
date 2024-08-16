@@ -20,6 +20,7 @@ export default {
         bgColor: 'var(--bg-color)',
         darkGrey: 'var(--dark-grey)',
         optionHover: 'var(--option-hover)',
+        optionHoverActive: 'var(--option-hoverActive)',
         bgDropdown: 'var(--bg-dropdown)',
         primary: 'var(--color-primary)',
         primaryDark: 'rgb(138, 33, 34)',

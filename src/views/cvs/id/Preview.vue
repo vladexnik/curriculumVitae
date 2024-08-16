@@ -1,9 +1,9 @@
 <template>
   <div class="about">
-    <h1>Users</h1>
+    <h1>Cv preview</h1>
   </div>
 </template>
-<script setup lang="ts"></script>
+
 <style>
 @media (min-width: 1024px) {
   .about {
