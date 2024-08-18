@@ -145,7 +145,7 @@ const secondaryMenuItems = ref([
 ])
 const modalMenuItems = ref([
   {
-    route: `users/${userStore.authedUser.user.id}`,
+    route: `users/${userStore.authedUser?.user?.id}`,
     label: 'Profile',
     icon: 'pi pi-user'
   },

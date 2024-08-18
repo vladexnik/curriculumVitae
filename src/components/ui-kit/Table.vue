@@ -36,3 +36,8 @@ const props = defineProps<{
 
 const { tableData, columns } = props;
 </script>
+
+<style scoped>
+:deep(.p-datatable-tbody > tr > td), :deep(.p-datatable-thead > tr > th) {
+  @apply bg-bgColor
+}</style>
