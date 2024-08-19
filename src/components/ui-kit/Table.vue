@@ -12,6 +12,7 @@
           </div>
           <span v-else>{{ slotProps.data[col.field]}}</span>
         </template>
+
       </Column>
     </template>
   </DataTable>
@@ -40,4 +41,6 @@ const { tableData, columns } = props;
 <style scoped>
 :deep(.p-datatable-tbody > tr > td), :deep(.p-datatable-thead > tr > th) {
   @apply bg-bgColor
-}</style>
+}
+
+</style>

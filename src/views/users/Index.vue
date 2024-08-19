@@ -29,7 +29,7 @@ interface DataRow {
 }
 
 const data = ref<DataRow[]>();
-  const columnsConfig = ref([
+const columnsConfig = ref([
   { field: 'img', header: '', sortable: false,
   customBody: (rowData: DataRow) => {
       const obj = {
@@ -46,11 +46,11 @@ const data = ref<DataRow[]>();
       return h(Avatar, obj);
     }
    },
-  { field: 'firstName', header: 'First Name', sortable: false },
-  { field: 'lastName', header: 'Last Name', sortable: false },
-  { field: 'email', header: 'Email', sortable: false },
+  { field: 'firstName', header: 'First Name', sortable: true },
+  { field: 'lastName', header: 'Last Name', sortable: true },
+  { field: 'email', header: 'Email', sortable: true },
   { field: 'department', header: 'Department', sortable: true },
-  { field: 'position', header: 'Position', sortable: false },
+  { field: 'position', header: 'Position', sortable: true },
   { field: 'actionButton', header: '', sortable: false,
     customBody: (rowData: DataRow) => {
       return h('div', [
