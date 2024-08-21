@@ -34,29 +34,59 @@ const router = createRouter({
   routes: [
     {
       path: '/users',
-      name: 'Users',
+      name: 'Employees',
       component: HomeView,
+      meta: {
+        isAuth: true,
+        breadcrumb: 'Employees'
+      }
+    },
+    {
+      path: '/users',
+      name: 'Users',
+      meta: {
+        isAuth: true,
+        hasTabs: true,
+        breadcrumb: 'Employees',
+        hasBreadcrumbs: true
+      },
       children: [
-        { path: '', name: 'Users', component: Users },
-        { path: ':id', name: 'UserId', component: UserId },
-        { path: ':id/cvs', name: 'UserCvs', component: UserCvs },
-        { path: ':id/skills', name: 'UserSkills', component: UserSkills },
+        {
+          path: ':id',
+          name: 'Employee',
+          component: UserId,
+          meta: {
+            breadcrumb: (route) => route?.params?.id
+          }
+        },
+        {
+          path: ':id/cvs',
+          name: 'UserCvs',
+          component: UserCvs,
+          meta: { breadcrumb: 'CVs' }
+        },
+        {
+          path: ':id/skills',
+          name: 'UserSkills',
+          component: UserSkills,
+          meta: { breadcrumb: 'Skills' }
+        },
         {
           path: ':id/languages',
           name: 'UserLanguages',
-          component: UserLanguages
+          component: UserLanguages,
+          meta: { breadcrumb: 'Languages' }
         }
-      ],
-      meta: {
-        isAuth: true
-      }
+      ]
     },
+
     {
       path: '/projects',
       name: 'Projects',
       component: ProjectsAll,
       meta: {
-        isAuth: true
+        isAuth: true,
+        breadcrumb: 'Projects'
       }
     },
     {
@@ -70,7 +100,8 @@ const router = createRouter({
         { path: ':id/skills', name: 'CvSkills', component: Skills }
       ],
       meta: {
-        isAuth: true
+        isAuth: true,
+        breadcrumb: 'CVs'
       }
     },
     {
@@ -94,7 +125,8 @@ const router = createRouter({
       name: 'Skills',
       component: AllSkills,
       meta: {
-        isAuth: true
+        isAuth: true,
+        breadcrumb: 'Skills'
       }
     },
     {
@@ -102,7 +134,8 @@ const router = createRouter({
       name: 'Settings',
       component: Settings,
       meta: {
-        isAuth: true
+        isAuth: true,
+        breadcrumb: 'Settings'
       }
     },
     {
@@ -110,7 +143,8 @@ const router = createRouter({
       name: 'Positions',
       component: Positions,
       meta: {
-        isAuth: true
+        isAuth: true,
+        breadcrumb: 'Positions'
       }
     },
     {
@@ -118,7 +152,8 @@ const router = createRouter({
       name: 'Departments',
       component: Departments,
       meta: {
-        isAuth: true
+        isAuth: true,
+        breadcrumb: 'Departments'
       }
     },
     {
@@ -126,7 +161,8 @@ const router = createRouter({
       name: 'Languages',
       component: Languages,
       meta: {
-        isAuth: true
+        isAuth: true,
+        breadcrumb: 'Languages'
       }
     }
   ]
@@ -151,6 +187,7 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else next()
     } else {
+      if (!accessToken && !refreshToken) next()
       if (!accessToken && !refreshToken) next()
       if (!accessToken && refreshToken) {
         console.log('no access')

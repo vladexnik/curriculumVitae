@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>Users</h1>
+    <h1>All users and they dfsdfsdf</h1>
   </div>
 </template>
 <script setup lang="ts"></script>
@@ -9,7 +9,6 @@
   .about {
     min-height: 100vh;
     display: flex;
-    align-items: center;
   }
 }
 </style>

@@ -1,13 +1,11 @@
 <template>
   <div class="mt-4 pl-5 text-textSec">
-    <h1>{{ route.name }}</h1>
+    <BreadcrumbsUser />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
+import BreadcrumbsUser from './BreadcrumbsUser.vue'
 </script>
 
 <style>

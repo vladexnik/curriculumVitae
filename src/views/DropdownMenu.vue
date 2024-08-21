@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MenuItem from '@/components/ui-kit/MenuItem.vue'
 import Avatar from 'primevue/avatar'
@@ -146,7 +146,7 @@ const secondaryMenuItems = ref([
 
 const modalMenuItems = ref([
   {
-    route: '/users',
+    route: computed(() => `/users/${userData.value.id}`),
     label: 'Profile',
     icon: 'pi pi-user'
   },
