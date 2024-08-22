@@ -11,8 +11,25 @@
             <component :is="col.customBody(slotProps.data)" />
           </div>
           <span v-else>{{ slotProps.data[col.field]}}</span>
-        </template>
+          <template v-if="index === 0 && slotProps.data.description">
+              <div :colspan="columns.length" class="project-description-cell">
+                <div class="project-description">
+                <div class="block">
+                  {{ slotProps.data.description ? slotProps.data.description : '' }}
+                </div>
+                  <div class="inline-flex m-4 gap-4">
+                    <div class="border-2 rounded-[40px] border-slate-200 p-1" v-for="(env, idx) in slotProps.data.environment" :key="idx">
+                      {{env}}
+                    </div>
+                </div> 
+                </div>
+              </div>
+            </template>
+            <template v-else-if="slotProps.data.description">
+              <div :colspan="columns.length" class="project-description-cell"></div>
+            </template>
 
+        </template>
       </Column>
     </template>
   </DataTable>
@@ -41,6 +58,20 @@ const uniqueKey = computed(() => props.tableData.length)
 <style scoped>
 :deep(.p-datatable-tbody > tr > td), :deep(.p-datatable-thead > tr > th) {
   @apply bg-bgColor
+}
+.project-description-cell {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  position: static;
+  height: 100px;
+}
+
+.project-description {
+  @apply text-textSec;
+  position: absolute;
+  width: 100%;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 </style>

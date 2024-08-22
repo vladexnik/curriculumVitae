@@ -187,4 +187,8 @@ const submitForm = async () => {
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4">
     <NoFound />
   </div>
+
+  <div class="d-flex w-max-[500px] m-4 max-w-full gap-4">
+    <Dr />
+  </div>
 </template>
