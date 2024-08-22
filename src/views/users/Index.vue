@@ -1,17 +1,21 @@
 <template>
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4" v-if="data">
+    <div class="d-flex w-[300px] pl-3"><SearchInput v-model="search"/></div>
     <Table :tableData="data" :columns="columnsConfig" />
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import Table from '@/components/ui-kit/Table.vue';
+import SearchInput from '@/components/ui-kit/SearchInput.vue';
+import NoFound from '@/components/ui-kit/NoFound.vue';
 import LibButton from 'primevue/button'
 import Avatar from 'primevue/avatar'
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router'
 import { useUsersListStore } from '@/stores/usersList'
-import { ref, h, watchEffect } from 'vue';
+import { ref, h, watchEffect, watch } from 'vue';
 
 const usersStore = useUsersListStore()
 const { users } = storeToRefs(usersStore)
@@ -28,6 +32,7 @@ interface DataRow {
   actionButton: string
 }
 
+const search = ref<String>('');
 const data = ref<DataRow[]>();
 const columnsConfig = ref([
   { field: 'img', header: '', sortable: false,
@@ -67,14 +72,13 @@ const columnsConfig = ref([
   }
 ]);
 
+watch(search, (newValue) => {
+  if (typeof newValue === 'string' && data.value) {
+    data.value = users.value?.filter(user => user?.firstName?.toLowerCase()?.includes(newValue.toLowerCase()) || user?.lastName?.toLowerCase().includes(newValue.toLowerCase()) || user?.email?.toLowerCase()?.includes(newValue.toLowerCase()))
+  }
+})
+
 watchEffect(() => {
   data.value = users.value;
 })
 </script>
-<style scoped>
-.about {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-}
-</style>

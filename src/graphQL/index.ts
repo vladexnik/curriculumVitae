@@ -181,7 +181,8 @@ export const SKILLS = gql`
     skills {
       id
       name
-      category
+      category_parent_name
+      category_name
     }
   }
 `

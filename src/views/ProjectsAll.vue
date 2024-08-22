@@ -1,14 +1,18 @@
 <template>
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4" v-if="data">
+    <div class="d-flex w-[300px] pl-3"><SearchInput v-model="search"/></div>
     <Table :tableData="data" :columns="columnsConfig"/>
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import Table from '@/components/ui-kit/Table.vue';
+import SearchInput from '@/components/ui-kit/SearchInput.vue';
+import NoFound from '@/components/ui-kit/NoFound.vue';
 import { storeToRefs } from 'pinia';
 import { useProjectsListStore } from '@/stores/projects'; 
-import { ref, watchEffect, h } from 'vue';
+import { ref, watchEffect, watch } from 'vue';
 
 const projectsStore = useProjectsListStore()
 const { projects } = storeToRefs(projectsStore)
@@ -21,8 +25,9 @@ interface DataRow {
     endrDate: string,
     description: string,
     environment: string[],
-  }
-// const internalRow = ref<unknown[]>()
+}
+
+const search = ref<String>('')
 const data = ref<DataRow[]>()
 const columnsConfig = ref([
   { field: 'name', header: 'Name', sortable: true },
@@ -31,9 +36,14 @@ const columnsConfig = ref([
   { field: 'endDate', header: 'End Date', sortable: true },
 ])
 
+watch(search, (newValue) => {
+  if (typeof newValue === 'string' && data.value) {
+    data.value = projects.value?.filter(project => project?.name?.toLowerCase()?.includes(newValue.toLowerCase()) )
+  }
+}) 
+
 watchEffect(() => {
   data.value = projects.value
-  // internalRow.value = data.value?.map(el => {id: el.id, description: el.description, })
 })
 </script>
 

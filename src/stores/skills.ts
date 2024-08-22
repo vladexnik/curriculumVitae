@@ -5,6 +5,7 @@ import { getSkills } from '@/service/commonData'
   interface DataRow {
     id: string,
     name: string,
+    type: string,
     category: string,
   }
 
@@ -19,7 +20,8 @@ export const useSkillsStore = defineStore('skills', () => {
         return {
           id: skill.id,
           name: skill.name,
-          category: skill.category,
+          type: skill.category_parent_name,
+          category: skill.category_name,
         }
       })
     }

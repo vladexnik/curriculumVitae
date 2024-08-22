@@ -10,9 +10,12 @@ import useVuelidate from '@vuelidate/core'
 import { required, email, minLength, helpers } from '@vuelidate/validators'
 import { REQUIRED_FIELD } from './ui-kit/constants/constants'
 
+import Dr from './ui-kit/Dr.vue'
+
 import LibButton from 'primevue/button'
 import Avatar from 'primevue/avatar'
 import { h } from 'vue'
+import NoFound from './ui-kit/NoFound.vue'
 
 interface DataRow {
   img: string,
@@ -179,5 +182,9 @@ const submitForm = async () => {
 
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4">
     <Table :tableData="data" :columns="columnsConfig" />
+  </div>
+
+  <div class="d-flex w-max-[500px] m-4 max-w-full gap-4">
+    <NoFound />
   </div>
 </template>
