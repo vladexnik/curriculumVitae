@@ -36,11 +36,12 @@ export const GET_USER_DATA_BY_ID = gql`
   }
 `
 
-export const ALL_CVS = gql`
-  query AllCvs {
+export const CVS = gql`
+  query Cvs {
     cvs {
       id
       name
+      education
       description
       user {
         email
@@ -147,12 +148,14 @@ export const PROJECTS = gql`
   query PROJECTS {
     projects {
       id
+      created_at
       name
       internal_name
       domain
-      team_size
       start_date
       end_date
+      description
+      environment
     }
   }
 `
@@ -182,7 +185,8 @@ export const SKILLS = gql`
     skills {
       id
       name
-      category
+      category_parent_name
+      category_name
     }
   }
 `
