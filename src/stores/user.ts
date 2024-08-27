@@ -23,7 +23,6 @@ export const useUserStore = defineStore('user', () => {
     })
     accessToken.value = data.login.access_token
     authedUser.value = data.login.user
-    console.log(authedUser.value)
     setCookies('accessToken', data.login.access_token)
     setCookies('refreshToken', data.login.refresh_token)
   }
