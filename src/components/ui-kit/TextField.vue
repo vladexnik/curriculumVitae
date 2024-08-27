@@ -7,6 +7,7 @@
         v-model="modelInput"
         class="field__input"
         :required="required"
+        :disabled="disabled"
         @focus="isFocused = true"
         @blur="isFocused = false"
       />
@@ -47,6 +48,7 @@ const props = defineProps<{
   required?: boolean
   type: String
   error?: String | Ref<string>
+  disabled?: boolean
 }>()
 const modelInput = defineModel({ type: String })
 
@@ -71,12 +73,12 @@ defineExpose({
   @apply flex border border-lightGrey;
 }
 
-.field__inner:hover {
+.field__inner:hover:not(:has(.field__input:disabled)) {
   @apply border-textMain;
 }
 
 .field__inner:focus-within {
-  @apply border-primary;
+  @apply !border-primary;
 }
 
 .field__inner .field__input {

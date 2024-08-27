@@ -22,9 +22,13 @@ export const GET_USER_DATA_BY_ID = gql`
   query USER($userId: ID!) {
     user(userId: $userId) {
       id
+      created_at
       email
       position_name
+      department_name
       profile {
+        first_name
+        last_name
         full_name
         avatar
       }

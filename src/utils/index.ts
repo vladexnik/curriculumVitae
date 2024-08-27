@@ -12,3 +12,9 @@ export const capitalizeFullName = (name: string) => {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ')
 }
+
+export const formatDate = (dateString: string) => {
+  if (!dateString) return ''
+  const date = new Date(+dateString)
+  return date.toDateString()
+}

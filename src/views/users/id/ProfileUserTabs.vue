@@ -3,13 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue'
+import { computed } from 'vue'
 import Tabs from '@/components/ui-kit/Tabs.vue'
 import type { TabsAuthT } from '@/models/models'
-import { useUserStore } from '@/stores/user'
 import { useRoute } from 'vue-router'
 
-const userStore = useUserStore()
 const route = useRoute()
 
 const currentUserId = computed(() => route.params.id)

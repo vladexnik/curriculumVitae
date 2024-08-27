@@ -47,8 +47,7 @@ const router = createRouter({
       meta: {
         isAuth: true,
         hasTabs: true,
-        breadcrumb: 'Employees',
-        hasBreadcrumbs: true
+        breadcrumb: 'Employees'
       },
       children: [
         {
@@ -89,20 +88,30 @@ const router = createRouter({
         breadcrumb: 'Projects'
       }
     },
+
     {
       path: '/cvs',
-      name: 'CVs',
-      children: [
-        { path: '', name: 'CVs', component: Cvs },
-        { path: ':id', name: 'CvId', component: CvId },
-        { path: ':id/preview', name: 'CvPreview', component: Preview },
-        { path: ':id/projects', name: 'CvProjects', component: Projects },
-        { path: ':id/skills', name: 'CvSkills', component: Skills }
-      ],
+      name: 'CVsList',
+      component: Cvs,
       meta: {
         isAuth: true,
         breadcrumb: 'CVs'
       }
+    },
+    {
+      path: '/cvs',
+      name: 'CVs',
+      meta: {
+        isAuth: true,
+        hasTabs: true,
+        breadcrumb: 'CVs'
+      },
+      children: [
+        { path: ':id', name: 'CvId', component: CvId },
+        { path: ':id/preview', name: 'CvPreview', component: Preview },
+        { path: ':id/projects', name: 'CvProjects', component: Projects },
+        { path: ':id/skills', name: 'CvSkills', component: Skills }
+      ]
     },
     {
       path: '/auth/login',
@@ -178,9 +187,10 @@ router.beforeEach(async (to, from, next) => {
     const accessToken = getCookies('accessToken')
     const refreshToken = getCookies('refreshToken')
 
-    if (to.path === '/') {
+    if (to.path === '/' && from.path !== '/users') {
       return next('/users')
     }
+
     if (requireAuth) {
       if (!accessToken && !refreshToken) next('/auth/login')
       if (!accessToken && refreshToken) {
