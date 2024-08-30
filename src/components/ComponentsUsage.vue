@@ -16,6 +16,7 @@ import LibButton from 'primevue/button'
 import Avatar from 'primevue/avatar'
 import { h } from 'vue'
 import NoFound from './ui-kit/NoFound.vue'
+import TextArea from './ui-kit/TextArea.vue'
 
 interface DataRow {
   img: string,
@@ -85,7 +86,8 @@ const columnsConfig = ref([
 const formData = reactive({
   email: '',
   password: '',
-  name: ''
+  name: '',
+  description: '',
 })
 
 const inputString = ref('')
@@ -109,7 +111,11 @@ const rules = computed(() => {
     password: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
       minLength: minLength(5)
-    }
+    },
+    description: {
+      required: helpers.withMessage(REQUIRED_FIELD, required),
+      minLength: minLength(5),
+    },
   }
 })
 
@@ -162,6 +168,14 @@ const submitForm = async () => {
     >
       Password
     </TextField>
+
+    <TextArea
+      v-model="formData.description"
+      type="text"
+      :error="v$.description.$errors[0]?.$message"
+    >
+      Description
+    </TextArea>
     <Button variant="contained" color="primary" type="submit">sign in</Button>
   </form>
 
