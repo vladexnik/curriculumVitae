@@ -20,10 +20,11 @@ export const getUserData = async (userId): Promise<any> => {
       query: GET_USER_DATA_BY_ID,
       variables: {
         userId
-      }
+      },
+      fetchPolicy: 'network-only'
     })
-    // console.log('getUserData:', data)
-    return data
+    console.log('getUserData:', data.user)
+    return data.user
   } catch (e) {
     console.error(JSON.stringify(e, null, 2))
   }

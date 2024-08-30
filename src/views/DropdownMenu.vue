@@ -125,7 +125,7 @@ const route = useRoute()
 const userStore = useUserStore()
 const isCollapsed = ref(false)
 
-const userData = computed(() => userStore.authedUser?.user)
+const userData = computed(() => userStore.authedUser)
 const fullName = computed(
   () => userData.value?.profile?.full_name || userData.value?.email || null
 )

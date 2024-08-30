@@ -15,7 +15,7 @@ export function useCookie() {
       let isValid: boolean | null = null
       const decoded = parseJwt(token)
       const expiredTimestamp = decoded['exp'] * 1000
-      const currentTimestamp = new Date().getTime() + 10000
+      const currentTimestamp = new Date().getTime() + 60000
       // console.log('current - ', new Date(currentTimestamp))
       // console.log('expireAt - ', new Date(expiredTimestamp))
       if (currentTimestamp > expiredTimestamp) {

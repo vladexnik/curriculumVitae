@@ -38,7 +38,7 @@ watch(modelValue, (newValue) => {
   if (newValue?.code === '') {
     modelValue.value = null
   }
-  if (newValue?.id === '') {
+  if (newValue?.id == '') {
     modelValue.value = null
   }
 })

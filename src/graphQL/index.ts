@@ -499,6 +499,10 @@ export const UPDATE_PROFILE = gql`
   mutation UpdateProfile($profile: UpdateProfileInput!) {
     updateProfile(profile: $profile) {
       id
+      first_name
+      last_name
+      full_name
+      avatar
     }
   }
 `
@@ -660,7 +664,8 @@ export const UPDATE_USER = gql`
     updateUser(user: $user) {
       id
       email
-      is_verified
+      department_name
+      position_name
     }
   }
 `

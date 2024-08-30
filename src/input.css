@@ -99,3 +99,7 @@ body {
 .p-select-option-label {
   @apply text-sm text-textMain;
 }
+
+.p-toast-message-icon {
+  @apply !hidden;
+}

@@ -22,7 +22,8 @@ export const useUserStore = defineStore('user', () => {
       }
     })
     accessToken.value = data.login.access_token
-    authedUser.value = data.login.user
+    authedUser.value = data.login
+    console.log(authedUser.value, 'log authed')
     setCookies('accessToken', data.login.access_token)
     setCookies('refreshToken', data.login.refresh_token)
   }
@@ -35,7 +36,7 @@ export const useUserStore = defineStore('user', () => {
       }
     })
     accessToken.value = data.signup.access_token
-    authedUser.value = data.signup.user
+    authedUser.value = data.signup
     setCookies('accessToken', data.login.access_token)
     setCookies('refreshToken', data.login.refresh_token)
   }
@@ -47,6 +48,20 @@ export const useUserStore = defineStore('user', () => {
     accessToken.value = ''
     isAuthed.value = false
     router.push('/auth/login')
+  }
+
+  const updateUserProfile = (user, profile) => {
+    authedUser.value = {
+      ...authedUser.value,
+      department_name: user.department_name || null,
+      position_name: user.position_name || null,
+      profile: {
+        ...authedUser.value.profile,
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        full_name: profile.first_name + ' ' + profile.last_name
+      }
+    }
   }
 
   const initializeAuth = async () => {
@@ -64,9 +79,11 @@ export const useUserStore = defineStore('user', () => {
         const userId = decoded['sub']
         const dataUser = await getUserData(userId)
         if (dataUser) {
+          console.log(dataUser)
           authedUser.value = dataUser
           accessToken.value = token
           isAuthed.value = true
+          console.log(authedUser.value, 'initial auth')
         } else {
           isAuthed.value = false
         }
@@ -85,6 +102,7 @@ export const useUserStore = defineStore('user', () => {
     signup,
     getCookies,
     logout,
-    initializeAuth
+    initializeAuth,
+    updateUserProfile
   }
 })
