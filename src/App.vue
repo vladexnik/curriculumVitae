@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import AppHeader from './views/AppHeader.vue'
-import DropdownMenu from './views/DropdownMenu.vue'
+import AppHeader from './components/AppHeader.vue'
+import DropdownMenu from './components/DropdownMenu.vue'
 import { useCookie } from './composables/cookies'
 import { useRoute } from 'vue-router'
 import { useThemeStore } from './stores/theme'
 import { useLangStore } from './stores/lang'
-import ProfileUserTabs from './views/users/id/ProfileUserTabs.vue'
-import BreadcrumbsUser from './views/BreadcrumbsUser.vue'
+import ProfileUserTabs from './components/ProfileUserTabs.vue'
+import BreadcrumbsUser from './components/BreadcrumbsUser.vue'
 import { onBeforeMount } from 'vue'
 import { useUserStore } from './stores/user'
 
-const { getCookies, setCookies } = useCookie()
+const { getCookies } = useCookie()
 
 const route = useRoute()
 const themeStore = useThemeStore()

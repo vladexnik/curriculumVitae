@@ -40,6 +40,19 @@ export const GET_USER_DATA_BY_ID = gql`
   }
 `
 
+export const GET_USER_NAME = gql`
+  query USER($userId: ID!) {
+    user(userId: $userId) {
+      email
+      profile {
+        first_name
+        last_name
+        full_name
+      }
+    }
+  }
+`
+
 export const CVS = gql`
   query Cvs {
     cvs {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Form from './Form.vue'
+import Form from '@/components/auth/Form.vue';
 
 const obj = {
   title: 'Welcome Back',

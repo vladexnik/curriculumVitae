@@ -34,7 +34,7 @@ import { computed, ref, watchEffect } from 'vue'
 import Breadcrumb from 'primevue/breadcrumb'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { getUserData } from '@/service/userData'
+import { getUserName } from '@/service/userData'
 import { capitalizeFullName } from '@/utils'
 
 const route = useRoute()
@@ -49,11 +49,11 @@ const breadcrumbFullname = ref(`${id.value}`)
 
 const fetchBreadcrumbName = async () => {
   if (id.value && id.value !== userId.value) {
-    const data = await getUserData(id.value)
-    // console.log(data.profile.full_name)
-    breadcrumbFullname.value = capitalizeFullName(data.profile.full_name)
+    const data = await getUserName(id.value)
+    breadcrumbFullname.value = capitalizeFullName(
+      data.profile.full_name || data.email
+    )
   } else {
-    // console.log(userStore.authedUser)
     breadcrumbFullname.value = capitalizeFullName(userFullname.value)
   }
 }

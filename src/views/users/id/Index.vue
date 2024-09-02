@@ -119,7 +119,7 @@ import { computed, onBeforeMount, reactive, ref, watchEffect } from 'vue'
 import { useUserStore } from '@/stores/user'
 import Button from '@/components/ui-kit/Button.vue'
 import TextField from '@/components/ui-kit/TextField.vue'
-import SelectComp, { type Option } from '@/components/ui-kit/SelectComp.vue'
+import SelectComp from '@/components/ui-kit/SelectComp.vue'
 import Avatar from 'primevue/avatar'
 import {
   getAllDepartments,
@@ -133,22 +133,23 @@ import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils'
 import { getUserData } from '@/service/userData'
 import type { Department, UploadAvatarInput } from 'cv-graphql'
-import { useToast } from 'primevue/usetoast'
+import { useToastNotifications } from '@/composables/useToast'
 
 const userStore = useUserStore()
 const route = useRoute()
 const id = computed(() => route.params.id as string)
 const userId = computed(() => userStore.authedUser?.id)
 const userData = ref<any>(null)
-const toast = useToast()
+const departments = ref<Department[]>([])
+const positions = ref<Department[]>([])
+const isDisabled = ref(false)
+
+const { showError, showSuccessUpload, showProfileUpdate } =
+  useToastNotifications()
 
 const formatedDate = computed(() =>
   userData.value ? formatDate(userData.value.created_at) : null
 )
-
-const departments = ref<Department[]>([])
-const positions = ref<Department[]>([])
-const isDisabled = ref(false)
 
 const formProfile = reactive({
   selectedDepartment: null as Department | null,
@@ -170,33 +171,6 @@ const disabledBtn = computed(() => {
       : false
   return bool
 })
-
-const showError = () => {
-  toast.add({
-    severity: 'error',
-    summary: 'Error Message',
-    detail: 'Failed to fetch image',
-    life: 3000
-  })
-}
-
-const showSuccessUpload = () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Success Message',
-    detail: 'Image was uploaded',
-    life: 3000
-  })
-}
-
-const showProfileUpdate = () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Success Message',
-    detail: 'Profile was updated',
-    life: 3000
-  })
-}
 
 const handleFileUpload = (event: Event) => {
   const input = event.target as HTMLInputElement
@@ -261,13 +235,13 @@ const handleDeleteAvatar = async () => {
 }
 
 const setAllFieldsData = async () => {
+  console.log(id.value, userId.value, userData.value)
+  if (userData.value && id.value !== userId.value) return
   try {
-    if (id.value && userId.value && id.value !== userId.value) {
-      console.log('another user think')
+    if (id.value && id.value !== userId.value) {
       userData.value = await getUserData(id.value)
       isDisabled.value = true
     } else {
-      console.log('same user think')
       userData.value = userStore.authedUser
       isDisabled.value = false
     }
@@ -299,6 +273,7 @@ const setSelectValues = () => {
 }
 
 const fetchSelectsData = async () => {
+  if (departments.value.length > 0 && positions.value.length > 0) return
   try {
     const [departmentsData, positionsData] = await Promise.all([
       getAllDepartments(),
@@ -339,12 +314,13 @@ const updateProfile = async () => {
   }
 }
 
-onBeforeMount(() => {
-  fetchSelectsData()
-    .then(() => {
-      setAllFieldsData()
-    })
-    .catch((error) => console.error(error))
+onBeforeMount(async () => {
+  try {
+    await fetchSelectsData()
+    await setAllFieldsData()
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 watchEffect(() => {
@@ -353,5 +329,3 @@ watchEffect(() => {
   }
 })
 </script>
-
-<style scoped></style>

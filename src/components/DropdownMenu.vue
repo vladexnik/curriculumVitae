@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MenuItem from '@/components/ui-kit/MenuItem.vue'
 import Avatar from 'primevue/avatar'

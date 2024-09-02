@@ -1,4 +1,3 @@
-// apollo
 import {
   ApolloClient,
   createHttpLink,
@@ -14,16 +13,26 @@ const httpLink = createHttpLink({
 
 const { getCookies } = useCookie()
 
-const authLink = setContext(async (request, { headers }) => {
-  let accessToken = getCookies('accessToken')
-  const refreshToken = getCookies('refreshToken')
+let isUpdatingToken: boolean = false
 
-  const isAuthRequest = ['UpdateToken', 'LOGIN', 'Signup'].includes(
+let tokenUpdatePromise: Promise<string | null> | null = null
+
+const authLink = setContext(async (request, { headers }) => {
+  let accessToken: string | null = getCookies('accessToken')
+  const refreshToken: string | null = getCookies('refreshToken')
+
+  const isAuthRequest: boolean = ['UpdateToken', 'LOGIN', 'Signup'].includes(
     `${request.operationName}`
   )
 
   if (!accessToken && !isAuthRequest) {
-    accessToken = await updateAccessToken()
+    if (!isUpdatingToken) {
+      isUpdatingToken = true
+      tokenUpdatePromise = updateAccessToken().finally(() => {
+        isUpdatingToken = false
+      })
+    }
+    accessToken = await tokenUpdatePromise
   }
 
   return {
