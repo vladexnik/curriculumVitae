@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import BreadcrumbsUser from './BreadcrumbsUser.vue'
+import BreadcrumbsUser from './BreadcrumbsUser.vue';
 </script>
 
 <style>

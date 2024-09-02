@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import AppHeader from './views/AppHeader.vue'
-import DropdownMenu from './views/DropdownMenu.vue'
+import AppHeader from './components/AppHeader.vue'
+import DropdownMenu from './components/DropdownMenu.vue'
 import { useCookie } from './composables/cookies'
 import { useRoute } from 'vue-router'
 import { useThemeStore } from './stores/theme'
 import { useLangStore } from './stores/lang'
-import ProfileUserTabs from './views/users/id/ProfileUserTabs.vue'
-import BreadcrumbsUser from './views/BreadcrumbsUser.vue'
+import ProfileUserTabs from './components/ProfileUserTabs.vue'
+import BreadcrumbsUser from './components/BreadcrumbsUser.vue'
+import { onBeforeMount } from 'vue'
+import { useUserStore } from './stores/user'
 
 const { getCookies } = useCookie()
 
 const route = useRoute()
 const themeStore = useThemeStore()
 const langStore = useLangStore()
+const refreshToken = getCookies('refreshToken')
 
 themeStore.$subscribe((mutation, state) => {
   themeStore.selectedTheme = state.selectedTheme
@@ -21,11 +24,15 @@ themeStore.$subscribe((mutation, state) => {
 langStore.$subscribe((mutation, state) => {
   langStore.selectedLang = state.selectedLang
 })
+
+onBeforeMount(async () => {
+  useUserStore().initializeAuth()
+})
 </script>
 
 <template>
   <div :class="{ wrapper: route.meta.isAuth }">
-    <AppHeader v-if="!route.meta.isAuth && !getCookies('refreshToken')" />
+    <AppHeader v-if="!route.meta.isAuth && !refreshToken" />
     <DropdownMenu v-if="route.meta.isAuth" />
     <main class="h-screen px-6">
       <header class="pl-5 pt-4" v-if="route.meta.isAuth">

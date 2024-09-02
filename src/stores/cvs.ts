@@ -33,7 +33,7 @@ export const useCVsStore = defineStore('cvs', () => {
   const getCVsByUserId = async (userId: string) => {
     const data = await getUserData(userId);
     if (data) {
-      const cvsArr = data.user.cvs.map(cv => {
+      const cvsArr = data.cvs.map(cv => {
         return {
         id: cv.id,
         name: cv.name,

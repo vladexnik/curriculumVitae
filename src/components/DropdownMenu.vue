@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import MenuItem from '@/components/ui-kit/MenuItem.vue'
 import Avatar from 'primevue/avatar'
@@ -125,7 +125,7 @@ const route = useRoute()
 const userStore = useUserStore()
 const isCollapsed = ref(false)
 
-const userData = computed(() => userStore.authedUser?.user)
+const userData = computed(() => userStore.authedUser)
 const fullName = computed(
   () => userData.value?.profile?.full_name || userData.value?.email || null
 )

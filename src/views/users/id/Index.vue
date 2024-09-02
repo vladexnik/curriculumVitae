@@ -3,49 +3,69 @@
     v-if="userData?.profile"
     class="mx-auto flex w-full max-w-[900px] flex-col justify-center px-6 pb-8"
   >
-    <div class="my-8 flex items-center justify-center gap-5">
-      <div class="relative">
+    <div class="my-8 flex items-center justify-center gap-10">
+      <div class="relative h-[120px] w-[120px]">
         <Avatar
           v-if="!userData.profile.avatar"
           label="V"
-          class="flex items-center justify-center text-bgColor"
+          class="text-bgColor"
+          style="
+            background-color: var(--color-primary);
+            height: 120px;
+            width: 120px;
+          "
           size="xlarge"
-          style="background-color: var(--color-primary)"
           shape="circle"
         />
         <Avatar
           v-else
           :image="userData.profile.avatar"
-          size="xlarge"
           shape="circle"
-          class="flex items-center justify-center"
+          style="height: 120px; width: 120px"
         />
         <i
-          class="pi pi-times absolute right-2 top-[-40px] cursor-pointer rounded-2xl p-2 text-textMain duration-300 hover:bg-optionHover"
+          v-if="userData.profile.avatar && !isDisabled"
+          @click.prevent="handleDeleteAvatar"
+          class="pi pi-times absolute left-28 top-[-140px] cursor-pointer rounded-2xl p-2 text-textMain duration-300 hover:bg-optionHover"
           style="font-size: 1rem"
           v-ripple
         ></i>
       </div>
-      <div>
-        <div>
-          <div class="flex items-center gap-3">
-            <i
-              class="pi pi-upload cursor-pointer rounded-2xl p-2 text-textMain duration-300 hover:bg-optionHover"
-              style="font-size: 1rem"
-              v-ripple
-            ></i>
-            <span class="text-xl font-medium text-white"
-              >Upload avatar image</span
-            >
-          </div>
-          <p class="text-textSec">png, jpg or gif no more than 0.5MB</p>
+      <label
+        v-if="!isDisabled"
+        class="mb-10 cursor-pointer"
+        for="upload"
+        @drop.prevent="handleDrop"
+        @dragover.prevent
+        @dragleave.prevent
+      >
+        <div class="flex items-center gap-3">
+          <i
+            class="pi pi-upload rounded-2xl p-2 text-textMain"
+            style="font-size: 1rem"
+          ></i>
+          <span class="text-xl font-medium text-textMain">
+            Upload avatar image
+          </span>
         </div>
-      </div>
+
+        <p class="text-textSec">png, jpg or gif no more than 0.5MB</p>
+        <input
+          id="upload"
+          type="file"
+          size="524288"
+          accept="image/png, image/jpeg, image/jpg, image/gif"
+          class="hidden h-5"
+          @change="handleFileUpload"
+          :disabled="isDisabled"
+        />
+      </label>
+      <Toast />
     </div>
     <div class="mb-16 flex flex-col items-center">
-      <h2 class="text-white">{{ userData.profile.full_name }}</h2>
+      <h2 class="text-textMain">{{ userData.profile.full_name }}</h2>
       <p class="mt-2 text-textSec">{{ userData.email }}</p>
-      <p class="text-white">
+      <p class="text-textMain">
         A member since
         {{ formatedDate }}
       </p>
@@ -56,14 +76,14 @@
       class="pointer-events-auto grid grid-cols-2 gap-x-8 gap-y-8"
     >
       <TextField
-        v-model="formProfile.firstName"
+        v-model.trim="formProfile.firstName"
         type="text"
         :disabled="isDisabled"
       >
         First Name
       </TextField>
       <TextField
-        v-model="formProfile.lastName"
+        v-model.trim="formProfile.lastName"
         type="text"
         :disabled="isDisabled"
       >
@@ -87,6 +107,7 @@
         variant="contained"
         color="primary"
         @click.prevent="updateProfile"
+        :disabled="disabledBtn"
       >
         Update
       </Button>
@@ -94,79 +115,147 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onBeforeMount, reactive, ref, watch, watchEffect } from 'vue'
+import { computed, onBeforeMount, reactive, ref, watchEffect } from 'vue'
 import { useUserStore } from '@/stores/user'
 import Button from '@/components/ui-kit/Button.vue'
 import TextField from '@/components/ui-kit/TextField.vue'
-import SelectComp, { type Option } from '@/components/ui-kit/SelectComp.vue'
+import SelectComp from '@/components/ui-kit/SelectComp.vue'
 import Avatar from 'primevue/avatar'
 import {
   getAllDepartments,
   getAllPositions,
-  updatePosition
+  updateProfileInput,
+  updateUserInput,
+  deleteAvatar,
+  uploadAvatar
 } from '@/service/profile'
 import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils'
 import { getUserData } from '@/service/userData'
+import type { Department, UploadAvatarInput } from 'cv-graphql'
+import { useToastNotifications } from '@/composables/useToast'
 
 const userStore = useUserStore()
 const route = useRoute()
 const id = computed(() => route.params.id as string)
-const userId = computed(() => userStore.authedUser?.user.id)
+const userId = computed(() => userStore.authedUser?.id)
 const userData = ref<any>(null)
-
-const formatedDate = computed(() =>
-  userData.value ? formatDate(userData.value.created_at) : ''
-)
-
-const departments = ref<Option[]>([])
-const positions = ref<Option[]>([])
+const departments = ref<Department[]>([])
+const positions = ref<Department[]>([])
 const isDisabled = ref(false)
 
+const { showError, showSuccessUpload, showProfileUpdate } =
+  useToastNotifications()
+
+const formatedDate = computed(() =>
+  userData.value ? formatDate(userData.value.created_at) : null
+)
+
 const formProfile = reactive({
-  selectedDepartment: null as Option | null,
-  selectedPosition: null as Option | null,
+  selectedDepartment: null as Department | null,
+  selectedPosition: null as Department | null,
   firstName: '',
   lastName: ''
 })
 
-const fetchUserData = async () => {
+const disabledBtn = computed(() => {
+  if (!userData.value) {
+    return false
+  }
+  const bool =
+    formProfile.firstName === userData.value.profile.first_name &&
+    formProfile.lastName === userData.value.profile.last_name &&
+    formProfile.selectedDepartment?.name == userData.value.department_name &&
+    formProfile.selectedPosition?.name == userData.value.position_name
+      ? true
+      : false
+  return bool
+})
+
+const handleFileUpload = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (input.files && input.files[0]) {
+    processFile(input.files[0])
+  }
+}
+
+const handleDrop = (event: DragEvent) => {
+  if (event.dataTransfer?.files && event.dataTransfer.files[0]) {
+    processFile(event.dataTransfer.files[0])
+  }
+}
+
+const processFile = (file: File) => {
+  const reader = new FileReader()
+  reader.onload = () => {
+    const base64 = reader.result as string
+    const size = file.size
+    const type = file.type
+    uploadImage({
+      userId: userId.value,
+      base64,
+      size,
+      type
+    })
+  }
+  reader.readAsDataURL(file)
+}
+
+const uploadImage = async (data: UploadAvatarInput) => {
+  try {
+    const imageString = await uploadAvatar(data)
+    userStore.authedUser = {
+      ...userStore.authedUser,
+      profile: {
+        ...userStore.authedUser?.profile,
+        avatar: imageString
+      }
+    }
+    if (imageString) {
+      showSuccessUpload()
+    }
+  } catch (e) {
+    console.log(e)
+    showError()
+  }
+}
+
+const handleDeleteAvatar = async () => {
+  await deleteAvatar({
+    userId: userId.value
+  })
+
+  userStore.authedUser = {
+    ...userStore.authedUser,
+    profile: {
+      ...userStore.authedUser?.profile,
+      avatar: null
+    }
+  }
+}
+
+const setAllFieldsData = async () => {
+  console.log(id.value, userId.value, userData.value)
+  if (userData.value && id.value !== userId.value) return
   try {
     if (id.value && id.value !== userId.value) {
-      const anotherUser = await getUserData(id.value)
-      userData.value = anotherUser.user
+      userData.value = await getUserData(id.value)
       isDisabled.value = true
     } else {
-      userData.value = userStore.authedUser?.user
+      userData.value = userStore.authedUser
       isDisabled.value = false
     }
-
-    formProfile.firstName = userData.value.profile.first_name
-    formProfile.lastName = userData.value.profile.last_name
     setSelectValues()
+    setTextFieldsValues()
   } catch (e) {
     console.error('Error fetching user data:', e)
   }
 }
 
-const fetchSelectsData = async () => {
-  try {
-    const [departmentsData, positionsData] = await Promise.all([
-      getAllDepartments(),
-      getAllPositions()
-    ])
-
-    departments.value = [
-      { name: 'No department', id: '' },
-      ...departmentsData.departments
-    ]
-    positions.value = [
-      { name: 'No position', id: '' },
-      ...positionsData.positions
-    ]
-    setSelectValues()
-  } catch (e) {
-    console.error('Error fetching departments and positions:', e)
+const setTextFieldsValues = () => {
+  if (userData.value?.profile) {
+    formProfile.firstName = userData.value.profile.first_name
+    formProfile.lastName = userData.value.profile.last_name
   }
 }
 
@@ -183,35 +272,60 @@ const setSelectValues = () => {
   }
 }
 
-watchEffect(() => {
-  console.log(formProfile.selectedPosition)
-})
+const fetchSelectsData = async () => {
+  if (departments.value.length > 0 && positions.value.length > 0) return
+  try {
+    const [departmentsData, positionsData] = await Promise.all([
+      getAllDepartments(),
+      getAllPositions()
+    ])
 
-const updateProfile = async () => {
-  await updatePosition(formProfile.selectedPosition)
+    departments.value = [
+      { name: 'No department', id: '' },
+      ...departmentsData.departments
+    ]
+    positions.value = [
+      { name: 'No position', id: '' },
+      ...positionsData.positions
+    ]
+  } catch (e) {
+    console.log('Error fetching departments and positions:', e)
+  }
 }
 
-watch(
-  () => formProfile.firstName,
-  (newValue) => {
-    formProfile.firstName = newValue.trim()
-  }
-)
+const updateProfile = async () => {
+  try {
+    const updatedProfile = await updateProfileInput({
+      userId: userId.value,
+      first_name: formProfile.firstName,
+      last_name: formProfile.lastName
+    })
 
-watch(
-  () => formProfile.lastName,
-  (newValue) => {
-    formProfile.lastName = newValue.trim()
-  }
-)
+    const updatedUser = await updateUserInput({
+      userId: userId.value,
+      departmentId: formProfile.selectedDepartment?.id || '',
+      positionId: formProfile.selectedPosition?.id || ''
+    })
 
-watchEffect(() => {
-  fetchUserData()
-})
+    userStore.updateUserProfile(updatedUser, updatedProfile)
+    showProfileUpdate()
+  } catch (e) {
+    console.log(e)
+  }
+}
 
 onBeforeMount(async () => {
-  await fetchSelectsData()
+  try {
+    await fetchSelectsData()
+    await setAllFieldsData()
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+watchEffect(() => {
+  if (userData.value) {
+    setAllFieldsData()
+  }
 })
 </script>
-
-<style scoped></style>

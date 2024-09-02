@@ -4,10 +4,14 @@ export const LOGIN_QUERY = gql`
   query LOGIN($auth: AuthInput!) {
     login(auth: $auth) {
       user {
-        email
         id
+        created_at
+        email
         position_name
+        department_name
         profile {
+          first_name
+          last_name
           full_name
           avatar
         }
@@ -37,6 +41,19 @@ export const GET_USER_DATA_BY_ID = gql`
         last_name
         full_name
         avatar
+      }
+    }
+  }
+`
+
+export const GET_USER_NAME = gql`
+  query USER($userId: ID!) {
+    user(userId: $userId) {
+      email
+      profile {
+        first_name
+        last_name
+        full_name
       }
     }
   }
@@ -101,7 +118,7 @@ export const DEPARTMENTS = gql`
 `
 
 export const LANGUAGES = gql`
-  query LANGUAGES {
+  query LANGUAGESS {
     languages {
       id
       name
@@ -258,9 +275,14 @@ export const SIGNUP = gql`
   mutation Signup($auth: AuthInput!) {
     signup(auth: $auth) {
       user {
-        email
         id
+        created_at
+        email
+        position_name
+        department_name
         profile {
+          first_name
+          last_name
           full_name
           avatar
         }
@@ -509,6 +531,10 @@ export const UPDATE_PROFILE = gql`
   mutation UpdateProfile($profile: UpdateProfileInput!) {
     updateProfile(profile: $profile) {
       id
+      first_name
+      last_name
+      full_name
+      avatar
     }
   }
 `
@@ -670,7 +696,8 @@ export const UPDATE_USER = gql`
     updateUser(user: $user) {
       id
       email
-      is_verified
+      department_name
+      position_name
     }
   }
 `

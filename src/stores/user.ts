@@ -6,7 +6,7 @@ import { LOGIN_QUERY, SIGNUP } from '../graphQL/index'
 import router from '@/router'
 import { useCookie } from '@/composables/cookies'
 import { parseJwt } from '@/utils'
-import { getUserData, updateAccessToken } from '@/service/userData'
+import { getUserData } from '@/service/userData'
 
 export const useUserStore = defineStore('user', () => {
   const accessToken = ref('')
@@ -22,7 +22,8 @@ export const useUserStore = defineStore('user', () => {
       }
     })
     accessToken.value = data.login.access_token
-    authedUser.value = data.login.user
+    authedUser.value = data.login
+    console.log(authedUser.value, 'log authed')
     setCookies('accessToken', data.login.access_token)
     setCookies('refreshToken', data.login.refresh_token)
   }
@@ -35,7 +36,7 @@ export const useUserStore = defineStore('user', () => {
       }
     })
     accessToken.value = data.signup.access_token
-    authedUser.value = data.signup.user
+    authedUser.value = data.signup
     setCookies('accessToken', data.login.access_token)
     setCookies('refreshToken', data.login.refresh_token)
   }
@@ -49,14 +50,24 @@ export const useUserStore = defineStore('user', () => {
     router.push('/auth/login')
   }
 
+  const updateUserProfile = (user, profile) => {
+    authedUser.value = {
+      ...authedUser.value,
+      department_name: user.department_name || null,
+      position_name: user.position_name || null,
+      profile: {
+        ...authedUser.value.profile,
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        full_name: profile.first_name + ' ' + profile.last_name
+      }
+    }
+  }
+
   const initializeAuth = async () => {
     const { getCookies } = useCookie()
-    let token = getCookies('accessToken')
+    const token = getCookies('accessToken')
     const refreshToken = getCookies('refreshToken')
-
-    if (!token && refreshToken) {
-      token = await updateAccessToken()
-    }
 
     if (token) {
       const decoded = parseJwt(token)
@@ -85,6 +96,7 @@ export const useUserStore = defineStore('user', () => {
     signup,
     getCookies,
     logout,
-    initializeAuth
+    initializeAuth,
+    updateUserProfile
   }
 })

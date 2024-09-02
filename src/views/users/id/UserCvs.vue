@@ -125,7 +125,7 @@ const currentUserId = computed(() => {
   return arr[arr.length - 2];
 });
 
-const enableEditMode = computed(() => authedUser.value.user.id == currentUserId.value);
+const enableEditMode = computed(() => authedUser.value.id == currentUserId.value);
 
 const updateData = (obj) => {
   data.value?.push(obj);

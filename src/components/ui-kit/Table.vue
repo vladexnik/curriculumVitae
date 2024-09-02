@@ -10,25 +10,33 @@
           <div v-if="col.customBody">
             <component :is="col.customBody(slotProps.data)" />
           </div>
-          <span v-else>{{ slotProps.data[col.field]}}</span>
+          <span v-else>{{ slotProps.data[col.field] }}</span>
           <template v-if="index === 0 && slotProps.data.description">
-              <div :colspan="columns.length" class="project-description-cell">
-                <div class="project-description">
+            <div :colspan="columns.length" class="project-description-cell">
+              <div class="project-description">
                 <div class="block">
-                  {{ slotProps.data.description ? slotProps.data.description : '' }}
+                  {{
+                    slotProps.data.description ? slotProps.data.description : ''
+                  }}
                 </div>
-                  <div class="inline-flex m-4 gap-4">
-                    <div class="border-2 rounded-[40px] border-slate-200 p-1" v-for="(env, idx) in slotProps.data.environment" :key="idx">
-                      {{env}}
-                    </div>
-                </div> 
+                <div class="m-4 inline-flex gap-4">
+                  <div
+                    class="rounded-[40px] border-2 border-slate-200 p-1"
+                    v-for="(env, idx) in slotProps.data.environment"
+                    :key="idx"
+                  >
+                    {{ env }}
+                  </div>
                 </div>
               </div>
-            </template>
-            <template v-else-if="slotProps.data.description">
-              <div :colspan="columns.length" class="project-description-cell"></div>
-            </template>
-
+            </div>
+          </template>
+          <template v-else-if="slotProps.data.description">
+            <div
+              :colspan="columns.length"
+              class="project-description-cell"
+            ></div>
+          </template>
         </template>
       </Column>
     </template>
@@ -36,21 +44,21 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, ref } from 'vue';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
+import { defineProps, computed, ref } from 'vue'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 
 interface ColumnConfig<T> {
-  field: keyof T;
-  header: string;
-  sortable?: boolean;
-  customBody?: (rowData: T) => any;
+  field: keyof T
+  header: string
+  sortable?: boolean
+  customBody?: (rowData: T) => any
 }
 
 const props = defineProps<{
-  tableData: Record<string, any>[];
-  columns: ColumnConfig<Record<string, any>>[];
-}>();
+  tableData: Record<string, any>[]
+  columns: ColumnConfig<Record<string, any>>[]
+}>()
 
 const uniqueKey = computed(() => props.tableData.length)
 </script>
@@ -72,5 +80,4 @@ const uniqueKey = computed(() => props.tableData.length)
   margin-bottom: 10px;
   font-size: 1rem;
 }
-
 </style>

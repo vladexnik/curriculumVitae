@@ -5,7 +5,7 @@
         <SearchInput v-model="search" class="h-9"/> 
       </div>
       <div class="d-flex w-[300px] pl-3 h-10">
-        <CreateCV @addedCV="updateData" :currentUserId="authedUser.user.id"/>
+        <CreateCV @addedCV="updateData" :currentUserId="authedUser.id"/>
       </div>
     </div>
     <Table :tableData="data" :columns="columnsConfig" />
@@ -47,11 +47,11 @@ const { deleleteCVbyId } = cvsStore;
 const router = useRouter()
 
 interface DataRow {
-  id: string,
-  name: string,
-  education: string,
-  description: string,
-  employee: string,
+  id: string
+  name: string
+  education: string
+  description: string
+  employee: string
   actionButton: string
 }
 
@@ -75,9 +75,12 @@ const columnsConfig = ref([
   { field: 'name', header: 'Name', sortable: true },
   { field: 'education', header: 'Education', sortable: true },
   { field: 'employee', header: 'Employee', sortable: true },
-  { field: 'actionButton', header: '', sortable: false,
+  {
+    field: 'actionButton',
+    header: '',
+    sortable: false,
     customBody: (rowData: DataRow) => {
-      if (rowData.employee == authedUser?.user?.email) {
+      if (rowData.employee == authedUser?.email) {
         const localMenu = ref(null);    
         const toggleMenu = (event) => {
           localMenu.value?.toggle(event);
@@ -125,7 +128,7 @@ const columnsConfig = ref([
           icon: 'pi pi-chevron-right',
           iconPos: 'right',
           class: 'p-button-text p-button-secondary custom-button',
-          style: { color: '#64748b', borderColor: 'transparent', },
+          style: { color: '#64748b', borderColor: 'transparent' },
           rounded: true,
           onClick: () => router.push(`/cvs/${rowData.id}`)
         })
@@ -133,7 +136,7 @@ const columnsConfig = ref([
       }
     }
   }
-]);
+])
 
 const updateData = (obj) => {
   data.value?.push(obj);
@@ -142,12 +145,14 @@ const updateData = (obj) => {
 
 watch(search, (newValue) => {
   if (typeof newValue === 'string' && data.value) {
-    data.value = cvs.value?.filter(cv => cv?.name?.toLowerCase()?.includes(newValue.toLowerCase()))
+    data.value = cvs.value?.filter((cv) =>
+      cv?.name?.toLowerCase()?.includes(newValue.toLowerCase())
+    )
   }
 })
 
 watchEffect(() => {
-  data.value = cvs.value;
+  data.value = cvs.value
 })
 </script>
 

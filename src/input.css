@@ -112,3 +112,6 @@ body {
 .p-dialog .p-dialog-footer {
   @apply !bg-bgColor !text-textSec;
 }
+.p-toast-message-icon {
+  @apply !hidden;
+}

@@ -57,7 +57,7 @@ import {
   REQUIRED_FIELD,
   INVALID_EMAIL
 } from '@/components/ui-kit/constants/constants'
-import { showErrorAfterSubmit } from '@/components/ui-kit/constants/constants'
+import { showErrorAfterSubmit } from '@/utils'
 import type { ApolloError } from '@apollo/client'
 
 const route = useRoute()
