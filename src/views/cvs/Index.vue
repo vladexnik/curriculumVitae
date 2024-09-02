@@ -10,19 +10,7 @@
     </div>
     <Table :tableData="data" :columns="columnsConfig" />
     <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
-  
-<Dialog v-model:visible="openDeleteConfirmation" modal header="Delete CV" :style="{ width: '45rem' }">
-  <p>Are you sure you want to delete CV {{ cvToDelete?.name }}</p>
-
-  <div class="flex justify-end gap-5">
-    <div class="w-[150px]">
-      <Button variant="text" color="secondary" @click="reset">Cancel</Button>
-    </div>
-    <div class="w-[150px]">
-      <Button variant="contained" color="primary" @click="deleteCV">Confirm</Button>
-    </div>
-  </div>
-</Dialog>
+    <RemoveModal type="CV" :name="cvToDelete?.name" :openDeleteConfirmation="openDeleteConfirmation" @reset="reset" @remove="deleteCV"/>  
   </div>
 </template>
 
@@ -33,6 +21,7 @@ import SearchInput from '@/components/ui-kit/SearchInput.vue';
 import NoFound from '@/components/ui-kit/NoFound.vue';
 import LibButton from 'primevue/button'
 import Menu from 'primevue/menu';
+import RemoveModal from '@/components/ui-kit/RemoveModal.vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router'
 import { useCVsStore } from '@/stores/cvs'
@@ -80,7 +69,7 @@ const columnsConfig = ref([
     header: '',
     sortable: false,
     customBody: (rowData: DataRow) => {
-      if (rowData.employee == authedUser?.email) {
+      if (rowData.employee == authedUser.value?.email) {
         const localMenu = ref(null);    
         const toggleMenu = (event) => {
           localMenu.value?.toggle(event);
