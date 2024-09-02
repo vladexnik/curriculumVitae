@@ -8,3 +8,8 @@
 <script setup lang="ts">
 import Button from './Button.vue';
 </script>
+<style scoped>
+div {
+  @apply bg-bgColor text-textSec;
+}
+</style>

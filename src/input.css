@@ -99,3 +99,16 @@ body {
 .p-select-option-label {
   @apply text-sm text-textMain;
 }
+
+.p-dialog {
+  @apply !bg-bgColor !text-textSec !border-none;
+}
+.p-dialog .p-dialog-header {
+  @apply !bg-bgColor !text-textSec;
+}
+.p-dialog .p-dialog-content {
+  @apply !bg-bgColor !text-textSec;
+}
+.p-dialog .p-dialog-footer {
+  @apply !bg-bgColor !text-textSec;
+}

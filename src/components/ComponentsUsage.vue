@@ -10,7 +10,7 @@ import useVuelidate from '@vuelidate/core'
 import { required, email, minLength, helpers } from '@vuelidate/validators'
 import { REQUIRED_FIELD } from './ui-kit/constants/constants'
 
-import Dr from './ui-kit/Dr.vue'
+import Dr from './ui-kit/DraftTable.vue'
 
 import LibButton from 'primevue/button'
 import Avatar from 'primevue/avatar'
