@@ -41,7 +41,7 @@ const route = useRoute()
 
 const userStore = useUserStore()
 const userFullname = computed(
-  () => userStore.authedUser?.profile.full_name || userStore.authedUser?.email
+  () => userStore.authedUser?.profile?.full_name || userStore.authedUser?.email
 )
 const userId = computed(() => userStore.authedUser?.id)
 const id = computed(() => route.params.id)
