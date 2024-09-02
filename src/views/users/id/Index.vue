@@ -263,9 +263,11 @@ const handleDeleteAvatar = async () => {
 const setAllFieldsData = async () => {
   try {
     if (id.value && userId.value && id.value !== userId.value) {
+      console.log('another user think')
       userData.value = await getUserData(id.value)
       isDisabled.value = true
     } else {
+      console.log('same user think')
       userData.value = userStore.authedUser
       isDisabled.value = false
     }

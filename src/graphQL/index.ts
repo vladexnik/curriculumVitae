@@ -4,10 +4,14 @@ export const LOGIN_QUERY = gql`
   query LOGIN($auth: AuthInput!) {
     login(auth: $auth) {
       user {
-        email
         id
+        created_at
+        email
         position_name
+        department_name
         profile {
+          first_name
+          last_name
           full_name
           avatar
         }
@@ -95,7 +99,7 @@ export const DEPARTMENTS = gql`
 `
 
 export const LANGUAGES = gql`
-  query LANGUAGES {
+  query LANGUAGESS {
     languages {
       id
       name
@@ -252,9 +256,14 @@ export const SIGNUP = gql`
   mutation Signup($auth: AuthInput!) {
     signup(auth: $auth) {
       user {
-        email
         id
+        created_at
+        email
+        position_name
+        department_name
         profile {
+          first_name
+          last_name
           full_name
           avatar
         }

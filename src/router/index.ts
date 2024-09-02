@@ -25,8 +25,6 @@ import Settings from '../views/Settings.vue'
 import AllSkills from '../views/AllSkills.vue'
 import Languages from '@/views/Languages.vue'
 import { useCookie } from '@/composables/cookies'
-import { useUserStore } from '@/stores/user'
-import { updateAccessToken } from '@/service/userData'
 import ComponentsUsage from '@/components/ComponentsUsage.vue'
 
 const router = createRouter({
@@ -187,9 +185,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   try {
-    const userStore = useUserStore()
-    userStore.initializeAuth()
-
     const requireAuth = to.meta.isAuth
     const { getCookies } = useCookie()
     const accessToken = getCookies('accessToken')
@@ -202,21 +197,11 @@ router.beforeEach(async (to, from, next) => {
     if (requireAuth) {
       if (!accessToken && !refreshToken) next('/auth/login')
       if (!accessToken && refreshToken) {
+        console.log('no access , but have refresh')
         next()
       } else next()
     } else {
       if (!accessToken && !refreshToken) next()
-      if (!accessToken && !refreshToken) next()
-      if (!accessToken && refreshToken) {
-        console.log('no access')
-        const updatedAccessToken: unknown = await updateAccessToken()
-        if (updatedAccessToken) {
-          next(from.fullPath)
-        } else {
-          next()
-        }
-        return
-      } else next(from.fullPath)
     }
   } catch (e) {
     console.log(e)

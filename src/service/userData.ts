@@ -5,13 +5,16 @@ import { useCookie } from '@/composables/cookies'
 const { setCookies } = useCookie()
 
 export const updateAccessToken = async () => {
-  const { data } = await apolloClient.mutate({
-    mutation: UPDATE_ACCESS_TOKEN
-  })
-  console.log(data)
-  setCookies('accessToken', data.updateToken?.access_token)
-  console.log('UPDATED TOKEN:', data.updateToken?.access_token, data)
-  return data.updateToken?.access_token
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: UPDATE_ACCESS_TOKEN
+    })
+    setCookies('accessToken', data.updateToken?.access_token)
+    console.log('UPDATED TOKEN:', data.updateToken?.access_token, data)
+    return data.updateToken?.access_token
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 export const getUserData = async (userId): Promise<any> => {

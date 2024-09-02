@@ -8,28 +8,24 @@ export function useCookie() {
     cookies.set(keyName, data)
   }
 
+  const removeCookies = (keyName: string) => {
+    cookies.remove(keyName)
+  }
+
   const getCookies = (keyName: string) => {
     const token = cookies.get(keyName)
 
     if (token && keyName === 'accessToken') {
-      let isValid: boolean | null = null
       const decoded = parseJwt(token)
       const expiredTimestamp = decoded['exp'] * 1000
-      const currentTimestamp = new Date().getTime() + 60000
+      const currentTimestamp = new Date().getTime() + 20000
       // console.log('current - ', new Date(currentTimestamp))
       // console.log('expireAt - ', new Date(expiredTimestamp))
       if (currentTimestamp > expiredTimestamp) {
-        isValid = false
-      } else {
-        isValid = true
+        removeCookies(keyName)
       }
-      return isValid ? token : null
     }
     return token
-  }
-
-  const removeCookies = (keyName: string) => {
-    cookies.remove(keyName)
   }
 
   return {
