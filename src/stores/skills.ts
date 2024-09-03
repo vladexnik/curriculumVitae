@@ -9,9 +9,18 @@ import { getSkills } from '@/service/commonData'
     category: string,
   }
 
+  enum Mastery {
+    Novice,
+    Advanced,
+    Competent,
+    Proficient,
+    Expert,
+  }
+
 export const useSkillsStore = defineStore('skills', () => {
 
   const skills = ref<DataRow[]>();
+  const skillsProficiency = ref(Object.values(Mastery).filter(el => (typeof el == 'string')));
 
   const getSkillsList = async () => {
     const data = await getSkills();
@@ -31,6 +40,7 @@ export const useSkillsStore = defineStore('skills', () => {
     if (!skills.value) await getSkillsList();
   })
   return {
-    skills
+    skills,
+    skillsProficiency
   }
 })
