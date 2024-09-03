@@ -84,6 +84,7 @@ const invokeModal = (_, info) => {
     field1: { name: info.name},
     field2: { name: info.proficiency},
   }
+  console.log('LAng', info)
 }
 
 onMounted(async () => {
