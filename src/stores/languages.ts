@@ -1,6 +1,7 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getLanguages } from '@/service/commonData'
+import { getUserData } from '@/service/userData'
 
   interface DataRow {
     id: string,
@@ -24,6 +25,7 @@ export const useLanguagesStore = defineStore('languages', () => {
   const languages = ref<DataRow[]>();
   const langProficiency = ref(Object.values(Proficiency).filter(el => (typeof el == 'string')));
 
+
   const getLanguagesList = async () => {
     const data = await getLanguages();
     if (data) {
@@ -37,12 +39,22 @@ export const useLanguagesStore = defineStore('languages', () => {
       })
     }
   }
+
+  const getLangListByUserId = async (userId) => {
+    const data = await getUserData(userId);
+    if (data) {
+      const langArr = data.profile.languages
+      return langArr;
+    }
+
+  }
   
   onMounted(async() => {
     if (!languages.value) await getLanguagesList();
   })
   return {
     languages,
-    langProficiency
+    langProficiency,
+    getLangListByUserId
   }
 })

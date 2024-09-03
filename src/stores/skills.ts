@@ -1,8 +1,9 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getSkills } from '@/service/commonData'
-
-  interface DataRow {
+import { getUserData } from '@/service/userData'
+  
+interface DataRow {
     id: string,
     name: string,
     type: string,
@@ -35,12 +36,21 @@ export const useSkillsStore = defineStore('skills', () => {
       })
     }
   }
+
+  const getSkillListByUserId = async (userId) => {
+    const data = await getUserData(userId);
+    if (data) {
+      const skillArr = data.profile.skills
+      return skillArr;
+    }
+  }
   
   onMounted(async() => {
     if (!skills.value) await getSkillsList();
   })
   return {
     skills,
-    skillsProficiency
+    skillsProficiency,
+    getSkillListByUserId
   }
 })

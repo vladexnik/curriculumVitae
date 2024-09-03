@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import Button from '@/components/ui-kit/Button.vue';
 import Dialog from 'primevue/dialog';
-import SelectComp from './ui-kit/SelectComp.vue';
+import SelectComp from '@/components/ui-kit/SelectComp.vue';
 import { computed, toRefs, ref, watchEffect, watch } from 'vue';
 import type { Option } from '@/components/ui-kit/SelectComp.vue'
 
