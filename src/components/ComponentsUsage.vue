@@ -3,16 +3,91 @@ import Button from './ui-kit/Button.vue'
 import TextField from './ui-kit/TextField.vue'
 import SearchInput from './ui-kit/SearchInput.vue'
 import SelectComp from '../components/ui-kit/SelectComp.vue'
+import Table from './ui-kit/Table.vue'
 import type { Option } from '../components/ui-kit/SelectComp.vue'
 import { reactive, ref, watchEffect, computed, onMounted } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, email, minLength, helpers } from '@vuelidate/validators'
 import { REQUIRED_FIELD } from './ui-kit/constants/constants'
 
+import Dr from './ui-kit/DraftTable.vue'
+
+import LibButton from 'primevue/button'
+import Avatar from 'primevue/avatar'
+import { h } from 'vue'
+import NoFound from './ui-kit/NoFound.vue'
+import TextArea from './ui-kit/TextArea.vue'
+
+interface DataRow {
+  img: string,
+  firstName: string,
+  lastName: string,
+  department: string,
+  position: string,
+  actionButton: string
+}
+
+const data = ref<DataRow[]>([
+{
+  img: "https://www.gravatar.com/avatar/05dfd4b41340d09cae045235eb0893c3?d=mp",
+  firstName: 'Ahel',
+  lastName: "Ark",
+  department: ".NET",
+  position: "Enginner",
+  actionButton: "",
+},
+{
+  img: "",
+  firstName: 'Marco',
+  lastName: "Blandy",
+  department: "BA",
+  position: "BA",
+  actionButton: "actionButton",
+}
+]);
+
+const columnsConfig = ref([
+  { field: 'img', header: '', sortable: false,
+  customBody: (rowData: DataRow) => {
+      const obj = {
+        class: 'custom-avatar', 
+        style: { backgroundColor: '#ece9fc', color: '#2a1261' },
+        shape: 'circle',
+        size: 'large'
+      };
+      if (rowData.img) {
+        obj['image'] = rowData.img;
+      } else {
+        obj['icon'] = "pi pi-user";
+      }
+      return h(Avatar, obj);
+    }
+   },
+  { field: 'firstName', header: 'First Name', sortable: false },
+  { field: 'lastName', header: 'Last Name', sortable: false },
+  { field: 'department', header: 'Department', sortable: true },
+  { field: 'position', header: 'Position', sortable: false },
+  { field: 'actionButton', header: '', sortable: false,
+    customBody: (rowData: DataRow) => {
+      return h('div', [
+        h(LibButton, {
+          icon: 'pi pi-chevron-right',
+          iconPos: 'right',
+          class: 'p-button-text p-button-secondary custom-button',
+          style: { color: '#64748b', borderColor: 'transparent', },
+          rounded: true,
+          onClick: () => alert(`Button clicked for ${rowData.firstName}`)
+        })
+      ]);
+    }
+  }
+]);
+
 const formData = reactive({
   email: '',
   password: '',
-  name: ''
+  name: '',
+  description: '',
 })
 
 const inputString = ref('')
@@ -36,7 +111,11 @@ const rules = computed(() => {
     password: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
       minLength: minLength(5)
-    }
+    },
+    description: {
+      required: helpers.withMessage(REQUIRED_FIELD, required),
+      minLength: minLength(5),
+    },
   }
 })
 
@@ -89,6 +168,14 @@ const submitForm = async () => {
     >
       Password
     </TextField>
+
+    <TextArea
+      v-model="formData.description"
+      type="text"
+      :error="v$.description.$errors[0]?.$message"
+    >
+      Description
+    </TextArea>
     <Button variant="contained" color="primary" type="submit">sign in</Button>
   </form>
 
@@ -105,5 +192,17 @@ const submitForm = async () => {
       :options="cities"
       placeholder="Select the country"
     />
+  </div>
+
+  <div class="d-flex w-max-[500px] m-4 max-w-full gap-4">
+    <Table :tableData="data" :columns="columnsConfig" />
+  </div>
+
+  <div class="d-flex w-max-[500px] m-4 max-w-full gap-4">
+    <NoFound />
+  </div>
+
+  <div class="d-flex w-max-[500px] m-4 max-w-full gap-4">
+    <Dr />
   </div>
 </template>

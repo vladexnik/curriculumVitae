@@ -1,7 +1,8 @@
 <template>
   <div class="field">
     <div :class="['field__inner', { 'border-error': error }]">
-      <input
+      <textarea
+        rows="7"
         :type="isPasswordField && !showPassword ? 'password' : 'text'"
         ref="input"
         v-model="modelInput"
@@ -86,7 +87,7 @@ defineExpose({
 }
 
 .field__label {
-  @apply pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-textSec transition-all duration-300 ease-in-out;
+  @apply pointer-events-none absolute left-3.5 top-8 -translate-y-1/2 text-sm font-medium text-textSec transition-all duration-300 ease-in-out;
 }
 
 .field__input:focus ~ .field__label,

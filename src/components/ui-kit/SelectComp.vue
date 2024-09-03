@@ -8,6 +8,7 @@
           :options="options"
           optionLabel="name"
           class="custom-select"
+          :disabled="disabled"
         />
         <label for="dd-option">{{ placeholder }}</label>
       </FloatLabel>
@@ -21,18 +22,23 @@ import FloatLabel from 'primevue/floatlabel'
 
 export type Option = {
   name: string
-  code: string
+  code?: string
+  id?: string
 }
 
 const modelValue = defineModel<Option | null>()
 
 defineProps<{
-  options: Option[]
+  options: Option[] | null
   placeholder: string
+  disabled?: boolean
 }>()
 
 watch(modelValue, (newValue) => {
   if (newValue?.code === '') {
+    modelValue.value = null
+  }
+  if (newValue?.id == '') {
     modelValue.value = null
   }
 })
@@ -40,7 +46,7 @@ watch(modelValue, (newValue) => {
 
 <style scoped>
 .custom-select {
-  @apply flex h-12 items-center rounded-none border-lightGrey bg-transparent active:border-primary;
+  @apply flex h-[53px] items-center rounded-none border-lightGrey bg-transparent active:border-primary;
 }
 
 .md\:w-56 {
@@ -66,11 +72,16 @@ watch(modelValue, (newValue) => {
   @apply hover:border-textMain;
 }
 
-:deep(.custom-select .p-select-label) {
+:deep(.custom-select .p-select-label),
+:deep(.p-select.p-disabled .p-select-label) {
   @apply text-sm text-textMain;
 }
 
 :deep(.p-select.p-select-open .p-select-dropdown) {
   @apply rotate-180;
+}
+
+.p-select.p-disabled {
+  @apply bg-transparent;
 }
 </style>

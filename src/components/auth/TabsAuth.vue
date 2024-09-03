@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import Tabs from '../../components/ui-kit/Tabs.vue'
+import Tabs from '../ui-kit/Tabs.vue';
 import type { TabsAuthT } from '@/models/models'
 
 const tabsAuth = ref<TabsAuthT[]>([

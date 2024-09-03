@@ -4,10 +4,14 @@ export const LOGIN_QUERY = gql`
   query LOGIN($auth: AuthInput!) {
     login(auth: $auth) {
       user {
-        email
         id
+        created_at
+        email
         position_name
+        department_name
         profile {
+          first_name
+          last_name
           full_name
           avatar
         }
@@ -22,9 +26,19 @@ export const GET_USER_DATA_BY_ID = gql`
   query USER($userId: ID!) {
     user(userId: $userId) {
       id
+      created_at
       email
       position_name
+      department_name
+      cvs {
+        id
+        name
+        education
+        description
+      }
       profile {
+        first_name
+        last_name
         full_name
         avatar
       }
@@ -32,11 +46,25 @@ export const GET_USER_DATA_BY_ID = gql`
   }
 `
 
-export const ALL_CVS = gql`
-  query AllCvs {
+export const GET_USER_NAME = gql`
+  query USER($userId: ID!) {
+    user(userId: $userId) {
+      email
+      profile {
+        first_name
+        last_name
+        full_name
+      }
+    }
+  }
+`
+
+export const CVS = gql`
+  query Cvs {
     cvs {
       id
       name
+      education
       description
       user {
         email
@@ -90,7 +118,7 @@ export const DEPARTMENTS = gql`
 `
 
 export const LANGUAGES = gql`
-  query LANGUAGES {
+  query LANGUAGESS {
     languages {
       id
       name
@@ -143,12 +171,14 @@ export const PROJECTS = gql`
   query PROJECTS {
     projects {
       id
+      created_at
       name
       internal_name
       domain
-      team_size
       start_date
       end_date
+      description
+      environment
     }
   }
 `
@@ -178,7 +208,8 @@ export const SKILLS = gql`
     skills {
       id
       name
-      category
+      category_parent_name
+      category_name
     }
   }
 `
@@ -244,9 +275,14 @@ export const SIGNUP = gql`
   mutation Signup($auth: AuthInput!) {
     signup(auth: $auth) {
       user {
-        email
         id
+        created_at
+        email
+        position_name
+        department_name
         profile {
+          first_name
+          last_name
           full_name
           avatar
         }
@@ -376,6 +412,8 @@ export const CREATE_CV = gql`
     createCv(cv: $cv) {
       id
       name
+      education
+      description
       user {
         id
       }
@@ -397,7 +435,9 @@ export const UPDATE_CV = gql`
 
 export const DELETE_CV = gql`
   mutation DeleteCv($cv: DeleteCvInput!) {
-    deleteCv(cv: $cv)
+    deleteCv(cv: $cv) {
+      affected
+    }
   }
 `
 
@@ -491,6 +531,10 @@ export const UPDATE_PROFILE = gql`
   mutation UpdateProfile($profile: UpdateProfileInput!) {
     updateProfile(profile: $profile) {
       id
+      first_name
+      last_name
+      full_name
+      avatar
     }
   }
 `
@@ -652,7 +696,8 @@ export const UPDATE_USER = gql`
     updateUser(user: $user) {
       id
       email
-      is_verified
+      department_name
+      position_name
     }
   }
 `

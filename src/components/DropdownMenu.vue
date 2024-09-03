@@ -125,7 +125,7 @@ const route = useRoute()
 const userStore = useUserStore()
 const isCollapsed = ref(false)
 
-const userData = computed(() => userStore.authedUser?.user)
+const userData = computed(() => userStore.authedUser)
 const fullName = computed(
   () => userData.value?.profile?.full_name || userData.value?.email || null
 )
@@ -143,10 +143,9 @@ const secondaryMenuItems = ref([
   { label: 'Skills', icon: 'pi pi-chart-line', route: '/skills' },
   { label: 'Languages', icon: 'pi pi-globe', route: '/languages' }
 ])
-
 const modalMenuItems = ref([
   {
-    route: '/users',
+    route: computed(() => `/users/${userData.value.id}`),
     label: 'Profile',
     icon: 'pi pi-user'
   },
