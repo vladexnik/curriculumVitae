@@ -1,23 +1,38 @@
 <template>
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4" v-if="data">
-    <div class="d-flex w-[300px] pl-3"><SearchInput v-model="search" /></div>
+    <div class="inline-flex justify-between w-full">
+      <div class="d-flex w-[300px] pl-3" >
+        <SearchInput v-model="search" class="h-9"/> 
+      </div>
+      <div class="d-flex w-[300px] pl-3 h-10">
+        <CreateCV @addedCV="updateData" :currentUserId="authedUser.id"/>
+      </div>
+    </div>
     <Table :tableData="data" :columns="columnsConfig" />
-    <NoFound @resetSearch="() => (search = '')" v-if="search && !data.length" />
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
+    <RemoveModal type="CV" :name="cvToDelete?.name" :openDeleteConfirmation="openDeleteConfirmation" @reset="reset" @remove="deleteCV"/>  
   </div>
 </template>
 
 <script setup lang="ts">
-import Table from '@/components/ui-kit/Table.vue'
-import SearchInput from '@/components/ui-kit/SearchInput.vue'
-import NoFound from '@/components/ui-kit/NoFound.vue'
+import CreateCV from '@/components/ui-kit/CreateCV.vue';
+import Table from '@/components/ui-kit/Table.vue';
+import SearchInput from '@/components/ui-kit/SearchInput.vue';
+import NoFound from '@/components/ui-kit/NoFound.vue';
 import LibButton from 'primevue/button'
-import { storeToRefs } from 'pinia'
+import Menu from 'primevue/menu';
+import RemoveModal from '@/components/ui-kit/RemoveModal.vue';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router'
 import { useCVsStore } from '@/stores/cvs'
-import { ref, h, watchEffect, watch } from 'vue'
+import { useUserStore } from '@/stores/user';
+import { ref, h, watchEffect, watch } from 'vue';
 
+const userStore = useUserStore()
+const { authedUser } = storeToRefs(userStore)
 const cvsStore = useCVsStore()
 const { cvs } = storeToRefs(cvsStore)
+const { deleleteCVbyId } = cvsStore;
 const router = useRouter()
 
 interface DataRow {
@@ -29,8 +44,22 @@ interface DataRow {
   actionButton: string
 }
 
-const search = ref<String>('')
-const data = ref<DataRow[]>()
+const openDeleteConfirmation = ref(false)
+const cvToDelete = ref()
+const reset = () => {
+  cvToDelete.value = null
+  openDeleteConfirmation.value = false
+}
+const deleteCV = async () => {
+  await deleleteCVbyId(cvToDelete.value.id)
+  data.value = data.value?.filter(cv => cv.id !== cvToDelete.value.id)
+  cvs.value = data.value
+  cvToDelete.value = null
+  openDeleteConfirmation.value = false
+}
+
+const search = ref<String>('');
+const data = ref<DataRow[]>();
 const columnsConfig = ref([
   { field: 'name', header: 'Name', sortable: true },
   { field: 'education', header: 'Education', sortable: true },
@@ -40,7 +69,50 @@ const columnsConfig = ref([
     header: '',
     sortable: false,
     customBody: (rowData: DataRow) => {
-      return h('div', [
+      if (rowData.employee == authedUser.value?.email) {
+        const localMenu = ref(null);    
+        const toggleMenu = (event) => {
+          localMenu.value?.toggle(event);
+        };
+
+        const items = [
+          { label: 'Details', command: () => router.push(`/cvs/${rowData.id}`) },
+          { label: 'Delete CV', command: () => {
+            cvToDelete.value = {
+              id: rowData.id,
+              name: rowData.name,
+              education: rowData.education,
+              description: rowData.description,
+            }
+            openDeleteConfirmation.value = true
+          } },
+        ];
+
+        return h(
+          'div',
+          { class: 'card flex justify-center' },
+          [
+            h(LibButton, {
+              type: 'button',
+              icon: 'pi pi-ellipsis-v',
+              class: 'p-button-text p-button-secondary custom-button',
+              style: { color: '#64748b', borderColor: 'transparent' },
+              rounded: true,
+              onClick: toggleMenu,
+              'aria-haspopup': 'true',
+              'aria-controls': `menu_${rowData.id}`,
+            }),
+            h(Menu, {
+              ref: localMenu,
+              id: `menu_${rowData.id}`,
+              model: items,
+              popup: true,
+              appendTo: 'body',
+            })
+          ]
+        );
+      } else {
+        return h('div', [
         h(LibButton, {
           icon: 'pi pi-chevron-right',
           iconPos: 'right',
@@ -49,10 +121,16 @@ const columnsConfig = ref([
           rounded: true,
           onClick: () => router.push(`/cvs/${rowData.id}`)
         })
-      ])
+      ]);
+      }
     }
   }
 ])
+
+const updateData = (obj) => {
+  data.value?.push(obj);
+  cvs.value = data.value;
+}
 
 watch(search, (newValue) => {
   if (typeof newValue === 'string' && data.value) {

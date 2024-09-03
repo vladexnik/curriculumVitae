@@ -30,6 +30,12 @@ export const GET_USER_DATA_BY_ID = gql`
       email
       position_name
       department_name
+      cvs {
+        id
+        name
+        education
+        description
+      }
       profile {
         first_name
         last_name
@@ -406,6 +412,8 @@ export const CREATE_CV = gql`
     createCv(cv: $cv) {
       id
       name
+      education
+      description
       user {
         id
       }
@@ -427,7 +435,9 @@ export const UPDATE_CV = gql`
 
 export const DELETE_CV = gql`
   mutation DeleteCv($cv: DeleteCvInput!) {
-    deleteCv(cv: $cv)
+    deleteCv(cv: $cv) {
+      affected
+    }
   }
 `
 

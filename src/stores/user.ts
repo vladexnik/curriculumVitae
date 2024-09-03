@@ -22,7 +22,7 @@ export const useUserStore = defineStore('user', () => {
       }
     })
     accessToken.value = data.login.access_token
-    authedUser.value = data.login.user
+    authedUser.value = data.login
     console.log(authedUser.value, 'log authed')
     setCookies('accessToken', data.login.access_token)
     setCookies('refreshToken', data.login.refresh_token)
@@ -36,7 +36,7 @@ export const useUserStore = defineStore('user', () => {
       }
     })
     accessToken.value = data.signup.access_token
-    authedUser.value = data.signup.user
+    authedUser.value = data.signup
     setCookies('accessToken', data.login.access_token)
     setCookies('refreshToken', data.login.refresh_token)
   }

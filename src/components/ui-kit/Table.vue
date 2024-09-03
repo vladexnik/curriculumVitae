@@ -64,15 +64,13 @@ const uniqueKey = computed(() => props.tableData.length)
 </script>
 
 <style scoped>
-:deep(.p-datatable-tbody > tr > td),
-:deep(.p-datatable-thead > tr > th) {
-  @apply bg-bgColor;
+:deep(.p-datatable-tbody > tr > td), :deep(.p-datatable-thead > tr > th) {
+  @apply bg-bgColor text-textSec;
 }
 .project-description-cell {
   margin-top: 15px;
   margin-bottom: 15px;
   position: static;
-  height: 100px;
 }
 
 .project-description {
