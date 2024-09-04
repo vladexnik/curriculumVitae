@@ -44,7 +44,7 @@ export const getUserName = async (userId): Promise<any> => {
       variables: {
         userId
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-first'
     })
     return data.user
   } catch (e) {

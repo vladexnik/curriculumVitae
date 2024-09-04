@@ -167,8 +167,7 @@ const disabledBtn = computed(() => {
     formProfile.lastName === userData.value.profile.last_name &&
     formProfile.selectedDepartment?.name == userData.value.department_name &&
     formProfile.selectedPosition?.name == userData.value.position_name
-      ? true
-      : false
+
   return bool
 })
 

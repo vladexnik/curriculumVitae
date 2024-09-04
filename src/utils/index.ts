@@ -46,3 +46,7 @@ export function showErrorAfterSubmit(
     errorMessage.password = ''
   }, 3000)
 }
+
+export function truncateString(str: string): string {
+  return str.length > 40 ? str.slice(0, 38) + '...' : str
+}

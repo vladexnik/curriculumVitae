@@ -1,7 +1,7 @@
 <template>
   <aside
     :class="[
-      'transition-width flex h-screen flex-col place-content-between overflow-y-auto overflow-x-hidden pb-4 pt-11 text-black duration-500',
+      'transition-width flex h-screen flex-col place-content-between overflow-y-hidden pb-4 pt-11 text-black duration-500',
       isCollapsed ? 'w-14' : 'w-[200px]'
     ]"
   >

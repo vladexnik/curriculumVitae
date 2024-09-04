@@ -3,7 +3,7 @@
     <Tabs :value="activeTab" @update:value="changeTab">
       <TabList>
         <Tab
-          v-for="tab in tabsAuth"
+          v-for="tab in tabs"
           :key="tab.label"
           :value="tab.route"
           @click.prevent="router.push(tab.route)"
@@ -42,7 +42,7 @@ const router = useRouter()
 const activeTab = computed(() => route.path)
 
 defineProps<{
-  tabsAuth: TabsAuthT[]
+  tabs: TabsAuthT[]
 }>()
 
 const changeTab = () => {

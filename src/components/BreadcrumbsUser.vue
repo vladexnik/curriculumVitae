@@ -9,7 +9,16 @@
           custom
         >
           <a :href="href" v-bind="props.action" @click="navigate">
-            <span :class="[item.icon, 'text-primary']" />
+            <span
+              v-if="item.icon"
+              :class="[
+                item.icon,
+                'text-primary',
+                'border-b-4',
+                'pr-2',
+                'border-transparent'
+              ]"
+            />
             <span :class="item.styleClass">{{ item.label }}</span>
           </a>
         </router-link>
@@ -35,7 +44,8 @@ import Breadcrumb from 'primevue/breadcrumb'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { getUserName } from '@/service/userData'
-import { capitalizeFullName } from '@/utils'
+import { capitalizeFullName, truncateString } from '@/utils'
+import { getCVNameById } from '@/service/cvs'
 
 const route = useRoute()
 
@@ -46,15 +56,24 @@ const userFullname = computed(
 const userId = computed(() => userStore.authedUser?.id)
 const id = computed(() => route.params.id)
 const breadcrumbFullname = ref(`${id.value}`)
+const cvData = ref(null)
 
 const fetchBreadcrumbName = async () => {
-  if (id.value && id.value !== userId.value) {
-    const data = await getUserName(id.value)
-    breadcrumbFullname.value = capitalizeFullName(
-      data.profile.full_name || data.email
-    )
-  } else {
-    breadcrumbFullname.value = capitalizeFullName(userFullname.value)
+  if (route.path.includes(`/users/${route.params.id}`)) {
+    if (id.value && id.value !== userId.value) {
+      const data = await getUserName(id.value)
+      breadcrumbFullname.value = capitalizeFullName(
+        data.profile.full_name || data.email
+      )
+    } else {
+      breadcrumbFullname.value = capitalizeFullName(userFullname.value)
+    }
+  }
+  if (id.value && route.path.includes(`/cvs/${route.params.id}`)) {
+    console.log(id.value, `/cvs/${route.params.id}`)
+    cvData.value = await getCVNameById(id.value)
+    // console.log(cvData.value)
+    breadcrumbFullname.value = truncateString(cvData.value.name)
   }
 }
 
@@ -64,53 +83,101 @@ watchEffect(() => {
 
 const items = computed(() => {
   let breadcrumbs = [
-    { label: route.meta.breadcrumb, route: { name: route.name } }
+    {
+      label: route.meta.breadcrumb,
+      route: { name: route.name },
+      styleClass: 'text-textSec opacity-60 cursor-default'
+    }
   ]
 
   if (id.value) {
-    breadcrumbs = [
-      {
-        label: 'Employees',
-        route: { name: 'Employees' },
+    if (route.path.includes(`/users/${route.params.id}`)) {
+      breadcrumbs = [
+        {
+          label: 'Employeess',
+          route: { name: 'Employees' },
+          styleClass:
+            'border-b-2 border-transparent text-textSec hover:border-b-2 hover:border-textSec'
+        }
+      ]
+      breadcrumbs.push({
+        label: breadcrumbFullname.value,
+        route: { name: 'Employee', params: { id: id.value } },
+        icon: 'pi pi-user',
         styleClass:
-          'border-b-2 border-transparent text-textSec hover:border-b-2 hover:border-textSec'
-      }
-    ]
-    breadcrumbs.push({
-      label: breadcrumbFullname,
-      route: { name: 'Employee', params: { id: id.value } },
-      icon: 'pi pi-user',
-      styleClass:
-        'border-b-2 border-transparent text-primary hover:border-b-2 hover:border-primary'
-    })
+          'border-b-2 border-transparent text-primary hover:border-b-2 hover:border-primary'
+      })
 
-    switch (route.name) {
-      case 'UserCvs':
-        breadcrumbs.push({
-          label: 'CVs',
-          route: { name: 'Employees' }
-        })
-        break
-      case 'UserSkills':
-        breadcrumbs.push({
-          label: 'Skills',
-          route: { name: 'Employees' }
-        })
-        break
-      case 'UserLanguages':
-        breadcrumbs.push({
-          label: 'Languages',
-          route: { name: 'Employees' }
-        })
-        break
+      switch (route.name) {
+        case 'UserCvs':
+          breadcrumbs.push({
+            label: 'CVs',
+            route: { name: 'Employees' }
+          })
+          break
+        case 'UserSkills':
+          breadcrumbs.push({
+            label: 'Skills',
+            route: { name: 'Employees' }
+          })
+          break
+        case 'UserLanguages':
+          breadcrumbs.push({
+            label: 'Languages',
+            route: { name: 'Employees' }
+          })
+          break
+      }
     }
+    if (route.path.includes(`/cvs/${route.params.id}`)) {
+      breadcrumbs = [
+        {
+          label: 'CVs',
+          route: { name: 'CVsAll' },
+          styleClass:
+            'border-b-2 border-transparent text-textSec hover:border-b-2 hover:border-textSec'
+        }
+      ]
+      breadcrumbs.push({
+        label: breadcrumbFullname.value,
+        route: { name: 'CVId', params: { id: id.value } },
+        styleClass:
+          'border-b-2 border-transparent text-primary hover:border-b-2 hover:border-primary'
+      })
+
+      switch (route.name) {
+        case 'CVSkills':
+          breadcrumbs.push({
+            label: 'Skills',
+            route: { name: 'CVsList' }
+          })
+          break
+        case 'CVProjects':
+          breadcrumbs.push({
+            label: 'Projects',
+            route: { name: 'CVsList' }
+          })
+          break
+        case 'CVPreview':
+          breadcrumbs.push({
+            label: 'Preview',
+            route: { name: 'CVsList' }
+          })
+          break
+      }
+    }
+    breadcrumbs[breadcrumbs.length - 1].route = null
+    // console.log(breadcrumbs)
   }
-  breadcrumbs[breadcrumbs.length - 1].route = null
   return breadcrumbs
 })
 </script>
 <style scoped>
 .p-breadcrumb {
   @apply bg-transparent p-0;
+}
+
+a.p-breadcrumb-item-link {
+  @apply gap-0;
 }
 </style>

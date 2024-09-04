@@ -35,6 +35,10 @@ export const GET_USER_DATA_BY_ID = gql`
         name
         education
         description
+        user {
+          id
+          email
+        }
       }
       profile {
         first_name
@@ -67,6 +71,7 @@ export const CVS = gql`
       education
       description
       user {
+        id
         email
       }
     }
@@ -78,26 +83,89 @@ export const CV = gql`
     cv(cvId: $cvId) {
       id
       name
+      education
       description
       user {
+        id
         email
-        departament_name
+        department_name
         position_name
         profile {
           full_name
         }
       }
-      education
       projects {
         name
         internal_name
         description
         domain
-        team_size
       }
       skills {
         name
-        category
+        categoryId
+        mastery
+      }
+      languages {
+        name
+        proficiency
+      }
+    }
+  }
+`
+
+export const CV_NAME = gql`
+  query CV($cvId: ID!) {
+    cv(cvId: $cvId) {
+      id
+      name
+      user {
+        id
+        email
+      }
+    }
+  }
+`
+
+export const CV_DETAILS = gql`
+  query CV($cvId: ID!) {
+    cv(cvId: $cvId) {
+      id
+      name
+      education
+      description
+      user {
+        id
+        email
+      }
+    }
+  }
+`
+
+export const CV_SKILLS = gql`
+  query CV($cvId: ID!) {
+    cv(cvId: $cvId) {
+      id
+      name
+      education
+      description
+      user {
+        id
+        email
+        department_name
+        position_name
+        profile {
+          full_name
+        }
+      }
+      projects {
+        name
+        internal_name
+        description
+        domain
+      }
+      skills {
+        name
+        categoryId
         mastery
       }
       languages {
@@ -427,6 +495,21 @@ export const UPDATE_CV = gql`
       id
       name
       user {
+        id
+      }
+    }
+  }
+`
+
+export const UPDATE_CV_DETAILS = gql`
+  mutation UpdateCv($cv: UpdateCvInput!) {
+    updateCv(cv: $cv) {
+      id
+      name
+      education
+      description
+      user {
+        email
         id
       }
     }

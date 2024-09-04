@@ -66,17 +66,8 @@ const routes = [
     ]
   },
   {
-    path: '/projects',
-    name: 'Projects',
-    component: ProjectsAll,
-    meta: {
-      isAuth: true,
-      breadcrumb: 'Projects'
-    }
-  },
-  {
     path: '/cvs',
-    name: 'CVsList',
+    name: 'CVsAll',
     component: Cvs,
     meta: {
       isAuth: true,
@@ -92,12 +83,44 @@ const routes = [
       breadcrumb: 'CVs'
     },
     children: [
-      { path: ':id', name: 'CvId', component: CvId },
-      { path: ':id/preview', name: 'CvPreview', component: Preview },
-      { path: ':id/projects', name: 'CvProjects', component: Projects },
-      { path: ':id/skills', name: 'CvSkills', component: Skills }
+      {
+        path: ':id',
+        name: 'CVId',
+        component: CvId,
+        meta: {
+          breadcrumb: (route) => route?.params?.id
+        }
+      },
+      {
+        path: ':id/projects',
+        name: 'CVProjects',
+        component: Projects,
+        meta: { breadcrumb: 'Projects' }
+      },
+      {
+        path: ':id/skills',
+        name: 'CVSkills',
+        component: Skills,
+        meta: { breadcrumb: 'Skills' }
+      },
+      {
+        path: ':id/preview',
+        name: 'CVPreview',
+        component: Preview,
+        meta: { breadcrumb: 'Preview' }
+      }
     ]
   },
+  {
+    path: '/projects',
+    name: 'Projects',
+    component: ProjectsAll,
+    meta: {
+      isAuth: true,
+      breadcrumb: 'Projects'
+    }
+  },
+
   {
     path: '/auth/login',
     name: 'login',

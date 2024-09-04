@@ -1,15 +1,146 @@
 <template>
-  <div class="about">
-    <h1>Cv</h1>
+  <div
+    class="mx-auto flex w-full max-w-[900px] flex-col justify-center px-6 py-8"
+  >
+    <Toast />
+    <form class="grid grid-cols-2 gap-y-8">
+      <TextField
+        ref="nameField"
+        class="col-span-2"
+        v-model="formData.name"
+        :error="v$.name.$errors[0]?.$message"
+        type="text"
+        :disabled="isDisabled"
+      >
+        Name
+      </TextField>
+      <TextField
+        class="col-span-2"
+        v-model="formData.education"
+        type="text"
+        :disabled="isDisabled"
+      >
+        Education
+      </TextField>
+      <TextArea
+        ref="descriptionField"
+        class="col-span-2"
+        v-model="formData.description"
+        :error="v$.description.$errors[0]?.$message"
+        type="text"
+        :disabled="isDisabled"
+      >
+        Description
+      </TextArea>
+      <Button
+        v-if="!isDisabled"
+        class="col-start-2 col-end-4 mt-5"
+        variant="contained"
+        color="primary"
+        @click.prevent="submitForm"
+        :disabled="disabledBtn"
+      >
+        Update
+      </Button>
+    </form>
   </div>
 </template>
+<script lang="ts" setup>
+import TextField from '@/components/ui-kit/TextField.vue'
+import TextArea from '@/components/ui-kit/TextArea.vue'
+import Button from '@/components/ui-kit/Button.vue'
+import { computed, reactive, ref, watchEffect } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, helpers, maxLength } from '@vuelidate/validators'
+import { REQUIRED_FIELD } from '@/components/ui-kit/constants/constants'
+import type { ApolloError } from '@apollo/client'
+import { useRoute } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { getCVDetailsById, updateCVDetails } from '@/service/cvs'
+import { useToastNotifications } from '@/composables/useToast'
+import type { fetchedCvT } from '@/models/models'
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+const userStore = useUserStore()
+const route = useRoute()
+const isDisabled = ref(true)
+const id = ref(`${route.params.id}`)
+const nameField = ref<HTMLInputElement | null>(null)
+const descriptionField = ref<HTMLInputElement | null>(null)
+const fetchedData = ref<fetchedCvT | null>(null)
+const { showError, showProfileUpdate } = useToastNotifications()
+
+const formData = reactive({
+  cvId: '',
+  name: '',
+  education: '',
+  description: ''
+})
+
+const disabledBtn = computed(() => {
+  if (fetchedData.value) {
+    const bool =
+      formData.name === fetchedData.value.name &&
+      formData.education === fetchedData.value.education &&
+      formData.description === fetchedData.value.description
+    return bool
+  } else {
+    return true
+  }
+})
+
+const rules = computed(() => {
+  return {
+    name: {
+      required: helpers.withMessage(REQUIRED_FIELD, required),
+      maxLength: maxLength(100)
+    },
+    description: {
+      required: helpers.withMessage(REQUIRED_FIELD, required),
+      minLength: minLength(5)
+    }
+  }
+})
+const v$ = useVuelidate(rules, formData)
+
+async function setFormData() {
+  fetchedData.value = await getCVDetailsById(id.value)
+  if (fetchedData.value) {
+    formData.name = fetchedData.value.name || ''
+    formData.description = fetchedData.value.description || ''
+    formData.education = fetchedData.value.education || ''
+    formData.cvId = fetchedData.value?.id || ''
+
+    isDisabled.value = userStore.authedUser?.id !== fetchedData.value?.user?.id
   }
 }
-</style>
+
+async function submitForm() {
+  try {
+    const result = await v$.value.$validate()
+
+    if (!result) {
+      const nameError = v$.value.name.$errors[0]
+      if (nameError) {
+        nameField.value?.focus()
+      } else {
+        descriptionField.value?.focus()
+      }
+    } else {
+      fetchedData.value = await updateCVDetails(formData)
+      if (fetchedData.value) {
+        showProfileUpdate('CV was updated')
+      } else {
+        showError()
+      }
+    }
+  } catch (err: unknown) {
+    const error = err as ApolloError
+    console.log(error)
+  }
+}
+
+watchEffect(() => {
+  setFormData()
+})
+</script>
+<style></style>
