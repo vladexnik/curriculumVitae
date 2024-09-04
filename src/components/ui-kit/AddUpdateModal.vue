@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model:visible="visible" modal :header="header" :style="{ width: '35rem' }">
+  <Dialog v-model:visible="visible" modal :header="header" :style="{ width: '35rem' }" @hide="onHide">
   <SelectComp
       class="my-5"
       v-model="field1"
@@ -94,6 +94,11 @@ const field1Disability = computed(() => (!!dataToUpdate?.value && type?.value ==
 const buttonDisability = computed(() => {
   return type?.value =='Add' ? (!field1.value && !field2.value ) : !(field2.value.name !== dataToUpdate?.value?.field2);
 })
+
+const onHide = () => {
+  field1.value = null;
+  field2.value = null;
+};
 
 watchEffect(() => {
   if (commonData?.value) {

@@ -1,6 +1,6 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getLanguages } from '@/service/commonData'
+import { getLanguages, addLanguage, updateLanguage, deleteLanguage } from '@/service/commonData'
 import { getUserData } from '@/service/userData'
 
   interface DataRow {
@@ -46,7 +46,29 @@ export const useLanguagesStore = defineStore('languages', () => {
       const langArr = data.profile.languages
       return langArr;
     }
+  }
 
+  const addProfileLanguage = async (obj) => {
+    const data = await addLanguage(obj);
+    if (data) {
+      console.log('ADDED Lang', data)
+    }
+  }
+
+  const updateProfileLanguage = async (obj) => {
+    const data = await updateLanguage(obj);
+    if (data) {
+      console.log('UPDATED Lang', data)
+    }
+  }
+
+  const deleteProfileLanguage = async (arr) => {
+    arr.forEach(async (obj) => {
+      const data = await deleteLanguage(obj);
+      if (data) {
+        console.log('delete Lang', data)
+      }
+    })
   }
   
   onMounted(async() => {
@@ -55,6 +77,10 @@ export const useLanguagesStore = defineStore('languages', () => {
   return {
     languages,
     langProficiency,
-    getLangListByUserId
+    getLangListByUserId,
+    addProfileLanguage,
+    updateProfileLanguage,
+    deleteProfileLanguage
+
   }
 })

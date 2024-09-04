@@ -26,7 +26,7 @@
     :commonProficiency="skillsProficiency"
     :dataToUpdate="dataToUpdate" 
     v-model="openModal"
-    @cancel="() => (openModal = false)"
+    @cancel="cancel"
     @confirm="updateCreateSkill"
   />
 </template>
@@ -69,13 +69,22 @@ const handlerToDelete = (value) => {
   if (!value) arrayToDelete.value = []
 }
 
-const deleteObj = () => {
-  console.log("DELETE", arrayToDelete.value)
+const deleteObj = async () => {
+  const newArr = arrayToDelete.value.map(el => ({
+    userId: currentUserId.value,
+    name: el?.name
+  }))
+  await deleteProfileSkill(newArr);
   handlerToDelete(false);
 }
 
 const skillsStore = useSkillsStore();
 const { skills, skillsProficiency } = storeToRefs(skillsStore);
+const { 
+    addProfileSkill,
+    updateProfileSkill,
+    deleteProfileSkill
+  } = skillsStore;
 
 const userStore = useUserStore();
 const { authedUser } = storeToRefs(userStore);
@@ -92,8 +101,17 @@ const enableEditMode = computed(() => authedUser.value.id == currentUserId.value
 const currentUserSkills = ref();
 const { getSkillListByUserId } = skillsStore;
 
-const updateCreateSkill = (data) => {
-  console.log("skill", type.value, data)
+const updateCreateSkill = async (data) => {
+  const newObj = {
+    userId: currentUserId.value,
+    name: data.field1.value.name,
+    mastery: data.field2.value.name
+  }
+  if (type.value === 'Add') {
+    await addProfileSkill(newObj);
+  }  else {
+    await updateProfileSkill(newObj);
+  }
 }
 
 const dataToUpdate = ref();
@@ -117,9 +135,14 @@ const invokeUpdateModal = (_, info) => {
 };
 
 const invokeAddModal = () => {
+  dataToUpdate.value = {}
   openModal.value = true;
   type.value = 'Add';
-  dataToUpdate.value = {}
+}
+
+const cancel = () => {
+  openModal.value = false;
+  dataToUpdate.value = {};
 }
 
 const getProgressBarStyle = (el) => {
@@ -139,7 +162,6 @@ onMounted(async () => {
 });
 </script>
 <style>
-/* Применение стиля к заливной части прогресс-бара */
 .p-progressbar-value {
   background: var(--progress-bar-fill-color) !important;
 }

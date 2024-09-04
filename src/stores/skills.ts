@@ -1,6 +1,6 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getSkills } from '@/service/commonData'
+import { getSkills, addSkill, updateSkill, deleteSkill } from '@/service/commonData'
 import { getUserData } from '@/service/userData'
   
 interface DataRow {
@@ -44,6 +44,29 @@ export const useSkillsStore = defineStore('skills', () => {
       return skillArr;
     }
   }
+
+  const addProfileSkill= async (obj) => {
+    const data = await addSkill(obj);
+    if (data) {
+      console.log('ADDED Lang', data)
+    }
+  }
+
+  const updateProfileSkill= async (obj) => {
+    const data = await updateSkill(obj);
+    if (data) {
+      console.log('UPDATED Lang', data)
+    }
+  }
+
+  const deleteProfileSkill = async (arr) => {
+    arr.forEach(async (obj) => {
+      const data = await deleteSkill(obj);
+      if (data) {
+        console.log('delete Lang', data)
+      }
+    })
+  }  
   
   onMounted(async() => {
     if (!skills.value) await getSkillsList();
@@ -51,6 +74,9 @@ export const useSkillsStore = defineStore('skills', () => {
   return {
     skills,
     skillsProficiency,
-    getSkillListByUserId
+    getSkillListByUserId,
+    addProfileSkill,
+    updateProfileSkill,
+    deleteProfileSkill
   }
 })

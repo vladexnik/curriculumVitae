@@ -26,7 +26,7 @@
     :commonProficiency="langProficiency"
     :dataToUpdate="dataToUpdate"
     v-model="openModal"
-    @cancel="() => (openModal = false)"
+    @cancel="cancel"
     @confirm="updateCreateLang"
     />
 </template>
@@ -54,13 +54,22 @@ const handlerToDelete = (value) => {
   if (!value) arrayToDelete.value = []
 }
 
-const deleteObj = () => {
-  console.log("DELETE", arrayToDelete.value)
+const deleteObj = async () => {
+  const newArr = arrayToDelete.value.map(el => ({
+    userId: currentUserId.value,
+    name: el?.name
+  }))
+  await deleteProfileLanguage(newArr);
   handlerToDelete(false);
 }
 
 const langStore = useLanguagesStore();
 const { languages, langProficiency } = storeToRefs(langStore);
+const {
+    addProfileLanguage,
+    updateProfileLanguage,
+    deleteProfileLanguage
+  } = langStore;
 
 const userStore = useUserStore();
 const { authedUser } = storeToRefs(userStore);
@@ -75,8 +84,19 @@ const enableEditMode = computed(() => authedUser?.value?.id == currentUserId.val
 const currentUserLangList = ref();
 const { getLangListByUserId } = langStore;
 
-const updateCreateLang = (data) => {
-  console.log("lang", type.value, data)
+const updateCreateLang = async (data) => {
+  console.log("lang", type.value, data.value)
+  const newObj = {
+    userId: currentUserId.value,
+    name: data.field1.value.name,
+    proficiency: data.field2.value.name
+  }
+  console.log("lang", newObj)
+  if (type.value === 'Add') {
+    await addProfileLanguage(newObj);
+  }  else {
+    await updateProfileLanguage(newObj);
+  }
 }
 
 const dataToUpdate = ref({})
@@ -85,7 +105,7 @@ const invokeUpdateModal = (_, info) => {
   if (!addToDelete.value) {
     openModal.value = true;
     type.value = 'Update';
-    dataToUpdate.value =     dataToUpdate.value = {
+    dataToUpdate.value = {
       field1: info.name,
       field2: info.proficiency
     };
@@ -100,9 +120,14 @@ const invokeUpdateModal = (_, info) => {
 }
 
 const invokeAddModal = () => {
+  dataToUpdate.value = {}
   openModal.value = true;
   type.value = 'Add';
-  dataToUpdate.value = {}
+}
+
+const cancel = () => {
+  openModal.value = false;
+  dataToUpdate.value = {};
 }
 
 onMounted(async () => {
