@@ -48,24 +48,23 @@ export const useSkillsStore = defineStore('skills', () => {
   const addProfileSkill= async (obj) => {
     const data = await addSkill(obj);
     if (data) {
-      console.log('ADDED Lang', data)
+      return data.addProfileSkill;
     }
   }
 
   const updateProfileSkill= async (obj) => {
     const data = await updateSkill(obj);
     if (data) {
-      console.log('UPDATED Lang', data)
+      return data.updateProfileSkill;
     }
   }
 
-  const deleteProfileSkill = async (arr) => {
-    arr.forEach(async (obj) => {
+  const deleteProfileSkill = async (obj) => {
       const data = await deleteSkill(obj);
       if (data) {
         console.log('delete Lang', data)
+        return data.deleteProfileSkill;
       }
-    })
   }  
   
   onMounted(async() => {

@@ -22,7 +22,7 @@
   <AddUpdateModal 
     name="Language" 
     :type="type" 
-    :commonData="languages" 
+    :commonData="reworkedData" 
     :commonProficiency="langProficiency"
     :dataToUpdate="dataToUpdate"
     v-model="openModal"
@@ -55,13 +55,28 @@ const handlerToDelete = (value) => {
 }
 
 const deleteObj = async () => {
-  const newArr = arrayToDelete.value.map(el => ({
+  const newArr = arrayToDelete.value.map((el) => ({
     userId: currentUserId.value,
     name: el?.name
-  }))
-  await deleteProfileLanguage(newArr);
+  }));
+
+  let lastResponse = null;
+
+  for (let idx = 0; idx < newArr.length; idx++) {
+    const el = newArr[idx];
+    try {
+      lastResponse = await deleteProfileLanguage(el);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (lastResponse) {
+    currentUserLangList.value = lastResponse.languages;;
+  }
+
   handlerToDelete(false);
-}
+};
 
 const langStore = useLanguagesStore();
 const { languages, langProficiency } = storeToRefs(langStore);
@@ -79,24 +94,24 @@ const currentUserId = computed(() => {
   return arr[arr.length - 2];
 });
 
-const enableEditMode = computed(() => authedUser?.value?.id == currentUserId.value);
+const enableEditMode = computed(() => authedUser?.value?.id == currentUserId?.value);
 
 const currentUserLangList = ref();
 const { getLangListByUserId } = langStore;
 
 const updateCreateLang = async (data) => {
-  console.log("lang", type.value, data.value)
   const newObj = {
     userId: currentUserId.value,
     name: data.field1.value.name,
     proficiency: data.field2.value.name
   }
-  console.log("lang", newObj)
+  let response
   if (type.value === 'Add') {
-    await addProfileLanguage(newObj);
+    response = await addProfileLanguage(newObj);
   }  else {
-    await updateProfileLanguage(newObj);
-  }
+    response = await updateProfileLanguage(newObj);
+  } 
+  currentUserLangList.value = response.languages
 }
 
 const dataToUpdate = ref({})
@@ -109,7 +124,6 @@ const invokeUpdateModal = (_, info) => {
       field1: info.name,
       field2: info.proficiency
     };
-    console.log('LAng', info) 
   } else {
     if (arrayToDelete.value.includes(info)) {
       arrayToDelete.value = arrayToDelete.value.filter(el => el !== info)
@@ -129,6 +143,11 @@ const cancel = () => {
   openModal.value = false;
   dataToUpdate.value = {};
 }
+
+const reworkedData = computed(() => {
+  const arr = currentUserLangList?.value.map(lang => lang.name)
+  return type.value === 'Add' ? languages.value?.filter(lang => !arr.includes(lang.name)) : languages?.value
+})
 
 onMounted(async () => {
   const data = await getLangListByUserId(currentUserId.value);

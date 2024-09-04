@@ -51,24 +51,22 @@ export const useLanguagesStore = defineStore('languages', () => {
   const addProfileLanguage = async (obj) => {
     const data = await addLanguage(obj);
     if (data) {
-      console.log('ADDED Lang', data)
+      return data.addProfileLanguage;
     }
   }
 
   const updateProfileLanguage = async (obj) => {
     const data = await updateLanguage(obj);
     if (data) {
-      console.log('UPDATED Lang', data)
+      return data.updateProfileLanguage;
     }
   }
 
-  const deleteProfileLanguage = async (arr) => {
-    arr.forEach(async (obj) => {
+  const deleteProfileLanguage = async (obj) => {
       const data = await deleteLanguage(obj);
       if (data) {
-        console.log('delete Lang', data)
+        return data?.deleteProfileLanguage;
       }
-    })
   }
   
   onMounted(async() => {

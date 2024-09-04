@@ -22,7 +22,7 @@
   <AddUpdateModal 
     name="Skill" 
     :type="type" 
-    :commonData="skills" 
+    :commonData="reworkedData" 
     :commonProficiency="skillsProficiency"
     :dataToUpdate="dataToUpdate" 
     v-model="openModal"
@@ -70,13 +70,28 @@ const handlerToDelete = (value) => {
 }
 
 const deleteObj = async () => {
-  const newArr = arrayToDelete.value.map(el => ({
+  const newArr = arrayToDelete.value.map((el) => ({
     userId: currentUserId.value,
     name: el?.name
-  }))
-  await deleteProfileSkill(newArr);
+  }));
+
+  let lastResponse = null;
+
+  for (let idx = 0; idx < newArr.length; idx++) {
+    const el = newArr[idx];
+    try {
+      lastResponse = await deleteProfileSkill(el);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  if (lastResponse) {
+    currentUserSkills.value = lastResponse.skills;;
+  }
+
   handlerToDelete(false);
-}
+};
 
 const skillsStore = useSkillsStore();
 const { skills, skillsProficiency } = storeToRefs(skillsStore);
@@ -96,7 +111,7 @@ const currentUserId = computed(() => {
   return arr[arr.length - 2];
 });
 
-const enableEditMode = computed(() => authedUser.value.id == currentUserId.value);
+const enableEditMode = computed(() => authedUser?.value?.id == currentUserId?.value);
 
 const currentUserSkills = ref();
 const { getSkillListByUserId } = skillsStore;
@@ -107,11 +122,13 @@ const updateCreateSkill = async (data) => {
     name: data.field1.value.name,
     mastery: data.field2.value.name
   }
+  let response
   if (type.value === 'Add') {
-    await addProfileSkill(newObj);
+   response = await addProfileSkill(newObj);
   }  else {
-    await updateProfileSkill(newObj);
+    response = await updateProfileSkill(newObj);
   }
+  currentUserSkills.value = response.skills
 }
 
 const dataToUpdate = ref();
@@ -124,7 +141,6 @@ const invokeUpdateModal = (_, info) => {
       field1: info.name,
       field2: info.mastery
     };
-    console.log('skill', info);
   } else {
     if (arrayToDelete.value.includes(info)) {
       arrayToDelete.value = arrayToDelete.value.filter(el => el !== info)
@@ -155,6 +171,11 @@ const getProgressBarStyle = (el) => {
 const getValueForMastery = (el) => {
   return arrayToDelete.value.includes(el) ? 0 : Mastery[el.mastery as keyof typeof Mastery];
 };
+
+const reworkedData = computed(() => {
+  const arr = currentUserSkills.value.map(skill => skill.name)
+  return type.value === 'Add' ? skills.value?.filter(skill => !arr.includes(skill.name)) :skills.value;
+})
 
 onMounted(async () => {
   const data = await getSkillListByUserId(currentUserId.value);
