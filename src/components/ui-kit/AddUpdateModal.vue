@@ -58,7 +58,6 @@ const confirm = () => {
   visible.value = false;
 }
 
-
 const reworkedData = ref<Option[]>([]);
 const reworkedProficiency = ref<Option[]>([]);
 const field1 = ref();
@@ -93,7 +92,7 @@ const placeholder2 = computed(() => {
 const field1Disability = computed(() => (!!dataToUpdate?.value && type?.value === 'Update'))
 
 const buttonDisability = computed(() => {
-  return type?.value =='Add' ? (!field1.value && !field2.value ) : !(field2.value.name !== dataToUpdate?.value?.field2.name);
+  return type?.value =='Add' ? (!field1.value && !field2.value ) : !(field2.value.name !== dataToUpdate?.value?.field2);
 })
 
 watchEffect(() => {
@@ -110,14 +109,14 @@ watchEffect(() => {
   } 
 
   if (dataToUpdate?.value && type?.value === 'Update') {
-    field1.value = dataToUpdate?.value.field1
-    field2.value = dataToUpdate?.value.field2
+    field1.value = reworkedData.value.find(el => el.name === dataToUpdate?.value?.field1)
+    field2.value = reworkedProficiency.value.find(el => el.name == dataToUpdate?.value?.field2)
   }
   
 })
 
 watch(field1, (newVal) => {
-  if (newVal) {
+  if (newVal && type?.value === 'Add') {
     field2.value = reworkedProficiency.value[0]
   }
 })

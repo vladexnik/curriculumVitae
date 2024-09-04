@@ -1,12 +1,12 @@
 <template>
   <div class="max-w-4xl flex flex-wrap justify-center mt-5 ml-auto mr-auto gap-4 px-6">
     <div class="min-w-56" v-for="el in currentUserSkills" :key="el.id">
-      <Button variant="text" color="secondary" @click="(e) => invokeModal(e, el)" :disable="!enableEditMode">
+      <Button variant="text" color="secondary" @click="(e) => invokeUpdateModal(e, el)" :disable="!enableEditMode">
         <div class="inline-flex gap-4">
           <div class="pt-4" v-if="el.mastery">
             <ProgressBar 
-             :value="getValueForMastery(el.mastery)"
-             :style="getProgressBarStyle(el.mastery)"
+             :value="getValueForMastery(el)"
+             :style="getProgressBarStyle(el)"
             >
               {{ '' }}
             </ProgressBar>
@@ -17,6 +17,7 @@
       </Button>
     </div>
   </div>
+  <ButtonBlock v-if="enableEditMode" name="Skill" @openAddModal="invokeAddModal" @addToDelete="handlerToDelete" :deleteLength="arrayToDelete.length" @delete="deleteObj"/>
   
   <AddUpdateModal 
     name="Skill" 
@@ -31,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import ButtonBlock from '@/components/ui-kit/ButtonBlock.vue';
 import ProgressBar from 'primevue/progressbar';
 import Button from '@/components/ui-kit/Button.vue';
 import AddUpdateModal from '@/components/ui-kit/AddUpdateModal.vue';
@@ -59,6 +61,19 @@ const masteryColorMap = {
 const type = ref('Add')
 const openModal = ref(false)
 
+const addToDelete = ref(false)
+const arrayToDelete = ref([])
+
+const handlerToDelete = (value) => {
+  addToDelete.value = value
+  if (!value) arrayToDelete.value = []
+}
+
+const deleteObj = () => {
+  console.log("DELETE", arrayToDelete.value)
+  handlerToDelete(false);
+}
+
 const skillsStore = useSkillsStore();
 const { skills, skillsProficiency } = storeToRefs(skillsStore);
 
@@ -81,32 +96,41 @@ const updateCreateSkill = (data) => {
   console.log("skill", type.value, data)
 }
 
-const dataToUpdate = computed(() => {
-  return {
-    field1: { id: "1", name: "Python" },
-    field2: { id: "0", name: "Novice" }
-  };
-});
+const dataToUpdate = ref();
 
-const invokeModal = (_, info) => {
-  openModal.value = true;
-  type.value = 'Update';
-  dataToUpdate.value = {
-    field1: { name: info.name },
-    field2: { name: info.mastery }
-  };
-  console.log('skill', info);
+const invokeUpdateModal = (_, info) => {
+  if (!addToDelete.value) {
+    openModal.value = true;
+    type.value = 'Update';
+    dataToUpdate.value = {
+      field1: info.name,
+      field2: info.mastery
+    };
+    console.log('skill', info);
+  } else {
+    if (arrayToDelete.value.includes(info)) {
+      arrayToDelete.value = arrayToDelete.value.filter(el => el !== info)
+    } else {
+      arrayToDelete.value.push(info)
+    }
+  }
 };
 
-const getProgressBarStyle = (mastery) => {
-  const color = masteryColorMap[Mastery[mastery as keyof typeof Mastery]];
+const invokeAddModal = () => {
+  openModal.value = true;
+  type.value = 'Add';
+  dataToUpdate.value = {}
+}
+
+const getProgressBarStyle = (el) => {
+  const color = arrayToDelete.value.includes(el) ? 'grey': masteryColorMap[Mastery[el.mastery as keyof typeof Mastery]];
   return {
     '--progress-bar-fill-color': color,
   };
 };
 
-const getValueForMastery = (mastery) => {
-  return Mastery[mastery as keyof typeof Mastery];
+const getValueForMastery = (el) => {
+  return arrayToDelete.value.includes(el) ? 0 : Mastery[el.mastery as keyof typeof Mastery];
 };
 
 onMounted(async () => {
