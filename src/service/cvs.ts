@@ -5,7 +5,9 @@ import {
   CV,
   UPDATE_CV_DETAILS,
   CV_NAME,
-  CV_DETAILS
+  CV_DETAILS,
+  CV_SKILLS,
+  SKILL_CATEGORIES
 } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
 import type { Cv, UpdateCvInput } from 'cv-graphql'
@@ -120,5 +122,32 @@ export const updateCVDetails = async (cv: any): Promise<any> => {
   } catch (e) {
     console.error(JSON.stringify(e, null, 2))
     return null // or you could return a default Cv object
+  }
+}
+
+export const getCVPreview = async (cvId): Promise<any> => {
+  try {
+    const { data } = await apolloClient.query({
+      query: CV_SKILLS,
+      variables: {
+        cvId
+      },
+      fetchPolicy: 'network-only'
+    })
+    return data.cv
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2))
+  }
+}
+
+export const getSkillCategories = async (): Promise<any> => {
+  try {
+    const { data } = await apolloClient.query({
+      query: SKILL_CATEGORIES,
+      fetchPolicy: 'network-only'
+    })
+    return data.skillCategories
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2))
   }
 }

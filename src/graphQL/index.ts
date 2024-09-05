@@ -176,6 +176,16 @@ export const CV_SKILLS = gql`
   }
 `
 
+export const SKILL_CATEGORIES = gql`
+  query skillCategories {
+    skillCategories {
+      id
+      name
+      order
+    }
+  }
+`
+
 export const DEPARTMENTS = gql`
   query DEPARTMENTS {
     departments {
