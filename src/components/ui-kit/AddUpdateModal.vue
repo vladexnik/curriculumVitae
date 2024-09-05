@@ -111,11 +111,11 @@ const dataForGrouped = (data) => {
     const existingCategory = acc.find(category => category.label === label);
 
     if (existingCategory) {
-        existingCategory.items.push({ name: item.name, id: item.id });
+        existingCategory.items.push({...item, name: item.name, id: item.id });
     } else {
         acc.push({
             label: label,
-            items: [{ name: item.name, id: item.id }]
+            items: [{ ...item, name: item.name, id: item.id }]
         });
     }
     return acc;
@@ -126,7 +126,7 @@ const dataForGrouped = (data) => {
 watchEffect(() => {
   if (commonData?.value && !grouped.value) {
     reworkedData.value = commonData?.value?.map(obj => {
-     return { id: obj?.id, name: obj?.name}
+     return { ...obj, id: obj?.id, name: obj?.name}
    })
   } else if (commonData?.value && grouped.value) {
     reworkedData.value = dataForGrouped(commonData.value);

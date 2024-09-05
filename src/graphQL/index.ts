@@ -41,15 +41,15 @@ export const GET_USER_DATA_BY_ID = gql`
         last_name
         full_name
         avatar
-      skills {
-        name
-        categoryId
-        mastery
-      }
-      languages {
-        name
-        proficiency
-      }
+        skills {
+          name
+          categoryId
+          mastery
+        }
+        languages {
+          name
+          proficiency
+        }
       }
     }
   }`
