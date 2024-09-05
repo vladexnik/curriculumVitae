@@ -23,6 +23,21 @@ export type fetchedCvT = {
   user: cvUserDataT
 }
 
+export type SkillMastery = {
+  __typename: string
+  name: string
+  categoryId: string | null
+  mastery: string
+}
+
+export type SkillCategory = {
+  __typename: string
+  id: string
+  name: string
+  order: number
+  parent: SkillCategory | null
+}
+
 // export type UserDataT = {
 //   created_at: string
 //   department_name: string

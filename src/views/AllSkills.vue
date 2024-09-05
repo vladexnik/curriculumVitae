@@ -1,40 +1,45 @@
 <template>
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4" v-if="data">
-    <div class="d-flex w-[300px] pl-3"><SearchInput v-model="search"/></div>
-    <Table :tableData="data" :columns="columnsConfig"/>
-    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
+    <div class="d-flex w-[300px] pl-3"><SearchInput v-model="search" /></div>
+    <Table :tableData="data" :columns="columnsConfig" />
+    <NoFound @resetSearch="() => (search = '')" v-if="search && !data.length" />
   </div>
 </template>
 
 <script setup lang="ts">
-import Table from '@/components/ui-kit/Table.vue';
-import SearchInput from '@/components/ui-kit/SearchInput.vue';
-import NoFound from '@/components/ui-kit/NoFound.vue';
-import { storeToRefs } from 'pinia';
-import { useSkillsStore } from '@/stores/skills'; 
-import { ref, watchEffect, watch } from 'vue';
+import Table from '@/components/ui-kit/Table.vue'
+import SearchInput from '@/components/ui-kit/SearchInput.vue'
+import NoFound from '@/components/ui-kit/NoFound.vue'
+import { storeToRefs } from 'pinia'
+import { useSkillsStore } from '@/stores/skills'
+import { ref, watchEffect, watch } from 'vue'
 
 const skillsStore = useSkillsStore()
 const { skills } = storeToRefs(skillsStore)
 
 interface DataRow {
-  id: string,
-  name: string,
-  type: string,
-  category: string,
+  id: string
+  name: string
+  type: string
+  category: string
 }
 
-const search = ref<String>('');
+const search = ref<String>('')
 const data = ref<DataRow[]>()
 const columnsConfig = ref([
   { field: 'name', header: 'Name', sortable: true },
   { field: 'type', header: 'Type', sortable: true },
-  { field: 'category', header: 'Category', sortable: true },
+  { field: 'category', header: 'Category', sortable: true }
 ])
 
 watch(search, (newValue) => {
   if (typeof newValue === 'string' && data.value) {
-    data.value = skills.value?.filter(skill => skill?.name?.toLowerCase()?.includes(newValue.toLowerCase()) || skill?.category?.toLowerCase()?.includes(newValue.toLowerCase()) || skill?.type?.toLowerCase()?.includes(newValue.toLowerCase()))
+    data.value = skills.value?.filter(
+      (skill) =>
+        skill?.name?.toLowerCase()?.includes(newValue.toLowerCase()) ||
+        skill?.category?.toLowerCase()?.includes(newValue.toLowerCase()) ||
+        skill?.type?.toLowerCase()?.includes(newValue.toLowerCase())
+    )
   }
 })
 

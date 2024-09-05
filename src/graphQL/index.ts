@@ -45,6 +45,15 @@ export const GET_USER_DATA_BY_ID = gql`
         last_name
         full_name
         avatar
+        skills {
+          name
+          categoryId
+          mastery
+        }
+        languages {
+          name
+          proficiency
+        }
       }
     }
   }
@@ -85,6 +94,7 @@ export const CV = gql`
       name
       education
       description
+      created_at
       user {
         id
         email
@@ -148,6 +158,7 @@ export const CV_SKILLS = gql`
       name
       education
       description
+      created_at
       user {
         id
         email
@@ -162,6 +173,10 @@ export const CV_SKILLS = gql`
         internal_name
         description
         domain
+        start_date
+        end_date
+        environment
+        responsibilities
       }
       skills {
         name
@@ -182,6 +197,11 @@ export const SKILL_CATEGORIES = gql`
       id
       name
       order
+      parent {
+        id
+        name
+        order
+      }
     }
   }
 `
@@ -277,6 +297,15 @@ export const PROJECT = gql`
         name
         category
       }
+    }
+  }
+`
+
+export const SKILLS_CATEGORIES = gql`
+  query SkillsCategories {
+    skillCategories {
+      id
+      name
     }
   }
 `

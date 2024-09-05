@@ -7,10 +7,11 @@ import {
   CV_NAME,
   CV_DETAILS,
   CV_SKILLS,
-  SKILL_CATEGORIES
+  SKILL_CATEGORIES,
+  EXPORT_PDF
 } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
-import type { Cv, UpdateCvInput } from 'cv-graphql'
+import type { ExportPdfInput } from 'cv-graphql'
 
 export const getCVsList = async (): Promise<any> => {
   try {
@@ -34,6 +35,21 @@ export const deleteCV = async (id: string): Promise<any> => {
       fetchPolicy: 'network-only'
     })
     return data
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2))
+  }
+}
+
+export const exportPDFCv = async (pdf: ExportPdfInput): Promise<any> => {
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: EXPORT_PDF,
+      variables: {
+        pdf
+      },
+      fetchPolicy: 'network-only'
+    })
+    return data.exportPdf
   } catch (e) {
     console.error(JSON.stringify(e, null, 2))
   }
