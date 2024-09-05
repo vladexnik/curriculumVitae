@@ -1,4 +1,4 @@
-import { LANGUAGES, DEPARTMENTS, SKILLS, POSITIONS, ADD_PROFILE_LANGUAGE, UPDATE_PROFILE_LANGUAGE, DELETE_PROFILE_LANGUAGE, ADD_PROFILE_SKILL, UPDATE_PROFILE_SKILL, DELETE_PROFILE_SKILL } from '@/graphQL'
+import { LANGUAGES, DEPARTMENTS, SKILLS, POSITIONS, ADD_PROFILE_LANGUAGE, UPDATE_PROFILE_LANGUAGE, DELETE_PROFILE_LANGUAGE, ADD_PROFILE_SKILL, UPDATE_PROFILE_SKILL, DELETE_PROFILE_SKILL, SKILLS_CATEGORIES } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
 
 export const getLanguages = async (): Promise<any> => {
@@ -67,6 +67,18 @@ export const getDepartments = async (): Promise<any> => {
     console.error(JSON.stringify(e, null, 2))
   }
 }
+
+export const getCategories = async (): Promise<any> => {
+  try {
+    const { data } = await apolloClient.query({
+      query: SKILLS_CATEGORIES
+    })
+    return data
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2))
+  }
+}
+
 
 export const getSkills = async (): Promise<any> => {
   try {

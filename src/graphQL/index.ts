@@ -211,6 +211,14 @@ export const PROJECT = gql`
   }
 `
 
+export const SKILLS_CATEGORIES = gql`
+  query SkillsCategories {
+    skillCategories {
+      id
+      name
+    }
+  }`
+
 export const SKILLS = gql`
   query SKILLS {
     skills {

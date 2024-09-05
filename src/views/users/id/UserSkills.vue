@@ -18,17 +18,19 @@
     </div>
   </div>
   <ButtonBlock v-if="enableEditMode" name="Skill" @openAddModal="invokeAddModal" @addToDelete="handlerToDelete" :deleteLength="arrayToDelete.length" @delete="deleteObj"/>
-  
   <AddUpdateModal 
     name="Skill" 
     :type="type" 
     :commonData="reworkedData" 
     :commonProficiency="skillsProficiency"
     :dataToUpdate="dataToUpdate" 
+    :grouped="type==='Add'"
     v-model="openModal"
     @cancel="cancel"
     @confirm="updateCreateSkill"
   />
+
+  <Toast />
 </template>
 
 <script setup lang="ts">
@@ -41,6 +43,8 @@ import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router';
+import { useToastNotifications } from '@/composables/useToast'
+
 
 enum Mastery {
   Novice = 20,
@@ -57,6 +61,9 @@ const masteryColorMap = {
   [Mastery.Proficient]: 'yellow',
   [Mastery.Expert]: 'red'
 };
+
+const { showError, showSuccessUpload, showProfileUpdate } =
+  useToastNotifications()
 
 const type = ref('Add')
 const openModal = ref(false)
@@ -83,11 +90,13 @@ const deleteObj = async () => {
       lastResponse = await deleteProfileSkill(el);
     } catch (error) {
       console.error(error);
+      showError()
     }
   }
 
   if (lastResponse) {
-    currentUserSkills.value = lastResponse.skills;;
+    currentUserSkills.value = lastResponse.skills;
+    showProfileUpdate('Succesfully deleted');
   }
 
   handlerToDelete(false);
@@ -117,18 +126,25 @@ const currentUserSkills = ref();
 const { getSkillListByUserId } = skillsStore;
 
 const updateCreateSkill = async (data) => {
-  const newObj = {
-    userId: currentUserId.value,
-    name: data.field1.value.name,
-    mastery: data.field2.value.name
+  try {
+    const newObj = {
+      userId: currentUserId.value,
+      name: data.field1.value.name,
+      mastery: data.field2.value.name
+    }
+    let response
+    if (type.value === 'Add') {
+      response = await addProfileSkill(newObj);
+      if (response) showSuccessUpload('New Skill was succesfully added')
+    }  else {
+      response = await updateProfileSkill(newObj);
+      if (response) showProfileUpdate('Data was succesfully updated')
+    }
+    currentUserSkills.value = response.skills
+  } catch (e) {
+    console.log(e)
+    showError()
   }
-  let response
-  if (type.value === 'Add') {
-   response = await addProfileSkill(newObj);
-  }  else {
-    response = await updateProfileSkill(newObj);
-  }
-  currentUserSkills.value = response.skills
 }
 
 const dataToUpdate = ref();
@@ -172,10 +188,13 @@ const getValueForMastery = (el) => {
   return arrayToDelete.value.includes(el) ? 0 : Mastery[el.mastery as keyof typeof Mastery];
 };
 
-const reworkedData = computed(() => {
-  const arr = currentUserSkills.value.map(skill => skill.name)
-  return type.value === 'Add' ? skills.value?.filter(skill => !arr.includes(skill.name)) :skills.value;
-})
+const updateReworkedData = () => {
+  if (currentUserSkills?.value) {
+    const arr = currentUserSkills?.value?.map(skill => skill.name)
+    return type.value === 'Add' ? skills.value?.filter(skill => !arr.includes(skill.name)) : skills.value;
+  }
+}
+const reworkedData = computed(() => updateReworkedData())
 
 onMounted(async () => {
   const data = await getSkillListByUserId(currentUserId.value);

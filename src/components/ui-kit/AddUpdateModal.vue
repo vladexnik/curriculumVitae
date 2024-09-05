@@ -6,6 +6,7 @@
       :options="reworkedData"
       :placeholder="placeholder1"
       :disabled="field1Disability"
+      :grouped="grouped"
     />
     <SelectComp
       class="my-5"
@@ -39,9 +40,13 @@ const props = defineProps({
   modelValue: Boolean,
   commonData: Array,
   commonProficiency: Array,
-  dataToUpdate: Object
+  dataToUpdate: Object,
+  grouped: {
+    type: Boolean,
+    default: () => false
+  },
 })
-const { type, name, modelValue, commonData, commonProficiency, dataToUpdate } = toRefs(props)
+const { type, name, modelValue, commonData, commonProficiency, dataToUpdate, grouped } = toRefs(props)
 const emit = defineEmits(['update:modelValue', 'cancel', 'confirm'])
 
 const visible = computed({
@@ -99,13 +104,33 @@ const onHide = () => {
   field1.value = null;
   field2.value = null;
 };
+const dataForGrouped = (data) => {
+  const result = data.reduce((acc, item) => {
+    const label = item.type || item.category;
+
+    const existingCategory = acc.find(category => category.label === label);
+
+    if (existingCategory) {
+        existingCategory.items.push({ name: item.name, id: item.id });
+    } else {
+        acc.push({
+            label: label,
+            items: [{ name: item.name, id: item.id }]
+        });
+    }
+    return acc;
+}, []);
+  return result;
+}
 
 watchEffect(() => {
-  if (commonData?.value) {
+  if (commonData?.value && !grouped.value) {
     reworkedData.value = commonData?.value?.map(obj => {
      return { id: obj?.id, name: obj?.name}
    })
-  } 
+  } else if (commonData?.value && grouped.value) {
+    reworkedData.value = dataForGrouped(commonData.value);
+  }
 
   if (commonProficiency?.value) {
     reworkedProficiency.value = commonProficiency?.value?.map((el, idx) => {

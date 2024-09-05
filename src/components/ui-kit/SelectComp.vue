@@ -2,7 +2,24 @@
   <main>
     <div class="card">
       <FloatLabel class="custom-float-label w-full md:w-56">
+        <Select 
+          v-if="grouped"
+          v-model="modelValue"
+          inputId="dd-option"
+          :options="options" 
+          optionLabel="name" 
+          optionGroupLabel="label" 
+          optionGroupChildren="items"
+          class="custom-select"
+          :disabled="disabled">
+            <template #optiongroup="slotProps">
+                <div class="flex items-center">
+                    <div>{{ slotProps.option.label }}</div>
+                </div>
+            </template>
+        </Select>
         <Select
+          v-else
           v-model="modelValue"
           inputId="dd-option"
           :options="options"
@@ -32,6 +49,7 @@ defineProps<{
   options: Option[] | null
   placeholder: string
   disabled?: boolean
+  grouped?: boolean
 }>()
 
 watch(modelValue, (newValue) => {

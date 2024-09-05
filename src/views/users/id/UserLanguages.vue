@@ -29,6 +29,7 @@
     @cancel="cancel"
     @confirm="updateCreateLang"
     />
+    <Toast />
 </template>
 
 <script setup lang="ts">
@@ -38,10 +39,14 @@ import AddUpdateModal from '@/components/ui-kit/AddUpdateModal.vue';
 import { useLanguagesStore } from '@/stores/languages';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router';
+import { useToastNotifications } from '@/composables/useToast'
 
 const route = useRoute();
+
+const { showError, showSuccessUpload, showProfileUpdate } =
+  useToastNotifications()
 
 const type = ref('Add')
 const openModal = ref(false)
@@ -68,11 +73,13 @@ const deleteObj = async () => {
       lastResponse = await deleteProfileLanguage(el);
     } catch (error) {
       console.error(error);
+      showError();
     }
   }
 
   if (lastResponse) {
-    currentUserLangList.value = lastResponse.languages;;
+    currentUserLangList.value = lastResponse.languages;
+    showProfileUpdate('Succesfully deleted');
   }
 
   handlerToDelete(false);
@@ -100,18 +107,25 @@ const currentUserLangList = ref();
 const { getLangListByUserId } = langStore;
 
 const updateCreateLang = async (data) => {
-  const newObj = {
-    userId: currentUserId.value,
-    name: data.field1.value.name,
-    proficiency: data.field2.value.name
+  try {
+    const newObj = {
+      userId: currentUserId.value,
+      name: data.field1.value.name,
+      proficiency: data.field2.value.name
+    }
+    let response
+    if (type.value === 'Add') {
+      response = await addProfileLanguage(newObj);
+      if (response) showSuccessUpload('New Language was succesfully added')
+    }  else {
+      response = await updateProfileLanguage(newObj);
+      if (response) showProfileUpdate('Data was succesfully updated')
+    } 
+    currentUserLangList.value = response.languages
+  } catch (e) {
+    console.log(e)
+    showError()
   }
-  let response
-  if (type.value === 'Add') {
-    response = await addProfileLanguage(newObj);
-  }  else {
-    response = await updateProfileLanguage(newObj);
-  } 
-  currentUserLangList.value = response.languages
 }
 
 const dataToUpdate = ref({})
@@ -144,10 +158,14 @@ const cancel = () => {
   dataToUpdate.value = {};
 }
 
-const reworkedData = computed(() => {
-  const arr = currentUserLangList?.value.map(lang => lang.name)
-  return type.value === 'Add' ? languages.value?.filter(lang => !arr.includes(lang.name)) : languages?.value
-})
+const updateReworkedData = () => {
+  if (currentUserLangList?.value) {
+    const arr = currentUserLangList?.value?.map(lang => lang.name)
+    return type.value === 'Add' ? languages.value?.filter(lang => !arr.includes(lang.name)) : languages?.value
+  } 
+}
+
+const reworkedData = computed(() => updateReworkedData())
 
 onMounted(async () => {
   const data = await getLangListByUserId(currentUserId.value);
