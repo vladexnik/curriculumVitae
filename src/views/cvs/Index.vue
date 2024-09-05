@@ -10,7 +10,7 @@
     </div>
     <Table :tableData="data" :columns="columnsConfig" />
     <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
-    <RemoveModal type="CV" :name="cvToDelete?.name" :openDeleteConfirmation="openDeleteConfirmation" @reset="reset" @remove="deleteCV"/>  
+    <RemoveModal type="CV" :name="cvToDelete?.name" v-model="openDeleteConfirmation" @reset="reset" @remove="deleteCV"/>  
   </div>
 </template>
 

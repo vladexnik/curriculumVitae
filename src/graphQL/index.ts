@@ -45,10 +45,18 @@ export const GET_USER_DATA_BY_ID = gql`
         last_name
         full_name
         avatar
+        skills {
+          name
+          categoryId
+          mastery
+        }
+        languages {
+          name
+          proficiency
+        }
       }
     }
-  }
-`
+  }`
 
 export const GET_USER_NAME = gql`
   query USER($userId: ID!) {
@@ -270,6 +278,14 @@ export const PROJECT = gql`
     }
   }
 `
+
+export const SKILLS_CATEGORIES = gql`
+  query SkillsCategories {
+    skillCategories {
+      id
+      name
+    }
+  }`
 
 export const SKILLS = gql`
   query SKILLS {
