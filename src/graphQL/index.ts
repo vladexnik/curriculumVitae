@@ -39,6 +39,15 @@ export const GET_USER_DATA_BY_ID = gql`
           id
           email
         }
+        projects {
+          id
+          name
+          domain
+          start_date
+          end_date
+          description
+          responsibilities
+        }
       }
       profile {
         first_name
@@ -107,6 +116,12 @@ export const CV = gql`
         internal_name
         description
         domain
+        start_date
+        end_date
+        responsibilities
+        project {
+          id
+        }
       }
       skills {
         name
@@ -392,7 +407,11 @@ export const ADD_CV_PROJECT = gql`
         domain
         start_date
         end_date
-        team_size
+        description
+        responsibilities
+        project {
+          id
+        }
       }
     }
   }
@@ -413,7 +432,11 @@ export const UPDATE_CV_PROJECT = gql`
         domain
         start_date
         end_date
-        team_size
+        description
+        responsibilities
+        project {
+          id
+        }
       }
     }
   }
@@ -421,7 +444,7 @@ export const UPDATE_CV_PROJECT = gql`
 
 export const REMOVE_CV_PROJECT = gql`
   mutation RemoveCvProject($project: RemoveCvProjectInput!) {
-    RemoveCvProject(project: $project) {
+    removeCvProject(project: $project) {
       id
       name
       user {
@@ -434,7 +457,11 @@ export const REMOVE_CV_PROJECT = gql`
         domain
         start_date
         end_date
-        team_size
+        description 
+        responsibilities
+        project {
+          id
+        }
       }
     }
   }

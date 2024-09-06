@@ -8,7 +8,6 @@ import {
   CV_DETAILS
 } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
-import type { Cv, UpdateCvInput } from 'cv-graphql'
 
 export const getCVsList = async (): Promise<any> => {
   try {

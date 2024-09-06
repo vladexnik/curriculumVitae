@@ -1,13 +1,13 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getProjectsList } from '@/service/projectsList'
+import { getProjectsList, getProjectsByCvId, deleteProject, addProject, updateProject } from '@/service/projectsList'
 
   interface DataRow {
     id: string,
     name: string,
     domain: string,
     startDate: string,
-    endrDate: string,
+    endDate: string,
     description: string,
     environment: string[],
   }
@@ -25,11 +25,83 @@ export const useProjectsListStore = defineStore('projects', () => {
           name: project.name,
           domain: project.domain,
           startDate: project.start_date,
-          endrDate: project.end_date,
+          endDate: project.end_date,
           description: project.description,
           environment: project.environment
         }
       })
+    }
+  }
+
+  const getProjectsByCVId = async (cvId: string) => {
+    const data = await getProjectsByCvId(cvId)
+    if (data) {
+      const projectsArr = data.projects.map((project) => {
+        return {
+          id: project.project.id,
+          name: project.name,
+          domain: project.domain,
+          description: project.description,
+          startDate: project.start_date,
+          endDate: project.end_date,
+          environment: project.responsibilities
+        }
+      })
+      return projectsArr
+    }
+  }
+
+  const addProjectbyId = async (obj) => {
+    const data =  await addProject(obj);
+    if (data) {  
+      const projectsArr = data.projects.map((project) => {
+      return {
+        id: project.project.id,
+        name: project.name,
+        domain: project.domain,
+        description: project.description,
+        startDate: project.start_date,
+        endDate: project.end_date,
+        environment: project.responsibilities
+      }
+    })
+    return projectsArr
+    }
+  }
+
+  const updateProjectbyId = async (obj) => {
+    const data =  await updateProject(obj);
+    if (data) {  
+      const projectsArr = data.projects.map((project) => {
+      return {
+        id: project.project.id,
+        name: project.name,
+        domain: project.domain,
+        description: project.description,
+        startDate: project.start_date,
+        endDate: project.end_date,
+        environment: project.responsibilities
+      }
+    })
+    return projectsArr
+    }
+  }
+
+  const deleleteProjectbyId = async (cvId: string, projectId: string) => {
+    const data =  await deleteProject(cvId, projectId);
+    if (data) {  
+      const projectsArr = data.projects.map((project) => {
+      return {
+        id: project.project.id,
+        name: project.name,
+        domain: project.domain,
+        description: project.description,
+        startDate: project.start_date,
+        endDate: project.end_date,
+        environment: project.responsibilities
+      }
+    })
+    return projectsArr
     }
   }
   
@@ -37,6 +109,10 @@ export const useProjectsListStore = defineStore('projects', () => {
     if (!projects.value) await getProjects();
   })
   return {
-    projects
+    projects,
+    getProjectsByCVId,
+    deleleteProjectbyId,
+    updateProjectbyId,
+    addProjectbyId
   }
 })
