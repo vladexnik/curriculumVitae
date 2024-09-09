@@ -55,7 +55,7 @@
       </form>
       <div class="flex justify-end gap-5">
         <div class="w-[150px]">
-          <Button variant="text" color="secondary" @click="cancel"
+          <Button variant="text" color="secondary" @click="openModal=false"
             >Cancel</Button
           >
         </div>
@@ -94,7 +94,7 @@ const props = defineProps({
   projectsToExclude: Array
 });
 
-const emit = defineEmits(['update:modelValue', 'reset', 'updateProject']);
+const emit = defineEmits(['update:modelValue', 'updateProject']);
 
 const { type, modelValue, dataToUpdate, projectsToExclude } = toRefs(props);
 
@@ -102,11 +102,6 @@ const openModal = computed({
   get: () => modelValue.value,
   set: (value) => emit('update:modelValue', value)
 });
-
-const cancel = () => {
-  emit('reset');
-  clearFields()
-};
 
 const clearFields = () => {
   openModal.value = false;
@@ -119,6 +114,7 @@ const clearFields = () => {
   formData.id = ''
   project.value = ''
   projectFieldDisabled.value = false
+  dataToUpdate.value = {}
 }
 
 const formData = reactive({
@@ -146,7 +142,7 @@ const disableCreation = computed(() => {
 
 const project = ref()
 const projectFieldDisabled = ref(false)
-const projectsNames = computed(() => projects?.value?.filter(el => !projectsToExclude?.value?.includes(el.id)).map(el => ({ id: el.id, name: el.name})))
+const projectsNames = computed(() => (type.value === 'Add' ? projects?.value?.filter(el => !projectsToExclude?.value?.includes(el.id)) : projects?.value)?.map(el => ({ id: el.id, name: el.name})))
 
 watch(project, (newVal) => {
   if (newVal) {
@@ -165,10 +161,8 @@ watch(project, (newVal) => {
 
 watch(openModal, (newVal) => {
   if (!newVal) clearFields()
-})
-
-watchEffect(() => {
-  if (dataToUpdate?.value && type?.value === 'Update') {
+  if (newVal) {
+      if (dataToUpdate?.value && type.value === 'Update') {
       formData.id = dataToUpdate.value.id
       formData.domain =  dataToUpdate.value.domain;
       formData.startDate =  dataToUpdate.value.startDate;
@@ -179,7 +173,7 @@ watchEffect(() => {
       project.value = { id: dataToUpdate.value.id, name: dataToUpdate.value.name}
       projectFieldDisabled.value = true;
   }
-
+  }
 })
 
 </script>
