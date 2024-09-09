@@ -1,6 +1,7 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getSkills, addSkill, updateSkill, deleteSkill, getCategories } from '@/service/commonData'
+import { getCVById, addCvSkill, updateCvSkill, deleteCvSkill } from '@/service/cvs'
 import { getUserData } from '@/service/userData'
   
 interface DataRow {
@@ -74,6 +75,34 @@ export const useSkillsStore = defineStore('skills', () => {
         return data.deleteProfileSkill;
       }
   }  
+
+  const getSkillListByCVId = async (cvId) => {
+    const data = await getCVById(cvId);
+    if (data) {
+      const res = { skills: data.skills, userId: data.user.id }
+      return res;
+    }
+  }
+
+  const addCVSkill = async (obj) => {
+    const data = await addCvSkill(obj);
+    if (data) {
+       return data.addCvSkill;
+    }
+  }
+
+  const updateCVSkill = async (obj) => {
+    const data = await updateCvSkill(obj);
+    if (data) {
+       return data.updateCvSkill;
+    }
+  }
+  const deleteCVSkill = async (obj) => {
+    const data = await deleteCvSkill(obj);
+    if (data) {
+       return data.deleteCvSkill;
+    }
+  }
   
   onMounted(async() => {
     if (!skills.value) await getSkillsList();
@@ -87,6 +116,10 @@ export const useSkillsStore = defineStore('skills', () => {
     addProfileSkill,
     updateProfileSkill,
     deleteProfileSkill,
-    getSkillsCategories
+    getSkillsCategories,
+    getSkillListByCVId,
+    addCVSkill,
+    updateCVSkill,
+    deleteCVSkill
   }
 })

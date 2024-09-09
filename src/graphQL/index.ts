@@ -477,7 +477,6 @@ export const ADD_CV_SKILL = gql`
       }
       skills {
         name
-        category
         mastery
       }
     }
@@ -494,7 +493,6 @@ export const UPDATE_CV_SKILL = gql`
       }
       user {
         name
-        category
         mastery
       }
     }
@@ -511,7 +509,6 @@ export const DELETE_CV_SKILL = gql`
       }
       skills {
         name
-        category
         mastery
       }
     }
