@@ -81,7 +81,7 @@ import TextArea from '@/components/ui-kit/TextArea.vue'
 import CustomDatePicker from './CustomDatePicker.vue'
 import SelectComp from './SelectComp.vue'
 import { useProjectsListStore } from '@/stores/projects'
-import { computed, reactive, toRefs, watch, ref, onMounted, watchEffect } from 'vue'
+import { computed, reactive, toRefs, watch, ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const projectsStore = useProjectsListStore();
@@ -90,12 +90,13 @@ const { projects } = storeToRefs(projectsStore)
 const props = defineProps({
   type: String,
   modelValue: Boolean,
-  dataToUpdate: Object
+  dataToUpdate: Object,
+  projectsToExclude: Array
 });
 
 const emit = defineEmits(['update:modelValue', 'reset', 'updateProject']);
 
-const { type, modelValue, dataToUpdate } = toRefs(props);
+const { type, modelValue, dataToUpdate, projectsToExclude } = toRefs(props);
 
 const openModal = computed({
   get: () => modelValue.value,
@@ -145,7 +146,7 @@ const disableCreation = computed(() => {
 
 const project = ref()
 const projectFieldDisabled = ref(false)
-const projectsNames = computed(() => projects?.value?.map(el => ({ id: el.id, name: el.name})))
+const projectsNames = computed(() => projects?.value?.filter(el => !projectsToExclude?.value?.includes(el.id)).map(el => ({ id: el.id, name: el.name})))
 
 watch(project, (newVal) => {
   if (newVal) {

@@ -16,7 +16,7 @@
     <Table :tableData="data" :columns="columnsConfig" />
     <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
     <RemoveModal type="Project" :name="projectToDelete?.name" v-model="openDeleteConfirmation" @reset="reset" @remove="deleteProject"/> 
-    <AddUpdateProjectModal v-model="openModal" @updateProject="updateData" @reset="resetModalData" :type="type" :dataToUpdate="dataToUpdate"/>
+    <AddUpdateProjectModal v-model="openModal" @updateProject="updateData" @reset="resetModalData" :type="type" :dataToUpdate="dataToUpdate" :projectsToExclude="projectsToExclude"/>
     <Toast />
   </div>
 </template>
@@ -48,6 +48,8 @@ const {
     updateProjectbyId,
     addProjectbyId
    } = projectsStore;
+
+const projectsToExclude = computed(() =>  projectsByCVId.value.map(el => el.id))
 const route = useRoute()
 
 const currentCVId = computed(() => route.params.id)
