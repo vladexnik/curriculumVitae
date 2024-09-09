@@ -30,9 +30,19 @@ export function useToastNotifications() {
     })
   }
 
+  const showInfo = (detail: string = 'CV is generating...') => {
+    toast.add({
+      severity: 'info',
+      summary: 'Info Message',
+      detail,
+      life: 4000
+    })
+  }
+
   return {
     showError,
     showSuccessUpload,
-    showProfileUpdate
+    showProfileUpdate,
+    showInfo
   }
 }

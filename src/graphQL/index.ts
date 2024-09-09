@@ -170,7 +170,6 @@ export const CV_SKILLS = gql`
       }
       projects {
         name
-        internal_name
         description
         domain
         start_date

@@ -1,7 +1,7 @@
 <template>
   <table v-if="resultedArray" class="w-full">
     <thead class="h-14">
-      <tr class="border-b-2 border-primary uppercase">
+      <tr class="cv-preview__table-head">
         <th class="px-4 py-2 text-left" colspan="2">Skills</th>
         <th class="w-[90px] px-4 py-2">Experience in Years</th>
         <th class="w-[90px] px-4 py-2">Last Used</th>
@@ -10,7 +10,7 @@
     <tbody>
       <tr
         :class="{
-          'border-b-[1px] border-textMain':
+          'cv-preview__table-body-border':
             index === resultedArray.length - 1 ||
             resultedArray[index + 1].category !== skill.category
         }"
@@ -38,20 +38,17 @@
 </template>
 
 <script setup lang="ts">
-import type { SkillCategory } from '@/models/models'
+import type { CVData, SkillCategory } from '@/models/models'
 
 const props = defineProps<{
-  categories: SkillCategory[]
-  cvData: any
+  skillsCategories: SkillCategory[]
+  cvData: CVData
 }>()
 
 const resultedArray = props.cvData.skills
   .map((skill) => {
     const categoryId = skill.categoryId || '2'
-    const category = props.categories.find((cat) => cat.id === categoryId)
-    if (!category) {
-      return null
-    }
+    const category = props.skillsCategories.find((cat) => cat.id === categoryId)
 
     const relevantProjects = props.cvData.projects.filter((project) =>
       project.environment.includes(skill.name)
@@ -60,7 +57,7 @@ const resultedArray = props.cvData.skills
     if (relevantProjects.length === 0) {
       return {
         categoryId,
-        category: category.name,
+        category: category?.name,
         name: skill.name,
         experience: '',
         lastUsed: ''
@@ -89,19 +86,23 @@ const resultedArray = props.cvData.skills
 
     return {
       categoryId,
-      category: category.name,
+      category: category?.name,
       name: skill.name,
       experience: experience,
       lastUsed: nearestEndDate
     }
   })
-  .sort((a, b) => +a.categoryId - +b.categoryId)
+  .sort((a, b) => parseInt(a.categoryId) - parseInt(b.categoryId))
 
 console.log(resultedArray, props.cvData)
 </script>
 
 <style scoped>
-.title {
-  @apply mb-2 mt-4 text-base font-bold leading-6;
+.cv-preview__table-head {
+  @apply border-b-2 border-primary uppercase;
+}
+
+.cv-preview__table-body-border {
+  @apply border-b-[1px] border-textMain;
 }
 </style>

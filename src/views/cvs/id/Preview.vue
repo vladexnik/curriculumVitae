@@ -1,15 +1,14 @@
 <template>
-  <div
-    v-if="fullCvData && categories"
-    class="mx-auto flex w-full max-w-[900px] flex-col justify-center px-6 py-8"
-  >
-    <section class="mb-8">
-      <div class="flex h-[40px] items-end justify-between">
+  <Toast />
+  <div v-if="fullCvData && skillsCategories" class="cv-preview">
+    <section class="cv-preview__user-wrapper mb-8">
+      <div class="cv-preview__user-data">
         <h4 class="text-3xl">{{ fullCvData.user.profile.full_name }}</h4>
         <Button
-          class="!h-10 !w-[200px]"
+          class="cv-preview__button"
           variant="outlined"
           color="primary"
+          :disabled="isDisabled"
           @click="handleExportPDF"
         >
           Export PDF
@@ -17,10 +16,10 @@
       </div>
       <p class="uppercase">{{ fullCvData.user.position_name }}</p>
     </section>
-    <section class="mb-8 grid grid-cols-[260px_auto]">
-      <div class="pr-6">
+    <section class="cv-preview__cv-description mb-8">
+      <div class="cv-preview__cv-description__left-side pr-6">
         <p class="title">Education</p>
-        <p>{{ fullCvData.education || 'No education' }}</p>
+        <p>{{ fullCvData.education || NO_EDUCATION }}</p>
         <p class="title">Language proficiency</p>
         <ul>
           <li v-for="(item, index) in fullCvData.languages" :key="index">
@@ -34,16 +33,23 @@
           </li>
         </ul>
       </div>
-      <div class="border-l-2 border-l-primary pb-4 pl-6">
-        <p class="title">{{ fullCvData.name }}</p>
+      <div class="cv-preview__cv-description__right-side">
+        <p class="title">
+          {{ fullCvData.name }}
+        </p>
         <p>{{ fullCvData.description }}</p>
-        <SkillsLayout :skills="fullCvData.skills" :categories="categories" />
+        <SkillsLayout
+          :skills="fullCvData.skills"
+          :skillsCategories="skillsCategories"
+        />
       </div>
     </section>
-    <section class="mb-8">
-      <p class="text-3xl">Projects</p>
+    <section
+      class="cv-preview__projects-wrapper pagebreak-after pagebreak mb-8"
+    >
+      <p class="mb-8 text-3xl">Projects</p>
       <li
-        class="list-none"
+        class="cv-preview__project-item pagebreak-inside-avoid mb-8 list-none"
         v-for="(project, index) in fullCvData.projects"
         :key="index"
       >
@@ -53,46 +59,56 @@
         />
       </li>
     </section>
-    <section>
-      <p class="bg-red-500 text-3xl">Professional skills</p>
-      <ProfessionalSkills :categories="categories" :cvData="fullCvData" />
+    <section class="cv-preview__professional-skills pagebreak">
+      <p class="text-3xl">Professional skills</p>
+      <ProfessionalSkills
+        :skillsCategories="skillsCategories"
+        :cvData="fullCvData"
+      />
     </section>
   </div>
 </template>
+
 <script lang="ts" setup>
 import SkillsLayout from '@/components/SkillsLayout.vue'
 import Button from '@/components/ui-kit/Button.vue'
-import { exportPDFCv, getCVPreview, getSkillCategories } from '@/service/cvs'
-import { computed, ref, watchEffect } from 'vue'
+import { exportPDFCv, getCVPreview } from '@/service/cvs'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ProjectLayout from '@/components/ProjectLayout.vue'
 import ProfessionalSkills from '@/components/ProfessionalSkills.vue'
+import { PDF_STYLES } from '@/components/ui-kit/constants/pdf-styles'
+import { useToastNotifications } from '@/composables/useToast'
+import { useSkillsStore } from '@/stores/skills'
+import { storeToRefs } from 'pinia'
+import type { CVData } from '@/models/models'
+import { NO_EDUCATION } from '@/components/ui-kit/constants/constants'
 
 const route = useRoute()
-const id = computed(() => route.params.id as string)
-const fullCvData = ref<any | null>(null)
-const categories = ref()
+const { showError, showInfo } = useToastNotifications()
+const skillsStore = useSkillsStore()
+const { skillsCategories } = storeToRefs(skillsStore)
 
-const getCVData = async () => {
+const id = computed(() => route.params.id as string)
+const isDisabled = ref(false)
+const fullCvData = ref<CVData | null>(null)
+
+onMounted(async () => {
   fullCvData.value = await getCVPreview(id.value)
-  categories.value = await getSkillCategories()
   console.log('cvData', fullCvData.value)
-  console.log(categories.value)
-}
+})
 
 const handleExportPDF = async () => {
-  const pageHtml = document.querySelector('.mx-auto')?.outerHTML
-  const tailwindCss = await fetch('/tailwind.config.js').then((res) =>
-    res.text()
-  )
-  console.log(pageHtml)
-
+  const pageHtml = document.querySelector('.cv-preview')?.outerHTML
   if (pageHtml) {
+    isDisabled.value = true
     const completeHtml = `
       <html>
         <head>
-          <style>${tailwindCss}</style>
           <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
+          <style>
+            ${PDF_STYLES}
+          </style>
         </head>
         <body>
           ${pageHtml}
@@ -102,43 +118,62 @@ const handleExportPDF = async () => {
     const pdfInput = {
       html: completeHtml,
       margin: {
-        top: '20px',
-        bottom: '20px',
-        left: '15px',
-        right: '15px'
+        top: '35px',
+        bottom: '35px',
+        left: '40px',
+        right: '40px'
       }
     }
 
     try {
+      showInfo()
       let result = await exportPDFCv(pdfInput)
-      console.log('PDF export result:', result)
       if (result.startsWith('JVB')) {
         result = 'data:application/pdf;base64,' + result
         downloadFileObject(result)
+        setTimeout(() => {
+          isDisabled.value = false
+        }, 2000)
       }
-    } catch (error) {
-      console.error('Error exporting PDF:', error)
+    } catch (error: unknown) {
+      showError('Error exporting PDF')
     }
   } else {
-    console.error('Unable to find the HTML content for PDF export.')
+    showError('Error exporting PDF')
   }
 }
 
-function downloadFileObject(base64String) {
+const downloadFileObject = (base64String: string) => {
   const linkSource = base64String
   const downloadLink = document.createElement('a')
-  const fileName = 'convertedPDFFile.pdf'
+  const fileName = `${fullCvData.value?.name}`
   downloadLink.href = linkSource
   downloadLink.download = fileName
   downloadLink.click()
 }
-
-watchEffect(() => {
-  getCVData()
-})
 </script>
 
 <style>
+.cv-preview {
+  @apply mx-auto flex w-full max-w-[900px] flex-col justify-center px-6 py-8;
+}
+
+.cv-preview__user-data {
+  @apply flex h-[40px] items-end justify-between;
+}
+
+.cv-preview__cv-description {
+  @apply grid grid-flow-col grid-cols-[260px_auto];
+}
+
+.cv-preview__cv-description__right-side {
+  @apply border-l-2 border-l-primary pb-4 pl-6;
+}
+
+.cv-preview__button {
+  @apply h-10 w-[200px];
+}
+
 .title {
   @apply mb-2 mt-4 text-base font-bold leading-6;
 }

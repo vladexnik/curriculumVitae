@@ -40,7 +40,7 @@ export const deleteCV = async (id: string): Promise<any> => {
   }
 }
 
-export const exportPDFCv = async (pdf: ExportPdfInput): Promise<any> => {
+export const exportPDFCv = async (pdf: ExportPdfInput): Promise<string> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: EXPORT_PDF,
@@ -51,7 +51,7 @@ export const exportPDFCv = async (pdf: ExportPdfInput): Promise<any> => {
     })
     return data.exportPdf
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    throw new Error('Error exporting PDF')
   }
 }
 
@@ -141,7 +141,7 @@ export const updateCVDetails = async (cv: any): Promise<any> => {
   }
 }
 
-export const getCVPreview = async (cvId): Promise<any> => {
+export const getCVPreview = async (cvId: string): Promise<any> => {
   try {
     const { data } = await apolloClient.query({
       query: CV_SKILLS,
