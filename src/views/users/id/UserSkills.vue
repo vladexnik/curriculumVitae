@@ -2,7 +2,7 @@
     <div v-for="(element, idx) in uiData" :key="idx" class="max-w-4xl justify-center mt-8 ml-auto mr-auto gap-4 px-6">
       <div>{{ element.category }}</div>
       <div class="flex flex-wrap mt-2 pl-14">
-        <div class="min-w-56 mt-6" v-for="el in element.skills" :key="el.id">
+        <div class="min-w-56 mt-6 mx-2" v-for="el in element.skills" :key="el.id">
           <Button variant="text" color="secondary" @click="(e) => invokeUpdateModal(e, el)" :disable="!enableEditMode">
             <div class="inline-flex gap-4">
               <div class="pt-4" v-if="el.mastery">
@@ -44,10 +44,9 @@ import AddUpdateModal from '@/components/ui-kit/AddUpdateModal.vue';
 import { useSkillsStore } from '@/stores/skills';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router';
 import { useToastNotifications } from '@/composables/useToast'
-import { get } from 'http';
 
 
 enum Mastery {

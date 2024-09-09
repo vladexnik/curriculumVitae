@@ -1,6 +1,7 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getSkills, addSkill, updateSkill, deleteSkill, getCategories } from '@/service/commonData'
+import { getCVById } from '@/service/cvs'
 import { getUserData } from '@/service/userData'
   
 interface DataRow {
@@ -74,6 +75,14 @@ export const useSkillsStore = defineStore('skills', () => {
         return data.deleteProfileSkill;
       }
   }  
+
+  const getSkillListByCVId = async (cvId) => {
+    const data = await getCVById(cvId);
+    if (data) {
+      const res = { skills: data.skills, userId: data.user.id }
+      return res;
+    }
+  }
   
   onMounted(async() => {
     if (!skills.value) await getSkillsList();
@@ -87,6 +96,7 @@ export const useSkillsStore = defineStore('skills', () => {
     addProfileSkill,
     updateProfileSkill,
     deleteProfileSkill,
-    getSkillsCategories
+    getSkillsCategories,
+    getSkillListByCVId
   }
 })
