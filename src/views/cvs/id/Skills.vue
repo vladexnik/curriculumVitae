@@ -81,7 +81,7 @@ if (!value) arrayToDelete.value = []
 
 const deleteObj = async () => {
 const newArr = arrayToDelete.value.map((el) => ({
-  userId: currentUserId.value,
+  cvId: currentCvId.value,
   name: el?.name
 }));
 
@@ -90,7 +90,7 @@ let lastResponse = null;
 for (let idx = 0; idx < newArr.length; idx++) {
   const el = newArr[idx];
   try {
-    lastResponse = await deleteProfileSkill(el);
+    lastResponse = await deleteCVSkill(el);
   } catch (error) {
     console.error(error);
     showError()
@@ -110,9 +110,9 @@ handlerToDelete(false);
 const skillsStore = useSkillsStore();
 const { skills, skillsProficiency, skillsCategories } = storeToRefs(skillsStore);
 const { 
-  addProfileSkill,
-  updateProfileSkill,
-  deleteProfileSkill,
+  addCVSkill,
+  updateCVSkill,
+  deleteCVSkill,
   getSkillsCategories
 } = skillsStore;
 
@@ -131,7 +131,7 @@ const currentUserId = ref();
 const enableEditMode = computed(() => authedUser?.value?.id == currentUserId?.value);
 
 const currentUserSkills = ref();
-const { getSkillListByCVId, getSkillListByUserId } = skillsStore;
+const { getSkillListByCVId } = skillsStore;
 
 const getCategoryId = (skill) => {
 let category = skillsCategories.value.find(cat => cat.name == skill.type || cat.name == skill.category); 
@@ -145,7 +145,7 @@ return category.id;
 const updateCreateSkill = async (data) => {
 try {
   const newObj = {
-    userId: currentUserId.value,
+    cvId: currentCvId.value,
     name: data.field1.value.name,
     mastery: data.field2.value.name,
     categoryId: getCategoryId(data.field1.value)
@@ -153,10 +153,10 @@ try {
 
   let response;
   if (type.value === 'Add') {
-    response = await addProfileSkill(newObj);
+    response = await addCVSkill(newObj);
     if (response) showSuccessUpload('New Skill was successfully added');
   } else {
-    response = await updateProfileSkill(newObj);
+    response = await updateCVSkill(newObj);
     if (response) showProfileUpdate('Data was successfully updated');
   }
 
@@ -251,13 +251,11 @@ try {
   
   if (res && skillsCategories.value) {
     currentUserId.value = res?.userId
-    const response  = await getSkillListByUserId(currentUserId.value)
-    if (response) {
-      currentUserSkills.value = response
-      updateUISKillsData();
-    }
+    currentUserSkills.value = res?.skills
+    updateUISKillsData();
   }
 } catch (error) {
+  showError()
   console.error("Error loading skills or categories:", error);
 }
 }
