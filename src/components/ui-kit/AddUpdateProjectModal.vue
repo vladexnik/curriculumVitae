@@ -13,24 +13,24 @@
             v-model="project"
             :options="projectsNames"
             :disabled="projectFieldDisabled"
-            placeholder="Project"
+            :placeholder="$t('project')"
           />
         </div>
 
         <div class="d-flex mb-5 mr-5 w-full">
           <TextField v-model="formData.domain" type="text" disabled>
-            Domain
+            {{$t('domain')}}
           </TextField>
         </div>
       </div>
 
       <div class="inline-flex w-full">
         <div class="d-flex mb-5 mr-5 w-full">
-          <CustomDatePicker v-model="formData.startDate" placeholder="Start Date"/>
+          <CustomDatePicker v-model="formData.startDate" :placeholder="$t('startDate')"/>
         </div>
 
         <div class="d-flex mb-5 mr-5 w-full">
-          <CustomDatePicker v-model="formData.endDate" placeholder="End Date"/>
+          <CustomDatePicker v-model="formData.endDate" :placeholder="$t('endDate')"/>
         </div>
       </div>
 
@@ -40,7 +40,7 @@
             type="text"
             disabled
           >
-            Description
+          {{$t('description')}}
           </TextArea>
         </div>
 
@@ -48,7 +48,7 @@
           <TextField
             v-model="formData.responsibilities"
             type="text"
-            >Responsibilities</TextField
+            >{{$t('responsibilities')}}</TextField
           >
         </div>
 
@@ -56,7 +56,7 @@
       <div class="flex justify-end gap-5">
         <div class="w-[150px]">
           <Button variant="text" color="secondary" @click="openModal=false"
-            >Cancel</Button
+            >{{$t('cancel')}}</Button
           >
         </div>
         <div class="w-[150px]">
@@ -83,7 +83,9 @@ import SelectComp from './SelectComp.vue'
 import { useProjectsListStore } from '@/stores/projects'
 import { computed, reactive, toRefs, watch, ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const projectsStore = useProjectsListStore();
 const { projects } = storeToRefs(projectsStore)
 
@@ -132,7 +134,7 @@ const submitForm = () => {
   clearFields()
 }
 const header = computed(() => {
-  return (type?.value === 'Add' ? 'Add ' : 'Update ') + 'Project';
+  return (type?.value === 'Add' ? t('add') : t('update')) + 'Project';
 });
 
 const disableCreation = computed(() => {

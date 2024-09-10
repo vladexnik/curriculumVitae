@@ -9,7 +9,12 @@
       </div>
     </div>
     <Table :tableData="data" :columns="columnsConfig" />
-    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length">
+      <template #default>
+        <h2 class="text-2xl font-semibold mb-2">{{ $t('customNoResultsTitle') }}</h2>
+        <p class="text-gray-500 mb-4">{{ $t('customNoResultsDescription') }}</p>
+      </template>
+    </NoFound>
     <RemoveModal type="CV" :name="cvToDelete?.name" v-model="openDeleteConfirmation" @reset="reset" @remove="deleteCV"/>  
   </div>
 </template>
@@ -27,6 +32,9 @@ import { useRouter } from 'vue-router'
 import { useCVsStore } from '@/stores/cvs'
 import { useUserStore } from '@/stores/user';
 import { ref, h, watchEffect, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const userStore = useUserStore()
 const { authedUser } = storeToRefs(userStore)
@@ -61,9 +69,9 @@ const deleteCV = async () => {
 const search = ref<String>('');
 const data = ref<DataRow[]>();
 const columnsConfig = ref([
-  { field: 'name', header: 'Name', sortable: true },
-  { field: 'education', header: 'Education', sortable: true },
-  { field: 'employee', header: 'Employee', sortable: true },
+  { field: 'name', header: t('cvName'), sortable: true },
+  { field: 'education', header: t('education'), sortable: true },
+  { field: 'employee', header: t('employee'), sortable: true },
   {
     field: 'actionButton',
     header: '',
@@ -76,8 +84,8 @@ const columnsConfig = ref([
         };
 
         const items = [
-          { label: 'Details', command: () => router.push(`/cvs/${rowData.id}`) },
-          { label: 'Delete CV', command: () => {
+          { label: $t('details'), command: () => router.push(`/cvs/${rowData.id}`) },
+          { label: $t('deleteCV'), command: () => {
             cvToDelete.value = {
               id: rowData.id,
               name: rowData.name,

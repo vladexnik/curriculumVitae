@@ -12,7 +12,7 @@
         type="text"
         :disabled="isDisabled"
       >
-        Name
+      {{  $t('cvName') }}
       </TextField>
       <TextField
         class="col-span-2"
@@ -20,7 +20,7 @@
         type="text"
         :disabled="isDisabled"
       >
-        Education
+      {{  $t('education') }}
       </TextField>
       <TextArea
         ref="descriptionField"
@@ -30,7 +30,7 @@
         type="text"
         :disabled="isDisabled"
       >
-        Description
+       {{  $t('description') }}
       </TextArea>
       <Button
         v-if="!isDisabled"
@@ -40,7 +40,7 @@
         @click.prevent="submitForm"
         :disabled="disabledBtn"
       >
-        Update
+        {{ $t('update')}}
       </Button>
     </form>
   </div>
@@ -59,6 +59,9 @@ import { useUserStore } from '@/stores/user'
 import { getCVDetailsById, updateCVDetails } from '@/service/cvs'
 import { useToastNotifications } from '@/composables/useToast'
 import type { fetchedCvT } from '@/models/models'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const userStore = useUserStore()
 const route = useRoute()

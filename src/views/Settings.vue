@@ -4,12 +4,12 @@
       <SelectComp
         v-model="themeStore.selectedTheme"
         :options="themeStore.themes"
-        placeholder="Appearance"
+        :placeholder="$t('appearance')"
       />
       <SelectComp
         v-model="langStore.selectedLang"
         :options="langStore.langs"
-        placeholder="Language"
+        :placeholder="$t('language')"
       />
     </div>
   </div>
@@ -20,6 +20,9 @@
 import SelectComp from '@/components/ui-kit/SelectComp.vue'
 import { useThemeStore } from '@/stores/theme'
 import { useLangStore } from '@/stores/lang'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const themeStore = useThemeStore()
 const langStore = useLangStore()

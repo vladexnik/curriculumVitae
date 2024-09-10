@@ -46,6 +46,9 @@ import { useUserStore } from '@/stores/user'
 import { getUserName } from '@/service/userData'
 import { capitalizeFullName, truncateString } from '@/utils'
 import { getCVNameById } from '@/service/cvs'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const route = useRoute()
 
@@ -84,7 +87,7 @@ watchEffect(() => {
 const items = computed(() => {
   let breadcrumbs = [
     {
-      label: route.meta.breadcrumb,
+      label: t(route.meta.breadcrumb),
       route: { name: route.name },
       styleClass: 'text-textSec opacity-60 cursor-default'
     }
@@ -94,7 +97,7 @@ const items = computed(() => {
     if (route.path.includes(`/users/${route.params.id}`)) {
       breadcrumbs = [
         {
-          label: 'Employeess',
+          label: t('employees'),
           route: { name: 'Employees' },
           styleClass:
             'border-b-2 border-transparent text-textSec hover:border-b-2 hover:border-textSec'
@@ -111,19 +114,19 @@ const items = computed(() => {
       switch (route.name) {
         case 'UserCvs':
           breadcrumbs.push({
-            label: 'CVs',
+            label: t('cvs'),
             route: { name: 'Employees' }
           })
           break
         case 'UserSkills':
           breadcrumbs.push({
-            label: 'Skills',
+            label: t('skills'),
             route: { name: 'Employees' }
           })
           break
         case 'UserLanguages':
           breadcrumbs.push({
-            label: 'Languages',
+            label: t('languages'),
             route: { name: 'Employees' }
           })
           break
@@ -132,7 +135,7 @@ const items = computed(() => {
     if (route.path.includes(`/cvs/${route.params.id}`)) {
       breadcrumbs = [
         {
-          label: 'CVs',
+          label: t('cvs'),
           route: { name: 'CVsAll' },
           styleClass:
             'border-b-2 border-transparent text-textSec hover:border-b-2 hover:border-textSec'
@@ -148,26 +151,25 @@ const items = computed(() => {
       switch (route.name) {
         case 'CVSkills':
           breadcrumbs.push({
-            label: 'Skills',
+            label: t('skills'),
             route: { name: 'CVsList' }
           })
           break
         case 'CVProjects':
           breadcrumbs.push({
-            label: 'Projects',
+            label: t('projects'),
             route: { name: 'CVsList' }
           })
           break
         case 'CVPreview':
           breadcrumbs.push({
-            label: 'Preview',
+            label: t('preview'),
             route: { name: 'CVsList' }
           })
           break
       }
     }
     breadcrumbs[breadcrumbs.length - 1].route = null
-    // console.log(breadcrumbs)
   }
   return breadcrumbs
 })

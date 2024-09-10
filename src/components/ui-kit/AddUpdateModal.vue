@@ -18,10 +18,10 @@
 
   <div class="flex justify-end gap-5">
     <div class="w-[150px]">
-      <Button variant="text" color="secondary" @click="cancel">Cancel</Button>
+      <Button variant="text" color="secondary" @click="cancel">{{$t('cancel')}}</Button>
     </div>
     <div class="w-[150px]">
-      <Button variant="contained" color="primary" @click="confirm" :disabled="buttonDisability">Confirm</Button>
+      <Button variant="contained" color="primary" @click="confirm" :disabled="buttonDisability">{{$t('confirm')}}</Button>
     </div>
   </div>
 </Dialog>
@@ -33,7 +33,9 @@ import Dialog from 'primevue/dialog';
 import SelectComp from '@/components/ui-kit/SelectComp.vue';
 import { computed, toRefs, ref, watchEffect, watch } from 'vue';
 import type { Option } from '@/components/ui-kit/SelectComp.vue'
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const props = defineProps({
   type: String,
   name: String,

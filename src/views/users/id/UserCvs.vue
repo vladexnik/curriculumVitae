@@ -9,7 +9,12 @@
       </div>
     </div>
     <Table :tableData="data" :columns="columnsConfig"/>
-    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length">
+      <template #default>
+        <h2 class="text-2xl font-semibold mb-2">{{ $t('customNoResultsTitle') }}</h2>
+        <p class="text-gray-500 mb-4">{{ $t('customNoResultsDescription') }}</p>
+      </template>
+    </NoFound>  
   </div>
   <RemoveModal type="CV" :name="cvToDelete?.name" v-model="openDeleteConfirmation" @reset="reset" @remove="deleteCV"/>
 </template>
@@ -28,6 +33,9 @@ import { ref, computed, watch, onMounted, h } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import router from '@/router';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const cvsStore = useCVsStore();
 const { cvs } = storeToRefs(cvsStore);
@@ -61,8 +69,8 @@ const deleteCV = async () => {
 const search = ref<String>('');
 const data = ref<DataRow[]>();
 const columnsConfig = ref([
-  { field: 'name', header: 'Name', sortable: true },
-  { field: 'education', header: 'Education', sortable: true },
+  { field: 'name', header: t('cvName'), sortable: true },
+  { field: 'education', header: t('education'), sortable: true },
   {
     field: 'actionButton', 
     header: '', 
@@ -74,8 +82,8 @@ const columnsConfig = ref([
         };
 
         const items = [
-          { label: 'Details', command: () => router.push(`/cvs/${rowData.id}`) },
-          { label: 'Delete CV', command: () => {
+          { label: $t('details'), command: () => router.push(`/cvs/${rowData.id}`) },
+          { label: $t('deleteCV'), command: () => {
             cvToDelete.value = rowData
             openDeleteConfirmation.value = true
           } },

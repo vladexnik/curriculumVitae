@@ -4,10 +4,10 @@
 
     <div class="flex justify-end gap-5">
       <div class="w-[150px]">
-        <Button variant="text" color="secondary" @click="cancel">Cancel</Button>
+        <Button variant="text" color="secondary" @click="cancel">{{$t('cancel')}}</Button>
       </div>
       <div class="w-[150px]">
-        <Button variant="contained" color="primary" @click="confirm">Confirm</Button>
+        <Button variant="contained" color="primary" @click="confirm">{{$t('confirm')}}</Button>
       </div>
     </div>
   </Dialog>
@@ -17,6 +17,9 @@
 import { computed, toRefs } from 'vue';
 import Button from '@/components/ui-kit/Button.vue';
 import Dialog from 'primevue/dialog';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   type: String,

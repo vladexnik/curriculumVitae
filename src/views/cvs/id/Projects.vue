@@ -10,11 +10,16 @@
           color="primary"
           class="h-9 border-none"
           @click="() => actionOpenModal('Add')"
-          >+ Add Project</Button>
+          >{{ $t('addProject') }}</Button>
       </div>
     </div>
     <Table :tableData="data" :columns="columnsConfig" />
-    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length"/>
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length">
+      <template #default>
+        <h2 class="text-2xl font-semibold mb-2">{{ $t('customNoResultsTitle') }}</h2>
+        <p class="text-gray-500 mb-4">{{ $t('customNoResultsDescription') }}</p>
+      </template>
+    </NoFound>  
     <RemoveModal type="Project" :name="projectToDelete?.name" v-model="openDeleteConfirmation" @reset="reset" @remove="deleteProject"/> 
     <AddUpdateProjectModal v-model="openModal" @updateProject="updateData" @reset="resetModalData" :type="type" :dataToUpdate="dataToUpdate" :projectsToExclude="projectsToExclude"/>
     <Toast />
@@ -36,6 +41,9 @@ import { useUserStore } from '@/stores/user';
 import { ref, h, watchEffect, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router'
 import { useToastNotifications } from '@/composables/useToast'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const { showError, showSuccessUpload, showProfileUpdate } =
   useToastNotifications()
@@ -90,10 +98,10 @@ const deleteProject = async () => {
 const search = ref<String>('');
 const data = ref<DataRow[]>();
 const columnsConfig = ref([
-  { field: 'name', header: 'Name', sortable: true },
-  { field: 'domain', header: 'Domain', sortable: true },
-  { field: 'startDate', header: 'Start Date', sortable: true },
-  { field: 'endDate', header: 'End Date', sortable: true },
+  { field: 'name', header: $t('projectName'), sortable: true },
+  { field: 'domain', header: $t('domain'), sortable: true },
+  { field: 'startDate', header:  $t('startDate'), sortable: true },
+  { field: 'endDate', header:  $t('endDate'), sortable: true },
   {
     field: 'actionButton',
     header: '',
@@ -105,8 +113,8 @@ const columnsConfig = ref([
         };
 
         const items = [
-          { label: 'Update project', command: () => actionOpenModal('Update', rowData) },
-          { label: 'Remove project', command: () => {
+          { label: $t('updatePproject'), command: () => actionOpenModal('Update', rowData) },
+          { label: $t('removePproject'), command: () => {
             projectToDelete.value = {
               id: rowData.id,
               name: rowData.name,

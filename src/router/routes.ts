@@ -25,7 +25,7 @@ const routes = [
     component: Users,
     meta: {
       isAuth: true,
-      breadcrumb: 'Employees'
+      breadcrumb: 'employees'
     }
   },
   {
@@ -34,7 +34,7 @@ const routes = [
     meta: {
       isAuth: true,
       hasTabs: true,
-      breadcrumb: 'Employees'
+      breadcrumb: 'employees'
     },
     children: [
       {
@@ -49,19 +49,19 @@ const routes = [
         path: ':id/cvs',
         name: 'UserCvs',
         component: UserCvs,
-        meta: { breadcrumb: 'CVs' }
+        meta: { breadcrumb: 'cvs' }
       },
       {
         path: ':id/skills',
         name: 'UserSkills',
         component: UserSkills,
-        meta: { breadcrumb: 'Skills' }
+        meta: { breadcrumb: 'skills' }
       },
       {
         path: ':id/languages',
         name: 'UserLanguages',
         component: UserLanguages,
-        meta: { breadcrumb: 'Languages' }
+        meta: { breadcrumb: 'languages' }
       }
     ]
   },
@@ -71,7 +71,7 @@ const routes = [
     component: Cvs,
     meta: {
       isAuth: true,
-      breadcrumb: 'CVs'
+      breadcrumb: 'cvs'
     }
   },
   {
@@ -80,7 +80,7 @@ const routes = [
     meta: {
       isAuth: true,
       hasTabs: true,
-      breadcrumb: 'CVs'
+      breadcrumb: 'cvs'
     },
     children: [
       {
@@ -95,19 +95,19 @@ const routes = [
         path: ':id/projects',
         name: 'CVProjects',
         component: Projects,
-        meta: { breadcrumb: 'Projects' }
+        meta: { breadcrumb: 'projects' }
       },
       {
         path: ':id/skills',
         name: 'CVSkills',
         component: Skills,
-        meta: { breadcrumb: 'Skills' }
+        meta: { breadcrumb: 'skills' }
       },
       {
         path: ':id/preview',
         name: 'CVPreview',
         component: Preview,
-        meta: { breadcrumb: 'Preview' }
+        meta: { breadcrumb: 'preview' }
       }
     ]
   },
@@ -117,7 +117,7 @@ const routes = [
     component: ProjectsAll,
     meta: {
       isAuth: true,
-      breadcrumb: 'Projects'
+      breadcrumb: 'projects'
     }
   },
 
@@ -143,7 +143,7 @@ const routes = [
     component: AllSkills,
     meta: {
       isAuth: true,
-      breadcrumb: 'Skills'
+      breadcrumb: 'skills'
     }
   },
   {
@@ -152,7 +152,7 @@ const routes = [
     component: Settings,
     meta: {
       isAuth: true,
-      breadcrumb: 'Settings'
+      breadcrumb: 'settings'
     }
   },
   {
@@ -161,7 +161,7 @@ const routes = [
     component: Positions,
     meta: {
       isAuth: true,
-      breadcrumb: 'Positions'
+      breadcrumb: 'positions'
     }
   },
   {
@@ -170,7 +170,7 @@ const routes = [
     component: Departments,
     meta: {
       isAuth: true,
-      breadcrumb: 'Departments'
+      breadcrumb: 'departments'
     }
   },
   {
@@ -179,7 +179,7 @@ const routes = [
     component: Languages,
     meta: {
       isAuth: true,
-      breadcrumb: 'Languages'
+      breadcrumb: 'languages'
     }
   },
   {

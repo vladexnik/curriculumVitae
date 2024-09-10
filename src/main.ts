@@ -3,6 +3,8 @@ import './input.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { i18n } from './i18n' // Import i18n instance
+import { useLangStore } from '@/stores/lang' // Import the lang store
 
 // Apollo client
 import { DefaultApolloClient } from '@vue/apollo-composable'
@@ -38,4 +40,7 @@ app.use(VueCookies, {
 app.use(ToastService)
 app.component('Toast', Toast)
 
+const langStore = useLangStore();
+i18n.global.locale.value = langStore.selectedLang.code; 
+app.use(i18n)
 app.mount('#app')

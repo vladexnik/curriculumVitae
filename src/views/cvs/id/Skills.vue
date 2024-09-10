@@ -47,6 +47,9 @@ import { storeToRefs } from 'pinia';
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router';
 import { useToastNotifications } from '@/composables/useToast'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 
 enum Mastery {

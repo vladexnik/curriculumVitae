@@ -4,7 +4,7 @@
     color="primary"
     class="h-9 border-none"
     @click="openAddModal = true"
-    >Create CV +</Button
+    >{{$t('createCV')}} +</Button
   >
   <Dialog
     v-model:visible="openAddModal"
@@ -19,13 +19,13 @@
             v-model="formData.name"
             type="text"
             :error="v$.name.$errors[0]?.$message"
-            >Name</TextField
+            >{{$t('cvName')}}</TextField
           >
         </div>
 
         <div class="d-flex mb-5 mr-5">
           <TextField v-model="formData.education" type="text">
-            Education
+            {{$t('education')}}
           </TextField>
         </div>
 
@@ -35,14 +35,14 @@
             type="text"
             :error="v$.description.$errors[0]?.$message"
           >
-            Description
+          {{$t('description')}}
           </TextArea>
         </div>
       </form>
       <div class="flex justify-end gap-5">
         <div class="w-[150px]">
           <Button variant="text" color="secondary" @click="openAddModal = false"
-            >Cancel</Button
+            >{{$t('cancel')}}</Button
           >
         </div>
         <div class="w-[150px]">
@@ -51,7 +51,7 @@
             color="secondary"
             @click="submitForm"
             :disabled="disableCreation"
-            >Create</Button
+            >{{$t('create')}}</Button
           >
         </div>
       </div>
@@ -66,6 +66,9 @@ import TextField from '@/components/ui-kit/TextField.vue'
 import TextArea from '@/components/ui-kit/TextArea.vue'
 import { useCVsStore } from '@/stores/cvs'
 import { ref, computed, reactive } from 'vue'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, helpers } from '@vuelidate/validators'

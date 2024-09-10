@@ -45,11 +45,11 @@
             style="font-size: 1rem"
           ></i>
           <span class="text-xl font-medium text-textMain">
-            Upload avatar image
+              {{ $t('uploadAvatar')}}
           </span>
         </div>
 
-        <p class="text-textSec">png, jpg or gif no more than 0.5MB</p>
+        <p class="text-textSec"> {{ $t('uploadText')}}</p>
         <input
           id="upload"
           type="file"
@@ -66,7 +66,7 @@
       <h2 class="text-textMain">{{ userData.profile.full_name }}</h2>
       <p class="mt-2 text-textSec">{{ userData.email }}</p>
       <p class="text-textMain">
-        A member since
+        {{ $t('memberSince')}}
         {{ formatedDate }}
       </p>
     </div>
@@ -80,25 +80,25 @@
         type="text"
         :disabled="isDisabled"
       >
-        First Name
+      {{ $t('firstName')}}
       </TextField>
       <TextField
         v-model.trim="formProfile.lastName"
         type="text"
         :disabled="isDisabled"
       >
-        Last Name
+      {{ $t('lastName')}}
       </TextField>
       <SelectComp
         v-model="formProfile.selectedDepartment"
         :options="departments"
-        placeholder="Department"
+        :placeholder="$t('department')"
         :disabled="isDisabled"
       />
       <SelectComp
         v-model="formProfile.selectedPosition"
         :options="positions"
-        placeholder="Position"
+        :placeholder="$t('position')"
         :disabled="isDisabled"
       />
       <Button
@@ -109,7 +109,7 @@
         @click.prevent="updateProfile"
         :disabled="disabledBtn"
       >
-        Update
+        {{ $t('update')}}
       </Button>
     </form>
   </div>
@@ -134,6 +134,9 @@ import { formatDate } from '@/utils'
 import { getUserData } from '@/service/userData'
 import type { Department, UploadAvatarInput } from 'cv-graphql'
 import { useToastNotifications } from '@/composables/useToast'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const userStore = useUserStore()
 const route = useRoute()

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
+import { i18n } from '@/i18n' // Import i18n
 
 export const useLangStore = defineStore('lang', () => {
   const langs = ref([
@@ -10,15 +11,17 @@ export const useLangStore = defineStore('lang', () => {
 
   const selectedLang = ref(loadSavedLanguage())
 
-  function loadSavedLanguage() {
+  function loadSavedLanguage(): {name: string, code: "en" | "de" | "ru"} {
     const savedLangCode = localStorage.getItem('language')
     return (
       langs.value.find((lang) => lang.code === savedLangCode) || langs.value[0]
     )
   }
 
-  watch(selectedLang, (newLang) => {
+  watch(selectedLang, (newLang: {name: string, code: "en" | "de" | "ru"}) => {
     localStorage.setItem('language', newLang.code)
+    i18n.global.locale = newLang.code
+    selectedLang.value = newLang
   })
 
   return {

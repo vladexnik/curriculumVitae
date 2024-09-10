@@ -8,7 +8,7 @@
     <input
       type="text"
       class="box-border w-full bg-transparent py-[6px] pl-3 text-textMain focus:outline-none"
-      placeholder="Search"
+      :placeholder="t('search')"
       v-model="modelInput"
     />
     <i
@@ -20,7 +20,9 @@
     ></i>
   </div>
 </template>
-<script setup>
+<script setup>import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const modelInput = defineModel({ type: String })
 
 const clearInput = () => {

@@ -118,6 +118,9 @@ import Skeleton from 'primevue/skeleton'
 import Menu from 'primevue/menu'
 import Button from 'primevue/button'
 import { useUserStore } from '@/stores/user'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const menu = ref()
 const router = useRouter()
@@ -132,30 +135,30 @@ const fullName = computed(
 const avatar = computed(() => userData.value?.profile?.avatar || '')
 
 const mainMenuItems = ref([
-  { label: 'Employees', icon: 'pi pi-users', route: '/users' },
-  { label: 'Projects', icon: 'pi pi-folder', route: '/projects' },
-  { label: 'CVs', icon: 'pi pi-file', route: '/cvs' }
+  { label: t('employees'), icon: 'pi pi-users', route: '/users' },
+  { label: t('projects'), icon: 'pi pi-folder', route: '/projects' },
+  { label: t('cvs'), icon: 'pi pi-file', route: '/cvs' }
 ])
 
 const secondaryMenuItems = ref([
-  { label: 'Departments', icon: 'pi pi-building', route: '/departments' },
-  { label: 'Positions', icon: 'pi pi-briefcase', route: '/positions' },
-  { label: 'Skills', icon: 'pi pi-chart-line', route: '/skills' },
-  { label: 'Languages', icon: 'pi pi-globe', route: '/languages' }
+  { label: t('departments'), icon: 'pi pi-building', route: '/departments' },
+  { label: t('positions'), icon: 'pi pi-briefcase', route: '/positions' },
+  { label: t('skills'), icon: 'pi pi-chart-line', route: '/skills' },
+  { label: t('languages'), icon: 'pi pi-globe', route: '/languages' }
 ])
 const modalMenuItems = ref([
   {
     route: computed(() => `/users/${userData.value.id}`),
-    label: 'Profile',
+    label: t('profile'),
     icon: 'pi pi-user'
   },
   {
     route: '/settings',
-    label: 'Settings',
+    label: t('settings'),
     icon: 'pi pi-cog'
   },
   {
-    label: 'Logout',
+    label: t('logout'),
     icon: 'pi pi-sign-out'
   }
 ])

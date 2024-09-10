@@ -2,7 +2,12 @@
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4" v-if="data">
     <div class="d-flex w-[300px] pl-3"><SearchInput v-model="search" /></div>
     <Table :tableData="data" :columns="columnsConfig" />
-    <NoFound @resetSearch="() => (search = '')" v-if="search && !data.length" />
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length">
+      <template #default>
+        <h2 class="text-2xl font-semibold mb-2">{{ $t('customNoResultsTitle') }}</h2>
+        <p class="text-gray-500 mb-4">{{ $t('customNoResultsDescription') }}</p>
+      </template>
+    </NoFound>
   </div>
 </template>
 
@@ -16,6 +21,9 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useUsersListStore } from '@/stores/usersList'
 import { ref, h, watchEffect, watch } from 'vue'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const usersStore = useUsersListStore()
 const { users } = storeToRefs(usersStore)
@@ -54,11 +62,11 @@ const columnsConfig = ref([
       return h(Avatar, obj)
     }
   },
-  { field: 'firstName', header: 'First Name', sortable: true },
-  { field: 'lastName', header: 'Last Name', sortable: true },
-  { field: 'email', header: 'Email', sortable: true },
-  { field: 'department', header: 'Department', sortable: true },
-  { field: 'position', header: 'Position', sortable: true },
+  { field: 'firstName', header: t('firstName'), sortable: true },
+  { field: 'lastName', header: t('lastName'), sortable: true },
+  { field: 'email', header: t('email'), sortable: true },
+  { field: 'department', header: t('department'), sortable: true },
+  { field: 'position', header: t('position'), sortable: true },
   {
     field: 'actionButton',
     header: '',
