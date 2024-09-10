@@ -6,11 +6,33 @@ export type TabsAuthT = {
   route: string
   label: string
 }
+// category?: Nullable<string>;
 
-export type UpdateProfileInputT = {
-  userId: number
+export type userAuthedT = {
+  created_at: string
+  department_name?: Nullable<string>
+  email: string
+  id: string
+  position_name?: Nullable<string>
+  profile: {
+    avatar?: Nullable<string>
+    first_name?: Nullable<string>
+    full_name?: Nullable<string>
+    last_name?: Nullable<string>
+  }
+}
+
+export type UpdateProfileInputsT = {
+  id: string
   first_name: string
   last_name: string
+  full_name: string
+  avatar: string
+}
+
+export type UpdateUserPosDepT = {
+  department_name?: Nullable<string>
+  position_name?: Nullable<string>
 }
 
 export type cvDetailsDataT = {

@@ -7,6 +7,12 @@ import {
   deleteSkill,
   getCategories
 } from '@/service/commonData'
+import {
+  getCVById,
+  addCvSkill,
+  updateCvSkill,
+  deleteCvSkill
+} from '@/service/cvs'
 import { getUserData } from '@/service/userData'
 
 interface DataRow {
@@ -82,6 +88,34 @@ export const useSkillsStore = defineStore('skills', () => {
     }
   }
 
+  const getSkillListByCVId = async (cvId) => {
+    const data = await getCVById(cvId)
+    if (data) {
+      const res = { skills: data.skills, userId: data.user.id }
+      return res
+    }
+  }
+
+  const addCVSkill = async (obj) => {
+    const data = await addCvSkill(obj)
+    if (data) {
+      return data.addCvSkill
+    }
+  }
+
+  const updateCVSkill = async (obj) => {
+    const data = await updateCvSkill(obj)
+    if (data) {
+      return data.updateCvSkill
+    }
+  }
+  const deleteCVSkill = async (obj) => {
+    const data = await deleteCvSkill(obj)
+    if (data) {
+      return data.deleteCvSkill
+    }
+  }
+
   onMounted(async () => {
     if (!skills.value) await getSkillsList()
     if (!skillsCategories.value) await getSkillsCategories()
@@ -94,6 +128,10 @@ export const useSkillsStore = defineStore('skills', () => {
     addProfileSkill,
     updateProfileSkill,
     deleteProfileSkill,
-    getSkillsCategories
+    getSkillsCategories,
+    getSkillListByCVId,
+    addCVSkill,
+    updateCVSkill,
+    deleteCVSkill
   }
 })

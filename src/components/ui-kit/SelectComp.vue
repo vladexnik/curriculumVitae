@@ -46,7 +46,7 @@ export type Option = {
 const modelValue = defineModel<Option | null>()
 
 defineProps<{
-  options: Option[] | null
+  options: Option[] | null | string
   placeholder: string
   disabled?: boolean
   grouped?: boolean

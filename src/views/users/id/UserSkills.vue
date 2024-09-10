@@ -6,7 +6,7 @@
   >
     <div>{{ element.category }}</div>
     <div class="mt-2 flex flex-wrap pl-14">
-      <div class="mt-6 min-w-56" v-for="el in element.skills" :key="el.id">
+      <div class="mx-2 mt-6 min-w-56" v-for="el in element.skills" :key="el.id">
         <Button
           variant="text"
           color="secondary"
@@ -60,10 +60,9 @@ import AddUpdateModal from '@/components/ui-kit/AddUpdateModal.vue'
 import { useSkillsStore } from '@/stores/skills'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToastNotifications } from '@/composables/useToast'
-import { get } from 'http'
 
 enum Mastery {
   Novice = 20,
@@ -273,7 +272,6 @@ const getData = async () => {
   try {
     currentUserSkills.value = await getSkillListByUserId(currentUserId.value)
     skillsCategories.value = await getSkillsCategories()
-    console.log(currentUserSkills.value, skillsCategories.value)
     if (currentUserSkills.value && skillsCategories.value) {
       updateUISKillsData()
     }

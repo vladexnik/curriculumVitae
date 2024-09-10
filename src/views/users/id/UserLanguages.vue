@@ -39,7 +39,7 @@ import AddUpdateModal from '@/components/ui-kit/AddUpdateModal.vue';
 import { useLanguagesStore } from '@/stores/languages';
 import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router';
 import { useToastNotifications } from '@/composables/useToast'
 

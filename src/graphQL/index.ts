@@ -22,6 +22,24 @@ export const LOGIN_QUERY = gql`
   }
 `
 
+export const GET_BASE_USER_DATA_BY_ID = gql`
+  query USER($userId: ID!) {
+    user(userId: $userId) {
+      id
+      created_at
+      email
+      position_name
+      department_name
+      profile {
+        first_name
+        last_name
+        full_name
+        avatar
+      }
+    }
+  }
+`
+
 export const GET_USER_DATA_BY_ID = gql`
   query USER($userId: ID!) {
     user(userId: $userId) {
@@ -38,6 +56,15 @@ export const GET_USER_DATA_BY_ID = gql`
         user {
           id
           email
+        }
+        projects {
+          id
+          name
+          domain
+          start_date
+          end_date
+          description
+          responsibilities
         }
       }
       profile {
@@ -109,6 +136,12 @@ export const CV = gql`
         internal_name
         description
         domain
+        start_date
+        end_date
+        responsibilities
+        project {
+          id
+        }
       }
       skills {
         name
@@ -401,7 +434,11 @@ export const ADD_CV_PROJECT = gql`
         domain
         start_date
         end_date
-        team_size
+        description
+        responsibilities
+        project {
+          id
+        }
       }
     }
   }
@@ -422,7 +459,11 @@ export const UPDATE_CV_PROJECT = gql`
         domain
         start_date
         end_date
-        team_size
+        description
+        responsibilities
+        project {
+          id
+        }
       }
     }
   }
@@ -430,7 +471,7 @@ export const UPDATE_CV_PROJECT = gql`
 
 export const REMOVE_CV_PROJECT = gql`
   mutation RemoveCvProject($project: RemoveCvProjectInput!) {
-    RemoveCvProject(project: $project) {
+    removeCvProject(project: $project) {
       id
       name
       user {
@@ -443,7 +484,11 @@ export const REMOVE_CV_PROJECT = gql`
         domain
         start_date
         end_date
-        team_size
+        description
+        responsibilities
+        project {
+          id
+        }
       }
     }
   }
@@ -459,7 +504,6 @@ export const ADD_CV_SKILL = gql`
       }
       skills {
         name
-        category
         mastery
       }
     }
@@ -476,7 +520,6 @@ export const UPDATE_CV_SKILL = gql`
       }
       user {
         name
-        category
         mastery
       }
     }
@@ -493,7 +536,6 @@ export const DELETE_CV_SKILL = gql`
       }
       skills {
         name
-        category
         mastery
       }
     }
@@ -802,8 +844,6 @@ export const CREATE_USER = gql`
 export const UPDATE_USER = gql`
   mutation UpdateUser($user: UpdateUserInput!) {
     updateUser(user: $user) {
-      id
-      email
       department_name
       position_name
     }

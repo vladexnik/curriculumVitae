@@ -7,7 +7,9 @@
       <div class="relative h-[120px] w-[120px]">
         <Avatar
           v-if="!userData.profile.avatar"
-          label="V"
+          :label="
+            userData.profile.first_name?.charAt(0) || userData.email.charAt(0)
+          "
           class="text-bgColor"
           style="
             background-color: var(--color-primary);
@@ -131,15 +133,20 @@ import {
 } from '@/service/profile'
 import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils'
-import { getUserData } from '@/service/userData'
+import { getBaseUserData } from '@/service/userData'
 import type { Department, UploadAvatarInput } from 'cv-graphql'
 import { useToastNotifications } from '@/composables/useToast'
+import type {
+  UpdateProfileInputsT,
+  UpdateUserPosDepT,
+  userAuthedT
+} from '@/models/models'
 
 const userStore = useUserStore()
 const route = useRoute()
 const id = computed(() => route.params.id as string)
 const userId = computed(() => userStore.authedUser?.id)
-const userData = ref<any>(null)
+const userData = ref<userAuthedT | undefined | null>(null)
 const departments = ref<Department[]>([])
 const positions = ref<Department[]>([])
 const isDisabled = ref(false)
@@ -191,7 +198,7 @@ const processFile = (file: File) => {
     const size = file.size
     const type = file.type
     uploadImage({
-      userId: userId.value,
+      userId: userId.value || '',
       base64,
       size,
       type
@@ -203,42 +210,44 @@ const processFile = (file: File) => {
 const uploadImage = async (data: UploadAvatarInput) => {
   try {
     const imageString = await uploadAvatar(data)
-    userStore.authedUser = {
-      ...userStore.authedUser,
-      profile: {
-        ...userStore.authedUser?.profile,
-        avatar: imageString
+    if (userStore.authedUser) {
+      userStore.authedUser = {
+        ...userStore.authedUser,
+        profile: {
+          ...userStore.authedUser?.profile,
+          avatar: imageString
+        }
       }
     }
     if (imageString) {
       showSuccessUpload()
     }
   } catch (e) {
-    console.log(e)
     showError()
   }
 }
 
 const handleDeleteAvatar = async () => {
   await deleteAvatar({
-    userId: userId.value
+    userId: userId.value || ''
   })
 
-  userStore.authedUser = {
-    ...userStore.authedUser,
-    profile: {
-      ...userStore.authedUser?.profile,
-      avatar: null
+  if (userStore.authedUser) {
+    userStore.authedUser = {
+      ...userStore.authedUser,
+      profile: {
+        ...userStore.authedUser?.profile,
+        avatar: null
+      }
     }
   }
 }
 
 const setAllFieldsData = async () => {
-  console.log(id.value, userId.value, userData.value)
   if (userData.value && id.value !== userId.value) return
   try {
     if (id.value && id.value !== userId.value) {
-      userData.value = await getUserData(id.value)
+      userData.value = await getBaseUserData(id.value)
       isDisabled.value = true
     } else {
       userData.value = userStore.authedUser
@@ -247,14 +256,14 @@ const setAllFieldsData = async () => {
     setSelectValues()
     setTextFieldsValues()
   } catch (e) {
-    console.error('Error fetching user data:', e)
+    showError()
   }
 }
 
 const setTextFieldsValues = () => {
   if (userData.value?.profile) {
-    formProfile.firstName = userData.value.profile.first_name
-    formProfile.lastName = userData.value.profile.last_name
+    formProfile.firstName = userData.value.profile.first_name || ''
+    formProfile.lastName = userData.value.profile.last_name || ''
   }
 }
 
@@ -262,11 +271,11 @@ const setSelectValues = () => {
   if (userData.value && departments.value.length && positions.value.length) {
     formProfile.selectedDepartment =
       departments.value.find(
-        (department) => department.name === userData.value.department_name
+        (department) => department.name === userData.value?.department_name
       ) || null
     formProfile.selectedPosition =
       positions.value.find(
-        (position) => position.name === userData.value.position_name
+        (position) => position.name === userData.value?.position_name
       ) || null
   }
 }
@@ -288,28 +297,39 @@ const fetchSelectsData = async () => {
       ...positionsData.positions
     ]
   } catch (e) {
-    console.log('Error fetching departments and positions:', e)
+    showError()
   }
 }
 
 const updateProfile = async () => {
   try {
-    const updatedProfile = await updateProfileInput({
-      userId: userId.value,
+    const updatedProfile: UpdateProfileInputsT = await updateProfileInput({
+      userId: userId.value || '',
       first_name: formProfile.firstName,
       last_name: formProfile.lastName
     })
-
-    const updatedUser = await updateUserInput({
-      userId: userId.value,
+    const updatedUser: UpdateUserPosDepT = await updateUserInput({
+      userId: userId.value || '',
       departmentId: formProfile.selectedDepartment?.id || '',
       positionId: formProfile.selectedPosition?.id || ''
     })
 
-    userStore.updateUserProfile(updatedUser, updatedProfile)
+    if (userStore.authedUser) {
+      userStore.authedUser = {
+        ...userStore.authedUser,
+        department_name: updatedUser.department_name || null,
+        position_name: updatedUser.position_name || null,
+        profile: {
+          ...userStore.authedUser?.profile,
+          first_name: updatedProfile.first_name,
+          last_name: updatedProfile.last_name,
+          full_name: `${updatedProfile.first_name} ${updatedProfile.last_name}`
+        }
+      }
+    }
     showProfileUpdate()
   } catch (e) {
-    console.log(e)
+    showError()
   }
 }
 
@@ -318,6 +338,7 @@ onBeforeMount(async () => {
     await fetchSelectsData()
     await setAllFieldsData()
   } catch (error) {
+    showError()
     console.error(error)
   }
 })

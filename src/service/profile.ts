@@ -7,6 +7,7 @@ import {
   UPDATE_USER,
   UPLOAD_AVATAR
 } from '@/graphQL'
+import type { UpdateProfileInputsT, UpdateUserPosDepT } from '@/models/models'
 import apolloClient from '@/plugins/apollo'
 import type {
   DeleteAvatarInput,
@@ -53,7 +54,9 @@ export const updatePosition = async (positionInput) => {
   }
 }
 
-export const updateProfileInput = async (profile: UpdateProfileInput) => {
+export const updateProfileInput = async (
+  profile: UpdateProfileInput
+): Promise<UpdateProfileInputsT> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: UPDATE_PROFILE,
@@ -63,21 +66,26 @@ export const updateProfileInput = async (profile: UpdateProfileInput) => {
     })
     return data.updateProfile
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    throw new Error('Failed to update user fields')
   }
 }
 
-export const updateUserInput = async (user: UpdateUserInput) => {
+export const updateUserInput = async (
+  user: UpdateUserInput
+): Promise<UpdateUserPosDepT> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: UPDATE_USER,
-      variables: {
-        user
-      }
+      variables: { user }
     })
+
+    if (!data || !data.updateUser) {
+      throw new Error('No data returned from updateUser mutation')
+    }
+
     return data.updateUser
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    throw new Error('Failed to update user')
   }
 }
 
@@ -99,22 +107,17 @@ export const deleteAvatar = async (
 export const uploadAvatar = async (
   avatar: UploadAvatarInput
 ): Promise<string | undefined> => {
-  // try {
-  const { data } = await apolloClient.mutate({
-    mutation: UPLOAD_AVATAR,
-    variables: {
-      avatar
-    }
-  })
-  console.log(data)
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: UPLOAD_AVATAR,
+      variables: {
+        avatar
+      }
+    })
+    console.log(data)
 
-  return data.uploadAvatar
-  // } catch (e) {
-  //   console.log('err image')
-  //   useToast().add({
-  //     detail: 'Failed to fetch',
-  //     life: 3000
-  //   })
-  //   // console.error(JSON.stringify(e, null, 2))
-  // }
+    return data.uploadAvatar
+  } catch (e) {
+    console.log('Error uploading image')
+  }
 }

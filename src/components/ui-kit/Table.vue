@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, ref } from 'vue'
+import { defineProps, computed } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 

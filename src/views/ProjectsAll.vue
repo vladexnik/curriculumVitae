@@ -22,7 +22,7 @@ interface DataRow {
     name: string,
     domain: string,
     startDate: string,
-    endrDate: string,
+    endDate: string,
     description: string,
     environment: string[],
 }

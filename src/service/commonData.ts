@@ -91,7 +91,7 @@ export const getSkills = async (): Promise<any> => {
   }
 }
 
-export const addSkill= async (obj): Promise<any> => {
+export const addSkill = async (obj): Promise<any> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: ADD_PROFILE_SKILL,

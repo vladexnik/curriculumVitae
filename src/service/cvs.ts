@@ -5,9 +5,12 @@ import {
   CV,
   UPDATE_CV_DETAILS,
   CV_NAME,
-  CV_DETAILS,
   CV_SKILLS,
-  EXPORT_PDF
+  EXPORT_PDF,
+  CV_DETAILS,
+  ADD_CV_SKILL,
+  UPDATE_CV_SKILL,
+  DELETE_CV_SKILL
 } from '@/graphQL'
 import type { createCVT, CVData, cvDetailsDataT, CVsAll } from '@/models/models'
 import apolloClient from '@/plugins/apollo'
@@ -167,5 +170,49 @@ export const getCVPreview = async (
     return data.cv
   } catch (e) {
     console.log(e)
+  }
+}
+
+export const addCvSkill = async (obj): Promise<any> => {
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: ADD_CV_SKILL,
+      variables: {
+        skill: obj
+      },
+      fetchPolicy: 'network-only'
+    })
+    return data
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2))
+  }
+}
+export const updateCvSkill = async (obj): Promise<any> => {
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: UPDATE_CV_SKILL,
+      variables: {
+        skill: obj
+      },
+      fetchPolicy: 'network-only'
+    })
+    return data
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2))
+  }
+}
+
+export const deleteCvSkill = async (obj): Promise<any> => {
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: DELETE_CV_SKILL,
+      variables: {
+        skill: obj
+      },
+      fetchPolicy: 'network-only'
+    })
+    return data
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2))
   }
 }
