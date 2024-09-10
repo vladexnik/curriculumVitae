@@ -13,18 +13,15 @@ export type UpdateProfileInputT = {
   last_name: string
 }
 
-export type cvUserDataT = {
-  email: string
-  id: string
-  __typename: string
-}
-
-export type fetchedCvT = {
+export type cvDetailsDataT = {
   description: string
   education: string
   id: string
   name: string
-  user: cvUserDataT
+  user: {
+    email: string
+    id: string
+  }
 }
 
 export type SkillMastery = {
@@ -34,11 +31,28 @@ export type SkillMastery = {
 }
 
 export type SkillCategory = {
-  __typename: string
   id: string
   name: string
   order: number
   parent: SkillCategory | null
+}
+
+export type createCVT = {
+  name: string
+  userId: string
+  education: string
+  description: string
+}
+
+export type CVsAll = {
+  id: string
+  name: string
+  education: string
+  description: string
+  user: {
+    id: string
+    email: string
+  }
 }
 
 export type CVUser = {
@@ -73,14 +87,10 @@ export type CVData = {
   languages: LanguageProficiency[]
 }
 
-// export type UserDataT = {
-//   created_at: string
-//   department_name: string
-//   email: string
-//   id: string | number
-//   position_name: string,
-//   profile {
-//           full_name
-//           avatar
-//         }
-// }
+export type TableDataArray = {
+  categoryId: string | null
+  category: string | null
+  name: string
+  experience: number | null
+  lastUsed: string
+}

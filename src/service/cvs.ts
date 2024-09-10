@@ -7,13 +7,20 @@ import {
   CV_NAME,
   CV_DETAILS,
   CV_SKILLS,
-  SKILL_CATEGORIES,
   EXPORT_PDF
 } from '@/graphQL'
+import type { createCVT, CVData, cvDetailsDataT, CVsAll } from '@/models/models'
 import apolloClient from '@/plugins/apollo'
-import type { ExportPdfInput } from 'cv-graphql'
+import type {
+  DeleteCvInput,
+  DeleteResult,
+  ExportPdfInput,
+  UpdateCvInput
+} from 'cv-graphql'
+import { useToastNotifications } from '@/composables/useToast'
+// const { showError } = useToastNotifications()
 
-export const getCVsList = async (): Promise<any> => {
+export const getCVsList = async (): Promise<CVsAll | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: CVS,
@@ -21,11 +28,13 @@ export const getCVsList = async (): Promise<any> => {
     })
     return data
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    console.log(e)
   }
 }
 
-export const deleteCV = async (id: string): Promise<any> => {
+export const deleteCV = async (
+  id: DeleteCvInput
+): Promise<DeleteResult | undefined> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: DELETE_CV,
@@ -36,11 +45,11 @@ export const deleteCV = async (id: string): Promise<any> => {
     })
     return data
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    console.log(e)
   }
 }
 
-export const exportPDFCv = async (pdf: ExportPdfInput): Promise<string> => {
+export const exportPDFCV = async (pdf: ExportPdfInput): Promise<string> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: EXPORT_PDF,
@@ -51,11 +60,12 @@ export const exportPDFCv = async (pdf: ExportPdfInput): Promise<string> => {
     })
     return data.exportPdf
   } catch (e) {
+    console.log(e)
     throw new Error('Error exporting PDF')
   }
 }
 
-export const getCVById = async (cvId): Promise<any> => {
+export const getCVById = async (cvId: string): Promise<any> => {
   try {
     const { data } = await apolloClient.query({
       query: CV,
@@ -66,11 +76,13 @@ export const getCVById = async (cvId): Promise<any> => {
     })
     return data.cv
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    console.log(e)
   }
 }
 
-export const getCVNameById = async (cvId): Promise<any> => {
+export const getCVNameById = async (
+  cvId: string
+): Promise<{ id: string; name: string } | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: CV_NAME,
@@ -81,31 +93,30 @@ export const getCVNameById = async (cvId): Promise<any> => {
     })
     return data.cv
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    console.log(e)
   }
 }
 
-export const getCVDetailsById = async (cvId): Promise<any> => {
+export const getCVDetailsById = async (
+  cvId: string
+): Promise<cvDetailsDataT | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: CV_DETAILS,
       variables: {
         cvId
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-first'
     })
     return data.cv
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    console.log(e)
   }
 }
 
-export const createCV = async (obj: {
-  name: string
-  userId: string
-  education: string
-  description: string
-}): Promise<any> => {
+export const createCV = async (
+  obj: createCVT
+): Promise<createCVT | undefined> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: CREATE_CV,
@@ -121,11 +132,13 @@ export const createCV = async (obj: {
     })
     return data
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    console.log(e)
   }
 }
 
-export const updateCVDetails = async (cv: any): Promise<any> => {
+export const updateCVDetails = async (
+  cv: UpdateCvInput
+): Promise<cvDetailsDataT | undefined> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: UPDATE_CV_DETAILS,
@@ -136,34 +149,23 @@ export const updateCVDetails = async (cv: any): Promise<any> => {
     })
     return data.updateCv
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-    return null // or you could return a default Cv object
+    console.log(e)
   }
 }
 
-export const getCVPreview = async (cvId: string): Promise<any> => {
+export const getCVPreview = async (
+  cvId: string
+): Promise<CVData | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: CV_SKILLS,
       variables: {
         cvId
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-first'
     })
     return data.cv
   } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-  }
-}
-
-export const getSkillCategories = async (): Promise<any> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: SKILL_CATEGORIES,
-      fetchPolicy: 'network-only'
-    })
-    return data.skillCategories
-  } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
+    console.log(e)
   }
 }

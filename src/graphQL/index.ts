@@ -128,10 +128,6 @@ export const CV_NAME = gql`
     cv(cvId: $cvId) {
       id
       name
-      user {
-        id
-        email
-      }
     }
   }
 `
@@ -190,7 +186,7 @@ export const CV_SKILLS = gql`
   }
 `
 
-export const SKILL_CATEGORIES = gql`
+export const SKILLS_CATEGORIES = gql`
   query skillCategories {
     skillCategories {
       id
@@ -296,15 +292,6 @@ export const PROJECT = gql`
         name
         category
       }
-    }
-  }
-`
-
-export const SKILLS_CATEGORIES = gql`
-  query SkillsCategories {
-    skillCategories {
-      id
-      name
     }
   }
 `

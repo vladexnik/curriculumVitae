@@ -72,7 +72,7 @@
 <script lang="ts" setup>
 import SkillsLayout from '@/components/SkillsLayout.vue'
 import Button from '@/components/ui-kit/Button.vue'
-import { exportPDFCv, getCVPreview } from '@/service/cvs'
+import { exportPDFCV, getCVPreview } from '@/service/cvs'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ProjectLayout from '@/components/ProjectLayout.vue'
@@ -91,11 +91,10 @@ const { skillsCategories } = storeToRefs(skillsStore)
 
 const id = computed(() => route.params.id as string)
 const isDisabled = ref(false)
-const fullCvData = ref<CVData | null>(null)
+const fullCvData = ref<CVData | undefined | null>(null)
 
 onMounted(async () => {
   fullCvData.value = await getCVPreview(id.value)
-  console.log('cvData', fullCvData.value)
 })
 
 const handleExportPDF = async () => {
@@ -127,7 +126,7 @@ const handleExportPDF = async () => {
 
     try {
       showInfo()
-      let result = await exportPDFCv(pdfInput)
+      let result = await exportPDFCV(pdfInput)
       if (result.startsWith('JVB')) {
         result = 'data:application/pdf;base64,' + result
         downloadFileObject(result)

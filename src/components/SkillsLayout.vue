@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-// import type { SkillCategory, SkillMastery } from '@/models/models'
 import type { SkillCategory } from '@/models/models'
 import type { SkillMastery } from 'cv-graphql'
 import { computed } from 'vue'
@@ -54,6 +53,7 @@ const groupedSkills = computed(() => {
     }
     result[categoryName].push(skillObj)
   })
+
   const sortedResult: { [categoryName: string]: SkillMastery[] } = {}
 
   orderedCategories.forEach((categoryName) => {
@@ -63,7 +63,6 @@ const groupedSkills = computed(() => {
   })
   return sortedResult
 })
-console.log(groupedSkills.value)
 </script>
 
 <style scoped>

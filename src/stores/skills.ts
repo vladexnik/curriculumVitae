@@ -35,7 +35,6 @@ export const useSkillsStore = defineStore('skills', () => {
     const data = await getCategories()
     if (data) {
       skillsCategories.value = data.skillCategories
-      console.log(skillsCategories.value)
       return skillsCategories.value
     }
   }

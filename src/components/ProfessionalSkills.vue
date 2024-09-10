@@ -1,5 +1,5 @@
 <template>
-  <table v-if="resultedArray" class="w-full">
+  <table v-if="tableDataArray" class="w-full">
     <thead class="h-14">
       <tr class="cv-preview__table-head">
         <th class="px-4 py-2 text-left" colspan="2">Skills</th>
@@ -11,15 +11,15 @@
       <tr
         :class="{
           'cv-preview__table-body-border':
-            index === resultedArray.length - 1 ||
-            resultedArray[index + 1].category !== skill.category
+            index === tableDataArray.length - 1 ||
+            tableDataArray[index + 1].category !== skill.category
         }"
-        v-for="(skill, index) in resultedArray"
+        v-for="(skill, index) in tableDataArray"
         :key="skill.name"
       >
         <td
           v-if="
-            index === 0 || resultedArray[index - 1].category !== skill.category
+            index === 0 || tableDataArray[index - 1].category !== skill.category
           "
           class="min-w-[150px] max-w-[240px] px-4 py-2 text-primary"
         >
@@ -38,18 +38,18 @@
 </template>
 
 <script setup lang="ts">
-import type { CVData, SkillCategory } from '@/models/models'
+import type { CVData, SkillCategory, TableDataArray } from '@/models/models'
 
 const props = defineProps<{
   skillsCategories: SkillCategory[]
   cvData: CVData
 }>()
 
-const resultedArray = props.cvData.skills
+const tableDataArray: TableDataArray[] = props.cvData.skills
   .map((skill) => {
-    const categoryId = skill.categoryId || '2'
-    const category = props.skillsCategories.find((cat) => cat.id === categoryId)
-
+    const categoryId = skill.categoryId || null
+    const category =
+      props.skillsCategories.find((cat) => cat.id === categoryId)?.name || null
     const relevantProjects = props.cvData.projects.filter((project) =>
       project.environment.includes(skill.name)
     )
@@ -57,9 +57,9 @@ const resultedArray = props.cvData.skills
     if (relevantProjects.length === 0) {
       return {
         categoryId,
-        category: category?.name,
+        category: category,
         name: skill.name,
-        experience: '',
+        experience: null,
         lastUsed: ''
       }
     }
@@ -86,15 +86,13 @@ const resultedArray = props.cvData.skills
 
     return {
       categoryId,
-      category: category?.name,
+      category: category,
       name: skill.name,
       experience: experience,
       lastUsed: nearestEndDate
     }
   })
-  .sort((a, b) => parseInt(a.categoryId) - parseInt(b.categoryId))
-
-console.log(resultedArray, props.cvData)
+  .sort((a, b) => parseInt(a.categoryId ?? '0') - parseInt(b.categoryId ?? '0'))
 </script>
 
 <style scoped>

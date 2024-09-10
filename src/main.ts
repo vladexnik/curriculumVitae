@@ -27,6 +27,7 @@ app.use(PrimeVue, {
   },
   ripple: true
 })
+
 app.use(router)
 app.use(createPinia())
 app.use(VueCookies, {

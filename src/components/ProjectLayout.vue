@@ -10,7 +10,10 @@
       <p class="title">Project roles</p>
       <p>{{ role }}</p>
       <p class="title">Period</p>
-      <p>{{ project.start_date }} - {{ project.end_date }}</p>
+      <p>
+        {{ formatDateToMonthYear(project.start_date) }} -
+        {{ project.end_date ? formatDateToMonthYear(project.end_date) : '' }}
+      </p>
       <p class="title">Responsibilities</p>
       <ul>
         <li
@@ -28,6 +31,7 @@
 </template>
 <script lang="ts" setup>
 import type { CVProjectBase } from '@/models/models'
+import { formatDateToMonthYear } from '@/utils'
 
 defineProps<{
   project: CVProjectBase
