@@ -5,7 +5,7 @@
         <SearchInput v-model="search" class="h-9"/> 
       </div>
       <div class="d-flex w-[300px] pl-3 h-10">
-        <CreateCV @addedCV="updateData" :currentUserId="authedUser.id"/>
+        <CreateCV @addedCV="updateData" :currentUserId="authedUser?.id"/>
       </div>
     </div>
     <Table v-if="filteredData" :tableData="filteredData" :columns="columnsConfig" />

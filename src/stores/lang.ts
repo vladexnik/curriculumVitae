@@ -20,7 +20,7 @@ export const useLangStore = defineStore('lang', () => {
 
   watch(selectedLang, (newLang: {name: string, code: "en" | "de" | "ru"}) => {
     localStorage.setItem('language', newLang.code)
-    i18n.global.locale = newLang.code
+    i18n.global.locale.value = newLang.code
     selectedLang.value = newLang
   })
 

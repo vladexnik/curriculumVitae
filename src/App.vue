@@ -8,8 +8,9 @@ import { useThemeStore } from './stores/theme'
 import { useLangStore } from './stores/lang'
 import ProfileUserTabs from './components/ProfileUserTabs.vue'
 import BreadcrumbsUser from './components/BreadcrumbsUser.vue'
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, computed } from 'vue'
 import { useUserStore } from './stores/user'
+import { i18n } from '@/i18n' 
 
 const { getCookies } = useCookie()
 
@@ -24,14 +25,14 @@ themeStore.$subscribe((mutation, state) => {
 langStore.$subscribe((mutation, state) => {
   langStore.selectedLang = state.selectedLang
 })
-
+const loacaleKey = computed(() => i18n.global.locale.value)
 onBeforeMount(async () => {
   useUserStore().initializeAuth()
 })
 </script>
 
 <template>
-  <div :class="{ wrapper: route.meta.isAuth }">
+  <div :class="{ wrapper: route.meta.isAuth }" :key="loacaleKey">
     <AppHeader v-if="!route.meta.isAuth && !refreshToken" />
     <DropdownMenu v-if="route.meta.isAuth" />
     <main class="h-screen px-6">
