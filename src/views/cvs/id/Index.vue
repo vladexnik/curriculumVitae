@@ -38,7 +38,7 @@
         variant="contained"
         color="primary"
         @click.prevent="submitForm"
-        :disabled="disabledBtn"
+        :disabled="isDisabledBtn"
       >
         Update
       </Button>
@@ -75,7 +75,7 @@ const formData = reactive({
   description: ''
 })
 
-const disabledBtn = computed(() => {
+const isDisabledBtn = computed(() => {
   if (cvDetailsData.value) {
     const bool =
       formData.name === cvDetailsData.value.name &&
@@ -102,18 +102,26 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, formData)
 
 async function setFormData() {
-  cvDetailsData.value = await getCVDetailsById(id.value)
-  if (cvDetailsData.value) {
-    formData.name = cvDetailsData.value.name || ''
-    formData.description = cvDetailsData.value.description || ''
-    formData.education = cvDetailsData.value.education || ''
-    formData.cvId = cvDetailsData.value?.id || ''
+  try {
+    cvDetailsData.value = await getCVDetailsById(id.value)
+    if (cvDetailsData.value) {
+      formData.name = cvDetailsData.value.name || ''
+      formData.description = cvDetailsData.value.description || ''
+      formData.education = cvDetailsData.value.education || ''
+      formData.cvId = cvDetailsData.value?.id || ''
 
-    isDisabled.value =
-      userStore.authedUser?.id !== cvDetailsData.value?.user?.id
+      isDisabled.value =
+        userStore.authedUser?.id !== cvDetailsData.value?.user?.id
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
   }
 }
-
 async function submitForm() {
   try {
     const result = await v$.value.$validate()

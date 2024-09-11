@@ -93,7 +93,7 @@ export const useProjectsListStore = defineStore('projects', () => {
     }
   }
 
-  const deleleteProjectbyId = async (cvId: string, projectId: string) => {
+  const deleteProjectbyId = async (cvId: string, projectId: string) => {
     const data = await deleteProject(cvId, projectId)
     if (data) {
       const projectsArr = data.projects.map((project) => {
@@ -117,7 +117,7 @@ export const useProjectsListStore = defineStore('projects', () => {
   return {
     projects,
     getProjectsByCVId,
-    deleleteProjectbyId,
+    deleteProjectbyId,
     updateProjectbyId,
     addProjectbyId
   }

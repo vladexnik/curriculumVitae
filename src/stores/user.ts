@@ -61,25 +61,33 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const initializeAuth = async () => {
-    const token = getCookies('accessToken')
-    const refreshToken = getCookies('refreshToken')
+    try {
+      const token = getCookies('accessToken')
+      const refreshToken = getCookies('refreshToken')
 
-    if (token) {
-      const decoded = parseJwt(token)
-      if (decoded) {
-        const userId = decoded['sub']
-        const dataUser = await getBaseUserData(userId)
-        if (dataUser) {
-          authedUser.value = dataUser
-          isAuthed.value = true
+      if (token) {
+        const decoded = parseJwt(token)
+        if (decoded) {
+          const userId = decoded['sub']
+          const dataUser = await getBaseUserData(userId)
+          if (dataUser) {
+            authedUser.value = dataUser
+            isAuthed.value = true
+          } else {
+            isAuthed.value = false
+          }
         } else {
           isAuthed.value = false
         }
       } else {
         isAuthed.value = false
       }
-    } else {
-      isAuthed.value = false
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.log(e.message)
+      } else {
+        console.log('Error')
+      }
     }
   }
 

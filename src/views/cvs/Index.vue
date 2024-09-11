@@ -34,6 +34,7 @@ import { useRouter } from 'vue-router'
 import { useCVsStore } from '@/stores/cvs'
 import { useUserStore } from '@/stores/user'
 import { ref, h, watchEffect, watch } from 'vue'
+import { useToastNotifications } from '@/composables/useToast'
 
 const userStore = useUserStore()
 const { authedUser } = storeToRefs(userStore)
@@ -41,6 +42,8 @@ const cvsStore = useCVsStore()
 const { cvs } = storeToRefs(cvsStore)
 const { deleleteCVbyId } = cvsStore
 const router = useRouter()
+const { showError } =
+  useToastNotifications()
 
 interface DataRow {
   id: string
@@ -58,11 +61,19 @@ const reset = () => {
   openDeleteConfirmation.value = false
 }
 const deleteCV = async () => {
-  await deleleteCVbyId(cvToDelete.value.id)
-  data.value = data.value?.filter((cv) => cv.id !== cvToDelete.value.id)
-  cvs.value = data.value
-  cvToDelete.value = null
-  openDeleteConfirmation.value = false
+  try {
+    await deleleteCVbyId(cvToDelete.value.id)
+    data.value = data.value?.filter((cv) => cv.id !== cvToDelete.value.id)
+    cvs.value = data.value
+    cvToDelete.value = null
+    openDeleteConfirmation.value = false
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
+  }
 }
 
 const search = ref<String>('')

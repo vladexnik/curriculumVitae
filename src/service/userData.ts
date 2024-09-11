@@ -6,21 +6,17 @@ import {
 } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
 import { useCookie } from '@/composables/cookies'
-import type { userAuthedT } from '@/models/models'
+import type { userAuthedT, userNameT } from '@/models/models'
 
 const { setCookies } = useCookie()
 
 export const updateAccessToken = async () => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: UPDATE_ACCESS_TOKEN
-    })
-    setCookies('accessToken', data.updateToken?.access_token)
-    console.log('UPDATED TOKEN:', data.updateToken)
-    return data.updateToken?.access_token
-  } catch (e) {
-    console.log(e)
-  }
+  const { data } = await apolloClient.mutate({
+    mutation: UPDATE_ACCESS_TOKEN
+  })
+  setCookies('accessToken', data.updateToken?.access_token)
+  console.log('UPDATED TOKEN:', data.updateToken)
+  return data.updateToken?.access_token
 }
 
 export const getUserData = async (userId: string): Promise<any> => {
@@ -39,32 +35,24 @@ export const getUserData = async (userId: string): Promise<any> => {
   }
 }
 
-export const getBaseUserData = async (userId: string): Promise<userAuthedT | undefined> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: GET_BASE_USER_DATA_BY_ID,
-      variables: {
-        userId
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data.user
-  } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-  }
+export const getBaseUserData = async (userId: string): Promise<userAuthedT> => {
+  const { data } = await apolloClient.query({
+    query: GET_BASE_USER_DATA_BY_ID,
+    variables: {
+      userId
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data.user
 }
 
-export const getUserName = async (userId): Promise<any> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: GET_USER_NAME,
-      variables: {
-        userId
-      },
-      fetchPolicy: 'cache-first'
-    })
-    return data.user
-  } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-  }
+export const getUserName = async (userId): Promise<userNameT> => {
+  const { data } = await apolloClient.query({
+    query: GET_USER_NAME,
+    variables: {
+      userId
+    },
+    fetchPolicy: 'cache-first'
+  })
+  return data.user
 }

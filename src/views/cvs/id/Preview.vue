@@ -85,7 +85,8 @@ import type { CVData } from '@/models/models'
 import { NO_EDUCATION } from '@/components/ui-kit/constants/constants'
 
 const route = useRoute()
-const { showError, showInfo } = useToastNotifications()
+const { showError, showSuccessUpload, showProfileUpdate, showInfo } =
+  useToastNotifications()
 const skillsStore = useSkillsStore()
 const { skillsCategories } = storeToRefs(skillsStore)
 
@@ -94,14 +95,22 @@ const isDisabled = ref(false)
 const fullCvData = ref<CVData | undefined | null>(null)
 
 onMounted(async () => {
-  fullCvData.value = await getCVPreview(id.value)
+  try {
+    fullCvData.value = await getCVPreview(id.value)
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
+  }
 })
 
 const handleExportPDF = async () => {
   const pageHtml = document.querySelector('.cv-preview')?.outerHTML
-  if (pageHtml) {
-    isDisabled.value = true
-    const completeHtml = `
+  isDisabled.value = true
+  const completeHtml = `
       <html>
         <head>
           <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
@@ -114,31 +123,33 @@ const handleExportPDF = async () => {
         </body>
       </html>
     `
-    const pdfInput = {
-      html: completeHtml,
-      margin: {
-        top: '35px',
-        bottom: '35px',
-        left: '40px',
-        right: '40px'
-      }
+  const pdfInput = {
+    html: completeHtml,
+    margin: {
+      top: '35px',
+      bottom: '35px',
+      left: '40px',
+      right: '40px'
     }
+  }
 
-    try {
-      showInfo()
-      let result = await exportPDFCV(pdfInput)
-      if (result.startsWith('JVB')) {
-        result = 'data:application/pdf;base64,' + result
-        downloadFileObject(result)
-        setTimeout(() => {
-          isDisabled.value = false
-        }, 2000)
-      }
-    } catch (error: unknown) {
-      showError('Error exporting PDF')
+  try {
+    showInfo()
+    let result = await exportPDFCV(pdfInput)
+    if (result.startsWith('JVB')) {
+      result = 'data:application/pdf;base64,' + result
+      downloadFileObject(result)
+      setTimeout(() => {
+        isDisabled.value = false
+      }, 2000)
     }
-  } else {
-    showError('Error exporting PDF')
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
   }
 }
 

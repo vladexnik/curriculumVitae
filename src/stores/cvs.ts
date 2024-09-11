@@ -2,6 +2,7 @@ import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getCVsList, deleteCV, createCV } from '@/service/cvs'
 import { getUserData } from '@/service/userData'
+import type { DeleteCvInput } from 'cv-graphql'
 
 interface DataRow {
   id: string
@@ -46,7 +47,7 @@ export const useCVsStore = defineStore('cvs', () => {
     }
   }
 
-  const deleleteCVbyId = async (id: string) => {
+  const deleleteCVbyId = async (id: DeleteCvInput) => {
     const data = await deleteCV(id)
     if (data) {
       console.log('DELETED', data)

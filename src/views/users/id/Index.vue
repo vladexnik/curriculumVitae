@@ -109,7 +109,7 @@
         variant="contained"
         color="primary"
         @click.prevent="updateProfile"
-        :disabled="disabledBtn"
+        :disabled="isDisabledBtn"
       >
         Update
       </Button>
@@ -127,9 +127,9 @@ import {
   getAllDepartments,
   getAllPositions,
   updateProfileInput,
-  updateUserInput,
   deleteAvatar,
-  uploadAvatar
+  uploadAvatar,
+  updateUserSelects
 } from '@/service/profile'
 import { useRoute } from 'vue-router'
 import { formatDate } from '@/utils'
@@ -151,7 +151,7 @@ const departments = ref<Department[]>([])
 const positions = ref<Department[]>([])
 const isDisabled = ref(false)
 
-const { showError, showSuccessUpload, showProfileUpdate } =
+const { showError, showSuccessUpload, showProfileUpdate, showInfo } =
   useToastNotifications()
 
 const formatedDate = computed(() =>
@@ -165,7 +165,7 @@ const formProfile = reactive({
   lastName: ''
 })
 
-const disabledBtn = computed(() => {
+const isDisabledBtn = computed(() => {
   if (!userData.value) {
     return false
   }
@@ -192,6 +192,7 @@ const handleDrop = (event: DragEvent) => {
 }
 
 const processFile = (file: File) => {
+  showInfo('Image is uploading...')
   const reader = new FileReader()
   reader.onload = () => {
     const base64 = reader.result as string
@@ -207,38 +208,28 @@ const processFile = (file: File) => {
   reader.readAsDataURL(file)
 }
 
-const uploadImage = async (data: UploadAvatarInput) => {
+const handleDeleteAvatar = async () => {
   try {
-    const imageString = await uploadAvatar(data)
+    await deleteAvatar({
+      userId: userId.value || ''
+    })
+
     if (userStore.authedUser) {
       userStore.authedUser = {
         ...userStore.authedUser,
         profile: {
           ...userStore.authedUser?.profile,
-          avatar: imageString
+          avatar: null
         }
       }
     }
-    if (imageString) {
-      showSuccessUpload()
-    }
-  } catch (e) {
-    showError()
-  }
-}
-
-const handleDeleteAvatar = async () => {
-  await deleteAvatar({
-    userId: userId.value || ''
-  })
-
-  if (userStore.authedUser) {
-    userStore.authedUser = {
-      ...userStore.authedUser,
-      profile: {
-        ...userStore.authedUser?.profile,
-        avatar: null
-      }
+    showInfo('Image was deleted')
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
     }
   }
 }
@@ -255,8 +246,13 @@ const setAllFieldsData = async () => {
     }
     setSelectValues()
     setTextFieldsValues()
-  } catch (e) {
-    showError()
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
   }
 }
 
@@ -289,15 +285,19 @@ const fetchSelectsData = async () => {
     ])
 
     departments.value = [
-      { name: 'No department', id: '' },
-      ...departmentsData.departments
+      { name: 'No department', id: '', created_at: '' },
+      ...departmentsData
     ]
     positions.value = [
-      { name: 'No position', id: '' },
-      ...positionsData.positions
+      { name: 'No position', id: '', created_at: '' },
+      ...positionsData
     ]
-  } catch (e) {
-    showError()
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
   }
 }
 
@@ -308,7 +308,7 @@ const updateProfile = async () => {
       first_name: formProfile.firstName,
       last_name: formProfile.lastName
     })
-    const updatedUser: UpdateUserPosDepT = await updateUserInput({
+    const updatedUser: UpdateUserPosDepT = await updateUserSelects({
       userId: userId.value || '',
       departmentId: formProfile.selectedDepartment?.id || '',
       positionId: formProfile.selectedPosition?.id || ''
@@ -328,8 +328,38 @@ const updateProfile = async () => {
       }
     }
     showProfileUpdate()
+  } catch (e: unknown) {
+    console.dir(e)
+    if (e instanceof Error) {
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
+  }
+}
+
+const uploadImage = async (data: UploadAvatarInput) => {
+  try {
+    const imageString = await uploadAvatar(data)
+    if (userStore.authedUser) {
+      userStore.authedUser = {
+        ...userStore.authedUser,
+        profile: {
+          ...userStore.authedUser?.profile,
+          avatar: imageString
+        }
+      }
+    }
+    if (imageString) {
+      showSuccessUpload()
+    }
   } catch (e) {
-    showError()
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
   }
 }
 

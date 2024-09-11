@@ -239,6 +239,7 @@ export const DEPARTMENTS = gql`
     departments {
       id
       name
+      created_at
     }
   }
 `
@@ -259,6 +260,7 @@ export const POSITIONS = gql`
     positions {
       id
       name
+      created_at
     }
   }
 `

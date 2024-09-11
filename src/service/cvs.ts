@@ -20,199 +20,143 @@ import type {
   ExportPdfInput,
   UpdateCvInput
 } from 'cv-graphql'
-import { useToastNotifications } from '@/composables/useToast'
-// const { showError } = useToastNotifications()
 
-export const getCVsList = async (): Promise<CVsAll | undefined> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: CVS,
-      fetchPolicy: 'network-only'
-    })
-    return data
-  } catch (e) {
-    console.log(e)
-  }
+export const getCVsList = async (): Promise<CVsAll> => {
+  const { data } = await apolloClient.query({
+    query: CVS,
+    fetchPolicy: 'network-only'
+  })
+  return data
 }
 
-export const deleteCV = async (
-  id: DeleteCvInput
-): Promise<DeleteResult | undefined> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: DELETE_CV,
-      variables: {
-        cv: { cvId: id }
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data
-  } catch (e) {
-    console.log(e)
-  }
+export const deleteCV = async (id: DeleteCvInput): Promise<DeleteResult> => {
+  const { data } = await apolloClient.mutate({
+    mutation: DELETE_CV,
+    variables: {
+      cv: { cvId: id }
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data
 }
 
 export const exportPDFCV = async (pdf: ExportPdfInput): Promise<string> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: EXPORT_PDF,
-      variables: {
-        pdf
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data.exportPdf
-  } catch (e) {
-    console.log(e)
-    throw new Error('Error exporting PDF')
-  }
+  const { data } = await apolloClient.mutate({
+    mutation: EXPORT_PDF,
+    variables: {
+      pdf
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data.exportPdf
 }
 
 export const getCVById = async (cvId: string): Promise<any> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: CV,
-      variables: {
-        cvId
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data.cv
-  } catch (e) {
-    console.log(e)
-  }
+  const { data } = await apolloClient.query({
+    query: CV,
+    variables: {
+      cvId
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data.cv
 }
 
 export const getCVNameById = async (
   cvId: string
-): Promise<{ id: string; name: string } | undefined> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: CV_NAME,
-      variables: {
-        cvId
-      },
-      fetchPolicy: 'cache-first'
-    })
-    return data.cv
-  } catch (e) {
-    console.log(e)
-  }
+): Promise<{ id: string; name: string }> => {
+  const { data } = await apolloClient.query({
+    query: CV_NAME,
+    variables: {
+      cvId
+    },
+    fetchPolicy: 'cache-first'
+  })
+  return data.cv
 }
 
 export const getCVDetailsById = async (
   cvId: string
-): Promise<cvDetailsDataT | undefined> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: CV_DETAILS,
-      variables: {
-        cvId
-      },
-      fetchPolicy: 'cache-first'
-    })
-    return data.cv
-  } catch (e) {
-    console.log(e)
-  }
+): Promise<cvDetailsDataT> => {
+  const { data } = await apolloClient.query({
+    query: CV_DETAILS,
+    variables: {
+      cvId
+    },
+    fetchPolicy: 'cache-first'
+  })
+  return data.cv
 }
 
-export const createCV = async (
-  obj: createCVT
-): Promise<createCVT | undefined> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: CREATE_CV,
-      variables: {
-        cv: {
-          name: obj?.name,
-          description: obj?.description,
-          education: obj?.education,
-          userId: obj.userId
-        }
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data
-  } catch (e) {
-    console.log(e)
-  }
+export const createCV = async (obj: createCVT): Promise<createCVT> => {
+  const { data } = await apolloClient.mutate({
+    mutation: CREATE_CV,
+    variables: {
+      cv: {
+        name: obj?.name,
+        description: obj?.description,
+        education: obj?.education,
+        userId: obj.userId
+      }
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data
 }
 
 export const updateCVDetails = async (
   cv: UpdateCvInput
-): Promise<cvDetailsDataT | undefined> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: UPDATE_CV_DETAILS,
-      variables: {
-        cv: cv
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data.updateCv
-  } catch (e) {
-    console.log(e)
-  }
+): Promise<cvDetailsDataT> => {
+  const { data } = await apolloClient.mutate({
+    mutation: UPDATE_CV_DETAILS,
+    variables: {
+      cv: cv
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data.updateCv
 }
 
-export const getCVPreview = async (
-  cvId: string
-): Promise<CVData | undefined> => {
-  try {
-    const { data } = await apolloClient.query({
-      query: CV_SKILLS,
-      variables: {
-        cvId
-      },
-      fetchPolicy: 'cache-first'
-    })
-    return data.cv
-  } catch (e) {
-    console.log(e)
-  }
+export const getCVPreview = async (cvId: string): Promise<CVData> => {
+  const { data } = await apolloClient.query({
+    query: CV_SKILLS,
+    variables: {
+      cvId
+    },
+    fetchPolicy: 'cache-first'
+  })
+  return data.cv
 }
 
 export const addCvSkill = async (obj): Promise<any> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: ADD_CV_SKILL,
-      variables: {
-        skill: obj
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data
-  } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-  }
+  const { data } = await apolloClient.mutate({
+    mutation: ADD_CV_SKILL,
+    variables: {
+      skill: obj
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data
 }
+
 export const updateCvSkill = async (obj): Promise<any> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: UPDATE_CV_SKILL,
-      variables: {
-        skill: obj
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data
-  } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-  }
+  const { data } = await apolloClient.mutate({
+    mutation: UPDATE_CV_SKILL,
+    variables: {
+      skill: obj
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data
 }
 
 export const deleteCvSkill = async (obj): Promise<any> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: DELETE_CV_SKILL,
-      variables: {
-        skill: obj
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data
-  } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-  }
+  const { data } = await apolloClient.mutate({
+    mutation: DELETE_CV_SKILL,
+    variables: {
+      skill: obj
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data
 }

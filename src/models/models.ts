@@ -6,7 +6,17 @@ export type TabsAuthT = {
   route: string
   label: string
 }
-// category?: Nullable<string>;
+
+export type breadcrumbObjT = {
+  label: string
+  route: {
+    name: string
+    params?: {
+      id?: string
+    }
+  } | null
+  styleClass: string
+}
 
 export type userAuthedT = {
   created_at: string
@@ -22,6 +32,15 @@ export type userAuthedT = {
   }
 }
 
+export type userNameT = {
+  email: string
+  profile: {
+    first_name?: Nullable<string>
+    last_name?: Nullable<string>
+    full_name?: Nullable<string>
+  }
+}
+
 export type UpdateProfileInputsT = {
   id: string
   first_name: string
@@ -33,6 +52,10 @@ export type UpdateProfileInputsT = {
 export type UpdateUserPosDepT = {
   department_name?: Nullable<string>
   position_name?: Nullable<string>
+}
+export type selectProfileT = {
+  id: string
+  name: string
 }
 
 export type cvDetailsDataT = {

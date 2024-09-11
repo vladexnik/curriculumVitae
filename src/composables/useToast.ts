@@ -1,13 +1,18 @@
+import { handleError } from '@/utils/errorMessages'
 import { useToast } from 'primevue/usetoast'
 
 export function useToastNotifications() {
   const toast = useToast()
+  // const toast = inject<InstanceType<typeof Toast>>('toast') as InstanceType<
+  //   typeof Toast
+  // >
 
   const showError = (detail: string = 'An error occurred') => {
+    handleError(detail)
     toast.add({
       severity: 'error',
       summary: 'Error Message',
-      detail,
+      detail: handleError(detail),
       life: 3000
     })
   }

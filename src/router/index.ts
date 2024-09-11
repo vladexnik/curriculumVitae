@@ -22,7 +22,6 @@ router.beforeEach(async (to, from, next) => {
     if (requireAuth) {
       if (!accessToken && !refreshToken) next('/auth/login')
       if (!accessToken && refreshToken) {
-        console.log('no access , but have refresh')
         next()
       } else next()
     } else {

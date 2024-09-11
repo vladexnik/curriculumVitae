@@ -1,4 +1,10 @@
-import { PROJECTS, CV, REMOVE_CV_PROJECT, ADD_CV_PROJECT, UPDATE_CV_PROJECT } from '@/graphQL'
+import {
+  PROJECTS,
+  CV,
+  REMOVE_CV_PROJECT,
+  ADD_CV_PROJECT,
+  UPDATE_CV_PROJECT
+} from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
 
 export const getProjectsList = async (): Promise<any> => {
@@ -17,8 +23,8 @@ export const getProjectsByCvId = async (id): Promise<any> => {
     const { data } = await apolloClient.query({
       query: CV,
       variables: {
-         cvId: id
-      },
+        cvId: id
+      }
     })
     return data.cv
   } catch (e) {
@@ -55,17 +61,17 @@ export const updateProject = async (obj): Promise<any> => {
     console.error(JSON.stringify(e, null, 2))
   }
 }
-export const deleteProject = async (cvId: string, projectId: string): Promise<any> => {
-  try {
-    const { data } = await apolloClient.mutate({
-      mutation: REMOVE_CV_PROJECT,
-      variables: {
-        project: { cvId: cvId, projectId: projectId }
-      },
-      fetchPolicy: 'network-only'
-    })
-    return data.removeCvProject
-  } catch (e) {
-    console.error(JSON.stringify(e, null, 2))
-  }
+
+export const deleteProject = async (
+  cvId: string,
+  projectId: string
+): Promise<any> => {
+  const { data } = await apolloClient.mutate({
+    mutation: REMOVE_CV_PROJECT,
+    variables: {
+      project: { cvId: cvId, projectId: projectId }
+    },
+    fetchPolicy: 'network-only'
+  })
+  return data.removeCvProject
 }
