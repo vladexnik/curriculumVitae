@@ -8,11 +8,10 @@
         <CreateCV @addedCV="updateData" :currentUserId="currentUserId"/>
       </div>
     </div>
-    <Table :tableData="data" :columns="columnsConfig"/>
-    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length">
-      <template #default>
-        <h2 class="text-2xl font-semibold mb-2">{{ $t('customNoResultsTitle') }}</h2>
-        <p class="text-gray-500 mb-4">{{ $t('customNoResultsDescription') }}</p>
+    <Table v-if="data" :tableData="data" :columns="columnsConfig"/>
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length || !data.length">
+      <template  #default  v-if="!data.length && !search">
+        <h2 class="text-2xl font-semibold mb-2">{{ $t('noData') }}</h2>
       </template>
     </NoFound>  
   </div>
@@ -82,8 +81,8 @@ const columnsConfig = ref([
         };
 
         const items = [
-          { label: $t('details'), command: () => router.push(`/cvs/${rowData.id}`) },
-          { label: $t('deleteCV'), command: () => {
+          { label: t('details'), command: () => router.push(`/cvs/${rowData.id}`) },
+          { label: t('deleteCV'), command: () => {
             cvToDelete.value = rowData
             openDeleteConfirmation.value = true
           } },

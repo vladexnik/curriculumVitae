@@ -3,10 +3,11 @@
     <slot>
       <h2 class="text-2xl font-semibold mb-2">{{ $t('noResultsTitle') }}</h2>
       <p class="text-gray-500 mb-4">{{ $t('noResultsDescription') }}</p>
-    </slot>
+  
     <Button variant="text" color="secondary" class="w-[350px]" @click="$emit('resetSearch')">
       {{ $t('resetSearch') }}
     </Button>
+    </slot>
   </div>
 </template>
 

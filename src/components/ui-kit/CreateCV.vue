@@ -9,7 +9,7 @@
   <Dialog
     v-model:visible="openAddModal"
     modal
-    header="Create CV"
+    :header="$t('createCV')"
     :style="{ width: '40rem' }"
   >
     <div class="mx-2 mb-4">

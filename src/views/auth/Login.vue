@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import Form from '@/components/auth/Form.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const obj = {
-  title: 'Welcome Back',
-  subtitle: 'Hello again! Sign in to continue.',
-  action: 'Sign in',
-  actionRedirect: "i don't have an account",
+  title: t('loginTitle'),
+  subtitle: t('loginSubtitle'),
+  action: t('loginAction'),
+  actionRedirect: t('loginRedirect'),
   link: '/auth/signup'
 }
 </script>

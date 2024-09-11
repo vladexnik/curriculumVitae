@@ -42,7 +42,7 @@ const secIcon = computed(() => {
 });
 
 const secButton = computed(() => {
-  return changeToRemove.value ? 'DELETE ' + (deleteLength.value ? deleteLength.value : '') : name?.value === 'Language' ? t('removeLanguage') : t('removeSkill');
+  return changeToRemove.value ? t('delete') + ' '  + (deleteLength.value ? deleteLength.value : '') : name?.value === 'Language' ? t('removeLanguage') : t('removeSkill');
 });
 
 const firstButtonAction = () => {

@@ -2,6 +2,16 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   en: {
+    signUpTitle: 'Register Now',
+    signUpSubtitle: 'Welcome! Sign up to continue.',
+    signUpAction: 'Sign Up',
+    signUpRedirect: 'i have an account',
+
+    loginTitle: 'Welcome Back',
+    loginSubtitle: 'Hello again! Sign in to continue.',
+    loginAction: 'Sign In',
+    loginRedirect: "i don't have an account",
+
     light: 'Light',
     dark: 'Dark',
     deviceSettings: 'Device Settings',
@@ -54,7 +64,7 @@ const messages = {
     preview: 'Preview',
     details: 'Details', 
 
-    createCV: 'Create CV +',
+    createCV: 'Create CV',
     addSkill: 'Add Skill',
     addLanguage: 'Add Language',
     updateSkill: 'Update Skill',
@@ -83,9 +93,20 @@ const messages = {
     exportPDF: 'export pdf',
     memberSince: 'A member since',
     appearance: 'Appereance',
-
+    delete: 'Delete',
+    project: 'Project'
   },
   de: {
+    signUpTitle: 'Register Now',
+    signUpSubtitle: 'Welcome! Sign up to continue.',
+    signUpAction: 'Sign Up',
+    signUpRedirect: 'ich habe ein konto',
+
+    loginTitle: 'Welcome Back',
+    loginSubtitle: 'Hello again! Sign in to continue.',
+    loginAction: 'Sign In',
+    loginRedirect: "i don't have an account",
+
     light: 'Licht',
     dark: 'Dunkel',
     deviceSettings: 'Geräteeinstellungen',
@@ -138,7 +159,7 @@ const messages = {
     preview: 'Vorshau',
     details: 'Einzelheiten', 
 
-    createCV: '+ Lebenslauf Erstellen',
+    createCV: 'Lebenslauf Erstellen',
     addSkill: 'Fertigkeit hinzufügen',
     addLanguage: 'Sprache hinzufügen',
     updateSkill: 'Fertigkeit aktualisieren',
@@ -166,9 +187,21 @@ const messages = {
     memberSince: 'Seitdem Mitglied',
     appearance: 'Aussehen',
     language: 'Sprache',
-    skill: 'Fertigkeit'
+    skill: 'Fertigkeit',
+    delete: 'Löschen',
+    project: 'Projekt'
   },
   ru: {
+    signUpTitle: 'Зарегистрируйтесь',
+    signUpSubtitle: 'Добро пожаловать! Создайте аккаунт, чтобы продолжить',
+    signUpAction: 'Создать аккаунт',
+    signUpRedirect: 'У меня есть аккаунт',
+
+    loginTitle: 'С возвращением',
+    loginSubtitle: 'Рады вас видеть! Войдите, чтобы продолжить',
+    loginAction: 'Войти',
+    loginRedirect: "У меня нет аккаунтаа",
+
     light: 'Светлая',
     dark: 'Темная',
     deviceSettings: 'Настройки устройства',
@@ -250,6 +283,8 @@ const messages = {
     exportPDF: 'Экспорт pdf',
     memberSince: 'Аккаунт был создан',
     appearance: 'Внешний вид',
+    delete: 'Удалить',
+    project: 'Проект'
   }
 }
 

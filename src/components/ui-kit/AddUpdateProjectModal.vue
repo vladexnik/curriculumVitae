@@ -81,7 +81,7 @@ import TextArea from '@/components/ui-kit/TextArea.vue'
 import CustomDatePicker from './CustomDatePicker.vue'
 import SelectComp from './SelectComp.vue'
 import { useProjectsListStore } from '@/stores/projects'
-import { computed, reactive, toRefs, watch, ref, watchEffect } from 'vue'
+import { computed, reactive, toRefs, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n';
 
@@ -134,7 +134,7 @@ const submitForm = () => {
   clearFields()
 }
 const header = computed(() => {
-  return (type?.value === 'Add' ? t('add') : t('update')) + 'Project';
+  return (type?.value === 'Add' ? t('add') : t('update')) + ' ' + t('project');
 });
 
 const disableCreation = computed(() => {

@@ -1,11 +1,10 @@
 <template>
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4" v-if="data">
     <div class="d-flex w-[300px] pl-3"><SearchInput v-model="search" /></div>
-    <Table :tableData="data" :columns="columnsConfig" />
-    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length">
-      <template #default>
-        <h2 class="text-2xl font-semibold mb-2">{{ $t('customNoResultsTitle') }}</h2>
-        <p class="text-gray-500 mb-4">{{ $t('customNoResultsDescription') }}</p>
+    <Table v-if="data" :tableData="data" :columns="columnsConfig"/>
+    <NoFound @resetSearch="() => search = ''" v-if="search && !data.length || !data.length">
+      <template  #default  v-if="!data.length && !search">
+        <h2 class="text-2xl font-semibold mb-2">{{ $t('noData') }}</h2>
       </template>
     </NoFound>  
     </div>

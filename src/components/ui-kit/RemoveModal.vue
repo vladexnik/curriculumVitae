@@ -47,7 +47,7 @@ const confirm = () => {
 };
 
 const header = computed(() => {
-  return type?.value === 'CV' ? 'Delete CV' : 'Remove Project';
+  return type?.value === 'CV' ? t('deleteCV') : t('removeProject');
 });
 
 const text = computed(() => {

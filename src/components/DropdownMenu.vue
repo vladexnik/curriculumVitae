@@ -88,7 +88,7 @@
             v-ripple
             class="cursor-pointer px-4 py-2 text-textMain hover:bg-optionHover active:bg-optionHoverActive"
             @click="
-              item.label === 'Logout' ? handleLogout() : router.push(item.route)
+              item.label === $t('logout') ? handleLogout() : router.push(item.route)
             "
           >
             <span :class="item.icon"></span>
