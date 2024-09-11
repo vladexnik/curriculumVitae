@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n';
+
 
 export const useThemeStore = defineStore('theme', () => {
+  const { t } = useI18n();
   const themes = ref([
-    { name: 'Light', code: 'light' },
-    { name: 'Dark', code: 'dark' },
-    { name: 'Device settings', code: 'device' }
+    { name: t('light'), code: 'light' },
+    { name: t('dark'), code: 'dark' },
+    { name: t('deviceSettings'), code: 'device' }
   ])
 
   const selectedTheme = ref(loadSavedTheme() || themes.value[0])

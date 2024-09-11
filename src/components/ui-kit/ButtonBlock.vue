@@ -15,6 +15,9 @@
 import { PrimeIcons } from '@primevue/core/api';
 import { computed, ref, toRefs } from 'vue';
 import Button from './Button.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   name: String,
@@ -31,7 +34,7 @@ const firstIcon = computed(() => {
 });
 
 const firstButton = computed(() => {
-  return changeToRemove.value ? 'CANCEL' : `ADD ${name.value.toUpperCase()}`;
+  return changeToRemove.value ? t('cancel') : name?.value === 'Language' ? t('addLanguage') : t('addSkill');
 });
 
 const secIcon = computed(() => {
@@ -39,7 +42,7 @@ const secIcon = computed(() => {
 });
 
 const secButton = computed(() => {
-  return changeToRemove.value ? 'DELETE ' + (deleteLength.value ? deleteLength.value : '') : `REMOVE ${name.value.toUpperCase()}S`;
+  return changeToRemove.value ? 'DELETE ' + (deleteLength.value ? deleteLength.value : '') : name?.value === 'Language' ? t('removeLanguage') : t('removeSkill');
 });
 
 const firstButtonAction = () => {

@@ -1,5 +1,5 @@
 <template>
-  <DataTable :value="props.tableData" :autoLayout="true" :key="uniqueKey">
+  <DataTable :value="props.tableData" :autoLayout="true" key="table-key">
     <template v-for="(col, index) in props.columns" :key="index">
       <Column
         :field="col.field as string"

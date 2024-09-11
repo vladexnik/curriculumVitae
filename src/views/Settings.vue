@@ -27,4 +27,3 @@ const { t } = useI18n();
 const themeStore = useThemeStore()
 const langStore = useLangStore()
 </script>
-<!-- --p-select-option-focus-background -->

@@ -74,23 +74,23 @@ const header = computed(() => {
   let res;
     switch (type?.value) {
       case 'Add': 
-        res = 'Add ' + name?.value;
+        res = name?.value === 'Language' ? t('addLanguage') : t('addSkill')
         break;
       case 'Update':
-        res = 'Update ' + name?.value;
+        res = name?.value === 'Language' ? t('updateLanguage') : t('updateSkill')
         break;
     }
   return res;
 })
-const placeholder1 = computed(() => name?.value || "")
+const placeholder1 = computed(() => t(name?.value.toLowerCase()) || "")
 const placeholder2 = computed(() => {
   let res;
     switch (name?.value) {
       case 'Language': 
-        res = name?.value + ' Proficiency';
+        res = t('langProficincy');
         break;
       case 'Skill':
-        res = name?.value + ' Mastery';
+        res = t('skillMastery');
         break;
     }
   return res;

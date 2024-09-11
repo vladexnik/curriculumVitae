@@ -2,6 +2,10 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   en: {
+    light: 'Light',
+    dark: 'Dark',
+    deviceSettings: 'Device Settings',
+
     firstName: 'First Name',
     lastName: 'Last Name',
     department: 'Department',
@@ -53,9 +57,13 @@ const messages = {
     createCV: 'Create CV +',
     addSkill: 'Add Skill',
     addLanguage: 'Add Language',
+    updateSkill: 'Update Skill',
+    updateLanguage: 'Update Language',
     removeSkill: 'Remove Skill',
     removeLanguage: 'Remove Language',
     addProject: '+ Add Project',
+    skill: 'Skill',
+    language: 'Language',
 
     add: 'Add',
     update: 'Update',
@@ -75,10 +83,13 @@ const messages = {
     exportPDF: 'export pdf',
     memberSince: 'A member since',
     appearance: 'Appereance',
-    language: 'Language',
 
   },
   de: {
+    light: 'Licht',
+    dark: 'Dunkel',
+    deviceSettings: 'Geräteeinstellungen',
+
     firstName: "Vorname",
     lastName: "Nachname",
     department: "Abteilung",
@@ -128,11 +139,13 @@ const messages = {
     details: 'Einzelheiten', 
 
     createCV: '+ Lebenslauf Erstellen',
-    addSkill: 'Sprache hinzufügen',
-    addLanguage: 'Fertigkeit hinzufügen',
+    addSkill: 'Fertigkeit hinzufügen',
+    addLanguage: 'Sprache hinzufügen',
+    updateSkill: 'Fertigkeit aktualisieren',
+    updateLanguage: 'Sprache aktualisieren',
     removeSkill: 'Remove Skill',
     removeLanguage: 'Remove Language',
-    addProject: '+ Add Project',
+    addProject: '+ Add Projekt',
 
     add: 'Add',
     update: 'Aktualisieren',
@@ -153,8 +166,13 @@ const messages = {
     memberSince: 'Seitdem Mitglied',
     appearance: 'Aussehen',
     language: 'Sprache',
+    skill: 'Fertigkeit'
   },
   ru: {
+    light: 'Светлая',
+    dark: 'Темная',
+    deviceSettings: 'Настройки устройства',
+
     firstName: "Имя",
     lastName: "Фамилия",
     department: "Отдел",
@@ -203,12 +221,16 @@ const messages = {
     preview: 'Просмотр',
     details: 'Подробности', 
 
-    createCV: '+ Создать Рехюме',
+    createCV: 'Создать Резюме',
     addSkill: 'Добавить Навык',
     addLanguage: 'Добавить Язык',
+    updateSkill: 'Обновить Навык',
+    updateLanguage: 'Обновить Язык',
     removeSkill: 'Удалить Навыки',
     removeLanguage: 'Удалить Язык',
     addProject: '+ Добавить Проект',
+    skill: 'Навык',
+    language: 'Язык',
 
     add: 'Добавить',
     update: 'Обновить',
@@ -228,7 +250,6 @@ const messages = {
     exportPDF: 'Экспорт pdf',
     memberSince: 'Аккаунт был создан',
     appearance: 'Внешний вид',
-    language: 'Язык',
   }
 }
 
