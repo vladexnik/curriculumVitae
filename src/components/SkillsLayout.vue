@@ -17,6 +17,9 @@
 import type { SkillCategory } from '@/models/models'
 import type { SkillMastery } from 'cv-graphql'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   skills: SkillMastery[]
@@ -27,12 +30,12 @@ const groupedSkills = computed(() => {
   const result: { [categoryName: string]: SkillMastery[] } = {}
 
   const orderedCategories = [
-    'Programming languages',
-    'Frontend',
-    'Backend',
-    'Testing frameworks and tools',
-    'DevOps',
-    'Source control systems'
+    ['Programming Languages', t('programmingLang')],
+    ['Frontend', t('frontend')],
+    ['Backend', t('backend')],
+    ['Testing frameworks and tools', t('testTools')],
+    ['DevOps', t('devOps')],
+    ['Source control systems', t('sourceControl')],
   ]
 
   props.skills.forEach((skillObj) => {
@@ -57,8 +60,8 @@ const groupedSkills = computed(() => {
   const sortedResult: { [categoryName: string]: SkillMastery[] } = {}
 
   orderedCategories.forEach((categoryName) => {
-    if (result[categoryName]) {
-      sortedResult[categoryName] = result[categoryName]
+    if (result[categoryName[0]]) {
+      sortedResult[categoryName[1]] = result[categoryName[0]]
     }
   })
   return sortedResult

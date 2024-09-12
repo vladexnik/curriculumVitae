@@ -94,7 +94,7 @@ const placeholder2 = computed(() => {
   let res;
     switch (name?.value) {
       case 'Language': 
-        res = t('langProficincy');
+        res = t('langProficiency');
         break;
       case 'Skill':
         res = t('skillMastery');

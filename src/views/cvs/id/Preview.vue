@@ -11,22 +11,22 @@
           :disabled="isDisabled"
           @click="handleExportPDF"
         >
-          Export PDF
+          {{ $t('exportPDF') }}
         </Button>
       </div>
       <p class="uppercase">{{ fullCvData.user.position_name }}</p>
     </section>
     <section class="cv-preview__cv-description mb-8">
       <div class="cv-preview__cv-description__left-side pr-6">
-        <p class="title">Education</p>
+        <p class="title"> {{ $t('education') }}</p>
         <p>{{ fullCvData.education || NO_EDUCATION }}</p>
-        <p class="title">Language proficiency</p>
+        <p class="title"> {{ $t('langProficiency') }}</p>
         <ul>
           <li v-for="(item, index) in fullCvData.languages" :key="index">
             {{ item.name }} - {{ item.proficiency }}
           </li>
         </ul>
-        <p class="title">Domains</p>
+        <p class="title">{{ $t('domain', fullCvData.projects.length) }}</p>
         <ul>
           <li v-for="(item, index) in fullCvData.projects" :key="index">
             {{ item.domain }}
@@ -47,7 +47,7 @@
     <section
       class="cv-preview__projects-wrapper pagebreak-after pagebreak mb-8"
     >
-      <p class="mb-8 text-3xl">Projects</p>
+      <p class="mb-8 text-3xl">{{ $t('projects') }}</p>
       <li
         class="cv-preview__project-item pagebreak-inside-avoid mb-8 list-none"
         v-for="(project, index) in fullCvData.projects"
@@ -60,7 +60,7 @@
       </li>
     </section>
     <section class="cv-preview__professional-skills pagebreak">
-      <p class="text-3xl">Professional skills</p>
+      <p class="text-3xl">{{ $t('professionalSkills') }}</p>
       <ProfessionalSkills
         :skillsCategories="skillsCategories"
         :cvData="fullCvData"
@@ -83,6 +83,9 @@ import { useSkillsStore } from '@/stores/skills'
 import { storeToRefs } from 'pinia'
 import type { CVData } from '@/models/models'
 import { NO_EDUCATION } from '@/components/ui-kit/constants/constants'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const route = useRoute()
 const { showError, showSuccessUpload, showProfileUpdate, showInfo } =

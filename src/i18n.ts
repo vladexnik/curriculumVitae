@@ -25,7 +25,7 @@ const messages = {
     search: 'Search',
 
     projectName: 'Name',
-    domain: 'Domain',
+    domain: 'Domain | Domains',
     startDate: 'Start Date',
     endDate: 'End Date',
 
@@ -84,7 +84,7 @@ const messages = {
     cancel: 'Cancel',
     create: 'Create',
     confirm: 'Confirm',
-    langProficincy: 'Language proficiency',
+    langProficiency: 'Language proficiency',
     skillMastery: 'Skill mastery',
     deleteCV: 'Delete CV',
     updateProject: 'Update Project',
@@ -94,7 +94,20 @@ const messages = {
     memberSince: 'A member since',
     appearance: 'Appereance',
     delete: 'Delete',
-    project: 'Project'
+    project: 'Project',
+    professionalSkills: 'Professional Skills',
+    projectRole: 'Project Role',
+    period: 'Period',
+    environment: 'Environment',
+    experienceInYears: 'expirience in years',
+    lastUsed: 'last used',
+    programmingLang: 'Programming languages',
+    frontend: 'Frontend',
+    backend: 'Backend',
+    testTools: 'Testing frameworks and tools',
+    devOps: 'DevOps',
+    sourceControl: 'Source control systems',
+
   },
   de: {
     signUpTitle: 'Register Now',
@@ -120,7 +133,7 @@ const messages = {
     search: 'Suche',
 
     projectName: 'Name',
-    domain: 'Domain',
+    domain: 'Doman | Domänen',
     startDate: 'Anfangsdatum',
     endDate: 'Enddatum',
 
@@ -177,7 +190,7 @@ const messages = {
     cancel: 'Stornieren',
     create: 'Erstellen',
     confirm: 'Bestätigen',
-    langProficincy: 'Language proficiency',
+    langProficiency: 'Sprachkompetenz',
     skillMastery: 'Fertigkeitsbeherrschung',
     deleteCV: 'Lebenslauf löschen',
     updateProject: 'Update Project',
@@ -189,7 +202,20 @@ const messages = {
     language: 'Sprache',
     skill: 'Fertigkeit',
     delete: 'Löschen',
-    project: 'Projekt'
+    project: 'Projekt',
+    professionalSkills: 'Professional Skills',
+    projectRole: 'Project Role',
+    period: 'Period',
+    environment: 'Environment',
+    experienceInYears: 'expirience in years',
+    lastUsed: 'last used',
+  
+    programmingLang: 'Programmiersprachen',
+    frontend: 'Frontend',
+    backend: 'Backend',
+    testTools: 'Testing frameworks and tools',
+    devOps: 'DevOps',
+    sourceControl: 'Quellcodeverwaltungssysteme',
   },
   ru: {
     signUpTitle: 'Зарегистрируйтесь',
@@ -215,7 +241,7 @@ const messages = {
     search: 'Поиск',
 
     projectName: 'Имя',
-    domain: 'Домен',
+    domain: 'Домен | Домены',
     startDate: 'Дата начала',
     endDate: 'Дата окончания',
 
@@ -274,7 +300,7 @@ const messages = {
     cancel: 'Отмена',
     create: 'Создать',
     confirm: 'Подтвердить',
-    langProficincy: 'Владение языком',
+    langProficiency: 'Владение языком',
     skillMastery: 'Уровень владения',
     deleteCV: 'Удалить Резюме',
     updateProject: 'Обновить Проект',
@@ -284,7 +310,20 @@ const messages = {
     memberSince: 'Аккаунт был создан',
     appearance: 'Внешний вид',
     delete: 'Удалить',
-    project: 'Проект'
+    project: 'Проект',
+    professionalSkills: 'Профессиональные Навыки',
+    projectRole: 'Роль на проекте',
+    period: 'Период',
+    environment: 'Окружение',
+    experienceInYears: 'Опыт в годах',
+    lastUsed: 'Последнее использование',
+
+    programmingLang: 'Языки программирования',
+    frontend: 'Frontend',
+    backend: 'Backend',
+    testTools: 'Платформы и инструменты тестирования',
+    devOps: 'DevOps',
+    sourceControl: 'Системы контроля версий',
   }
 }
 

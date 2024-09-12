@@ -2,9 +2,9 @@
   <table v-if="tableDataArray" class="w-full">
     <thead class="h-14">
       <tr class="cv-preview__table-head">
-        <th class="px-4 py-2 text-left" colspan="2">Skills</th>
-        <th class="w-[90px] px-4 py-2">Experience in Years</th>
-        <th class="w-[90px] px-4 py-2">Last Used</th>
+        <th class="px-4 py-2 text-left" colspan="2">{{ $t('skills') }}</th>
+        <th class="w-[90px] px-4 py-2">{{ $t('experienceInYears') }}</th>
+        <th class="w-[90px] px-4 py-2">{{ $t('lastUsed') }}</th>
       </tr>
     </thead>
     <tbody>
@@ -39,17 +39,34 @@
 
 <script setup lang="ts">
 import type { CVData, SkillCategory, TableDataArray } from '@/models/models'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   skillsCategories: SkillCategory[]
   cvData: CVData
 }>()
 
+const categories = [
+    ['Programming Languages', t('programmingLang')],
+    ['Frontend', t('frontend')],
+    ['Backend', t('backend')],
+    ['Testing frameworks and tools', t('testTools')],
+    ['DevOps', t('devOps')],
+    ['Source control systems', t('sourceControl')],
+  ]
+
 const tableDataArray: TableDataArray[] = props.cvData.skills
   .map((skill) => {
     const categoryId = skill.categoryId || null
-    const category =
-      props.skillsCategories.find((cat) => cat.id === categoryId)?.name || null
+    let categoryName = props.skillsCategories.find((cat) => cat.id === categoryId)?.name || null
+     let category = (categories.find(el => el[0].toLowerCase() === categoryName.toLowerCase()))
+     if (category) {
+      category = category[1]
+     } else {
+      category = categoryName
+     }
     const relevantProjects = props.cvData.projects.filter((project) =>
       project.environment.includes(skill.name)
     )
@@ -83,7 +100,7 @@ const tableDataArray: TableDataArray[] = props.cvData.skills
     const experience =
       new Date(nearestEndDate).getFullYear() -
       new Date(farthestStartDate).getFullYear()
-
+    console.log('el0', category)
     return {
       categoryId,
       category: category,
