@@ -22,6 +22,24 @@ export const LOGIN_QUERY = gql`
   }
 `
 
+export const GET_BASE_USER_DATA_BY_ID = gql`
+  query USER($userId: ID!) {
+    user(userId: $userId) {
+      id
+      created_at
+      email
+      position_name
+      department_name
+      profile {
+        first_name
+        last_name
+        full_name
+        avatar
+      }
+    }
+  }
+`
+
 export const GET_USER_DATA_BY_ID = gql`
   query USER($userId: ID!) {
     user(userId: $userId) {
@@ -65,7 +83,8 @@ export const GET_USER_DATA_BY_ID = gql`
         }
       }
     }
-  }`
+  }
+`
 
 export const GET_USER_NAME = gql`
   query USER($userId: ID!) {
@@ -102,6 +121,7 @@ export const CV = gql`
       name
       education
       description
+      created_at
       user {
         id
         email
@@ -141,10 +161,6 @@ export const CV_NAME = gql`
     cv(cvId: $cvId) {
       id
       name
-      user {
-        id
-        email
-      }
     }
   }
 `
@@ -171,6 +187,7 @@ export const CV_SKILLS = gql`
       name
       education
       description
+      created_at
       user {
         id
         email
@@ -182,9 +199,12 @@ export const CV_SKILLS = gql`
       }
       projects {
         name
-        internal_name
         description
         domain
+        start_date
+        end_date
+        environment
+        responsibilities
       }
       skills {
         name
@@ -199,11 +219,27 @@ export const CV_SKILLS = gql`
   }
 `
 
+export const SKILLS_CATEGORIES = gql`
+  query skillCategories {
+    skillCategories {
+      id
+      name
+      order
+      parent {
+        id
+        name
+        order
+      }
+    }
+  }
+`
+
 export const DEPARTMENTS = gql`
   query DEPARTMENTS {
     departments {
       id
       name
+      created_at
     }
   }
 `
@@ -224,6 +260,7 @@ export const POSITIONS = gql`
     positions {
       id
       name
+      created_at
     }
   }
 `
@@ -293,14 +330,6 @@ export const PROJECT = gql`
     }
   }
 `
-
-export const SKILLS_CATEGORIES = gql`
-  query SkillsCategories {
-    skillCategories {
-      id
-      name
-    }
-  }`
 
 export const SKILLS = gql`
   query SKILLS {
@@ -457,7 +486,7 @@ export const REMOVE_CV_PROJECT = gql`
         domain
         start_date
         end_date
-        description 
+        description
         responsibilities
         project {
           id
@@ -817,8 +846,6 @@ export const CREATE_USER = gql`
 export const UPDATE_USER = gql`
   mutation UpdateUser($user: UpdateUserInput!) {
     updateUser(user: $user) {
-      id
-      email
       department_name
       position_name
     }

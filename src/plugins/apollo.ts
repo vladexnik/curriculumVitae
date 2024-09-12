@@ -6,16 +6,16 @@ import {
 import { setContext } from '@apollo/client/link/context'
 import { useCookie } from '@/composables/cookies'
 import { updateAccessToken } from '@/service/userData'
+import { useUserStore } from '@/stores/user'
 
 const httpLink = createHttpLink({
   uri: 'https://cv-project-js.inno.ws/api/graphql'
 })
 
-const { getCookies } = useCookie()
+const { getCookies, removeCookies } = useCookie()
 
 let isUpdatingToken: boolean = false
-
-let tokenUpdatePromise: Promise<string | null> | null = null
+let tokenUpdatePromise: Promise<string> | null = null
 
 const authLink = setContext(async (request, { headers }) => {
   let accessToken: string | null = getCookies('accessToken')
@@ -25,12 +25,18 @@ const authLink = setContext(async (request, { headers }) => {
     `${request.operationName}`
   )
 
-  if (!accessToken && !isAuthRequest) {
+  if (!accessToken && refreshToken && !isAuthRequest) {
     if (!isUpdatingToken) {
       isUpdatingToken = true
-      tokenUpdatePromise = updateAccessToken().finally(() => {
-        isUpdatingToken = false
-      })
+      tokenUpdatePromise = updateAccessToken()
+        .then((newToken) => newToken)
+        .catch((error) => {
+          console.error('Token update error:', error)
+          return refreshToken
+        })
+        .finally(() => {
+          isUpdatingToken = false
+        })
     }
     accessToken = await tokenUpdatePromise
   }
@@ -43,11 +49,9 @@ const authLink = setContext(async (request, { headers }) => {
   }
 })
 
-const cache = new InMemoryCache()
-
 const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache
+  cache: new InMemoryCache()
 })
 
 export default apolloClient

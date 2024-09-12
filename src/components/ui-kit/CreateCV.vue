@@ -73,6 +73,7 @@ const { t } = useI18n();
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, helpers } from '@vuelidate/validators'
 import { REQUIRED_FIELD } from '@/components/ui-kit/constants/constants'
+import { useToastNotifications } from '@/composables/useToast'
 
 const props = defineProps({
   currentUserId: String
@@ -80,6 +81,7 @@ const props = defineProps({
 
 const cvsStore = useCVsStore()
 const { createNewCV } = cvsStore
+const { showError, showSuccessUpload } = useToastNotifications()
 
 const openAddModal = ref(false)
 const formData = reactive({
@@ -105,17 +107,26 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, formData)
 const emit = defineEmits(['addedCV'])
 const submitForm = async () => {
-  const result = await v$.value.$validate()
-  if (result) {
-    const res = await createNewCV(formData)
-    if (res) {
-      const { id, education, name, description } = res.createCv
-      emit('addedCV', { id, education, name, description })
-      openAddModal.value = false
-      formData.name = ''
-      formData.education = ''
-      formData.description = ''
-      v$.value.$reset()
+  try {
+    const result = await v$.value.$validate()
+    if (result) {
+      const res = await createNewCV(formData)
+      if (res) {
+        const { id, education, name, description } = res.createCv
+        emit('addedCV', { id, education, name, description })
+        openAddModal.value = false
+        formData.name = ''
+        formData.education = ''
+        formData.description = ''
+        v$.value.$reset()
+      }
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
     }
   }
 }

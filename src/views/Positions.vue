@@ -24,11 +24,11 @@ const positionsStore = usePositionssStore()
 const { positions } = storeToRefs(positionsStore)
 
 interface DataRow {
-    id: string,
-    name: string
+  id: string
+  name: string
 }
 
-const search = ref<String>('');
+const search = ref<String>('')
 const data = ref<DataRow[]>()
 const columnsConfig = ref([
   { field: 'name', header:  t('positionName'), sortable: true },
@@ -37,9 +37,11 @@ const columnsConfig = ref([
 
 watch(search, (newValue) => {
   if (typeof newValue === 'string' && data.value) {
-    data.value = positions.value?.filter(post => post?.name?.toLowerCase()?.includes(newValue.toLowerCase()) )
+    data.value = positions.value?.filter((post) =>
+      post?.name?.toLowerCase()?.includes(newValue.toLowerCase())
+    )
   }
-}) 
+})
 
 watchEffect(() => {
   data.value = positions.value

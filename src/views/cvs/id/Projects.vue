@@ -1,11 +1,11 @@
 <template>
   <div class="d-flex w-max-[500px] m-4 max-w-full gap-4" v-if="data">
-    <div class="inline-flex justify-between w-full">
-      <div class="d-flex w-[300px] pl-3" >
-        <SearchInput v-model="search" class="h-9"/> 
+    <div class="inline-flex w-full justify-between">
+      <div class="d-flex w-[300px] pl-3">
+        <SearchInput v-model="search" class="h-9" />
       </div>
-      <div class="d-flex w-[300px] pl-3 h-10">
-       <Button
+      <div class="d-flex h-10 w-[300px] pl-3">
+        <Button
           variant="outlined"
           color="primary"
           class="h-9 border-none"
@@ -25,19 +25,18 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import SearchInput from '@/components/ui-kit/SearchInput.vue';
-import Table from '@/components/ui-kit/Table.vue';
-import Button from '@/components/ui-kit/Button.vue';
-import AddUpdateProjectModal from '@/components/ui-kit/AddUpdateProjectModal.vue';
-import NoFound from '@/components/ui-kit/NoFound.vue';
+import SearchInput from '@/components/ui-kit/SearchInput.vue'
+import Table from '@/components/ui-kit/Table.vue'
+import Button from '@/components/ui-kit/Button.vue'
+import AddUpdateProjectModal from '@/components/ui-kit/AddUpdateProjectModal.vue'
+import NoFound from '@/components/ui-kit/NoFound.vue'
 import LibButton from 'primevue/button'
-import Menu from 'primevue/menu';
-import RemoveModal from '@/components/ui-kit/RemoveModal.vue';
+import Menu from 'primevue/menu'
+import RemoveModal from '@/components/ui-kit/RemoveModal.vue'
 import { useProjectsListStore } from '@/stores/projects'
-import { useUserStore } from '@/stores/user';
-import { ref, h, watchEffect, watch, onMounted, computed } from 'vue';
+import { useUserStore } from '@/stores/user'
+import { ref, h, watchEffect, watch, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToastNotifications } from '@/composables/useToast'
 import { useI18n } from 'vue-i18n';
@@ -50,13 +49,15 @@ const { showError, showSuccessUpload, showProfileUpdate } =
 const projectsStore = useProjectsListStore()
 const projectsByCVId = ref()
 const {
-    getProjectsByCVId,
-    deleleteProjectbyId,
-    updateProjectbyId,
-    addProjectbyId
-   } = projectsStore;
+  getProjectsByCVId,
+  deleteProjectbyId,
+  updateProjectbyId,
+  addProjectbyId
+} = projectsStore
 
-const projectsToExclude = computed(() =>  projectsByCVId.value.map(el => el.id))
+const projectsToExclude = computed(() =>
+  projectsByCVId.value.map((el) => el.id)
+)
 const route = useRoute()
 
 const currentCVId = computed(() => route.params.id)
@@ -81,21 +82,28 @@ const reset = () => {
 }
 const deleteProject = async () => {
   try {
-    const response  = await deleleteProjectbyId(currentCVId.value, projectToDelete.value.id)
+    const response = await deleteProjectbyId(
+      currentCVId.value,
+      projectToDelete.value.id
+    )
     if (response) {
-      projectsByCVId.value = response;
-      showProfileUpdate('Succesfully deleted');
+      projectsByCVId.value = response
+      showProfileUpdate('Succesfully deleted')
     }
     projectToDelete.value = null
     openDeleteConfirmation.value = false
-  } catch (error) {
-      console.error(error);
-      showError();
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
     }
+  }
 }
 
-const search = ref<String>('');
-const data = ref<DataRow[]>();
+const search = ref<String>('')
+const data = ref<DataRow[]>()
 const columnsConfig = ref([
   { field: 'name', header: t('projectName'), sortable: true },
   { field: 'domain', header: t('domain'), sortable: true },
@@ -106,10 +114,10 @@ const columnsConfig = ref([
     header: '',
     sortable: false,
     customBody: (rowData: DataRow) => {
-        const localMenu = ref(null);    
-        const toggleMenu = (event) => {
-          localMenu.value?.toggle(event);
-        };
+      const localMenu = ref(null)
+      const toggleMenu = (event) => {
+        localMenu.value?.toggle(event)
+      }
 
         const items = [
           { label: t('updateProject'), command: () => actionOpenModal('Update', rowData) },
@@ -122,32 +130,29 @@ const columnsConfig = ref([
               endDate: rowData.endDate
             }
             openDeleteConfirmation.value = true
-          } },
-        ];
+          }
+        }
+      ]
 
-        return h(
-          'div',
-          { class: 'card flex justify-center' },
-          [
-            h(LibButton, {
-              type: 'button',
-              icon: 'pi pi-ellipsis-v',
-              class: 'p-button-text p-button-secondary custom-button',
-              style: { color: '#64748b', borderColor: 'transparent' },
-              rounded: true,
-              onClick: toggleMenu,
-              'aria-haspopup': 'true',
-              'aria-controls': `menu_${rowData.id}`,
-            }),
-            h(Menu, {
-              ref: localMenu,
-              id: `menu_${rowData.id}`,
-              model: items,
-              popup: true,
-              appendTo: 'body',
-            })
-          ]
-        );
+      return h('div', { class: 'card flex justify-center' }, [
+        h(LibButton, {
+          type: 'button',
+          icon: 'pi pi-ellipsis-v',
+          class: 'p-button-text p-button-secondary custom-button',
+          style: { color: '#64748b', borderColor: 'transparent' },
+          rounded: true,
+          onClick: toggleMenu,
+          'aria-haspopup': 'true',
+          'aria-controls': `menu_${rowData.id}`
+        }),
+        h(Menu, {
+          ref: localMenu,
+          id: `menu_${rowData.id}`,
+          model: items,
+          popup: true,
+          appendTo: 'body'
+        })
+      ])
     }
   }
 ])
@@ -157,8 +162,8 @@ const type = ref('Add')
 
 const actionOpenModal = (str, el) => {
   if (str == 'Update') dataToUpdate.value = el
-  type.value = str;
-  openModal.value = true;
+  type.value = str
+  openModal.value = true
 }
 
 const resetModalData = () => {
@@ -177,17 +182,20 @@ const updateData = async (obj) => {
     }
     let response
     if (type.value === 'Add') {
-      response = await addProjectbyId(newObj);
+      response = await addProjectbyId(newObj)
       if (response) showSuccessUpload('New Project was succesfully added')
     } else if (type.value === 'Update') {
-      response = await updateProjectbyId(newObj);
+      response = await updateProjectbyId(newObj)
       if (response) showProfileUpdate('Data was succesfully updated')
-
     }
-    projectsByCVId.value = response;  
-  } catch (e) {
-    console.log(e)
-    showError()
+    projectsByCVId.value = response
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
   }
 }
 
@@ -203,7 +211,7 @@ watchEffect(() => {
   data.value = projectsByCVId.value
 })
 
-onMounted( async () => {
+onMounted(async () => {
   projectsByCVId.value = await getProjectsByCVId(currentCVId.value)
 })
 </script>

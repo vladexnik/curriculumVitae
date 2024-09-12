@@ -38,7 +38,7 @@
         variant="contained"
         color="primary"
         @click.prevent="submitForm"
-        :disabled="disabledBtn"
+        :disabled="isDisabledBtn"
       >
         {{ $t('update')}}
       </Button>
@@ -53,7 +53,6 @@ import { computed, reactive, ref, watchEffect } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, helpers, maxLength } from '@vuelidate/validators'
 import { REQUIRED_FIELD } from '@/components/ui-kit/constants/constants'
-import type { ApolloError } from '@apollo/client'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { getCVDetailsById, updateCVDetails } from '@/service/cvs'
@@ -62,6 +61,7 @@ import type { fetchedCvT } from '@/models/models'
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+import type { cvDetailsDataT } from '@/models/models'
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -69,7 +69,7 @@ const isDisabled = ref(true)
 const id = ref(`${route.params.id}`)
 const nameField = ref<HTMLInputElement | null>(null)
 const descriptionField = ref<HTMLInputElement | null>(null)
-const fetchedData = ref<fetchedCvT | null>(null)
+const cvDetailsData = ref<cvDetailsDataT | undefined | null>(null)
 const { showError, showProfileUpdate } = useToastNotifications()
 
 const formData = reactive({
@@ -79,12 +79,12 @@ const formData = reactive({
   description: ''
 })
 
-const disabledBtn = computed(() => {
-  if (fetchedData.value) {
+const isDisabledBtn = computed(() => {
+  if (cvDetailsData.value) {
     const bool =
-      formData.name === fetchedData.value.name &&
-      formData.education === fetchedData.value.education &&
-      formData.description === fetchedData.value.description
+      formData.name === cvDetailsData.value.name &&
+      formData.education === cvDetailsData.value.education &&
+      formData.description === cvDetailsData.value.description
     return bool
   } else {
     return true
@@ -106,17 +106,26 @@ const rules = computed(() => {
 const v$ = useVuelidate(rules, formData)
 
 async function setFormData() {
-  fetchedData.value = await getCVDetailsById(id.value)
-  if (fetchedData.value) {
-    formData.name = fetchedData.value.name || ''
-    formData.description = fetchedData.value.description || ''
-    formData.education = fetchedData.value.education || ''
-    formData.cvId = fetchedData.value?.id || ''
+  try {
+    cvDetailsData.value = await getCVDetailsById(id.value)
+    if (cvDetailsData.value) {
+      formData.name = cvDetailsData.value.name || ''
+      formData.description = cvDetailsData.value.description || ''
+      formData.education = cvDetailsData.value.education || ''
+      formData.cvId = cvDetailsData.value?.id || ''
 
-    isDisabled.value = userStore.authedUser?.id !== fetchedData.value?.user?.id
+      isDisabled.value =
+        userStore.authedUser?.id !== cvDetailsData.value?.user?.id
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
   }
 }
-
 async function submitForm() {
   try {
     const result = await v$.value.$validate()
@@ -129,16 +138,15 @@ async function submitForm() {
         descriptionField.value?.focus()
       }
     } else {
-      fetchedData.value = await updateCVDetails(formData)
-      if (fetchedData.value) {
+      cvDetailsData.value = await updateCVDetails(formData)
+      if (cvDetailsData.value) {
         showProfileUpdate('CV was updated')
       } else {
         showError()
       }
     }
   } catch (err: unknown) {
-    const error = err as ApolloError
-    console.log(error)
+    showError()
   }
 }
 

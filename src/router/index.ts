@@ -7,10 +7,11 @@ const router = createRouter({
   routes
 })
 
+const { getCookies } = useCookie()
+
 router.beforeEach(async (to, from, next) => {
   try {
     const requireAuth = to.meta.isAuth
-    const { getCookies } = useCookie()
     const accessToken = getCookies('accessToken')
     const refreshToken = getCookies('refreshToken')
 
@@ -21,7 +22,6 @@ router.beforeEach(async (to, from, next) => {
     if (requireAuth) {
       if (!accessToken && !refreshToken) next('/auth/login')
       if (!accessToken && refreshToken) {
-        console.log('no access , but have refresh')
         next()
       } else next()
     } else {

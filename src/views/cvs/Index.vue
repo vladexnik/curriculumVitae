@@ -56,10 +56,10 @@ const columnsConfig = ref([
     sortable: false,
     customBody: (rowData: DataRow) => {
       if (rowData.employee == authedUser.value?.email) {
-        const localMenu = ref(null);    
+        const localMenu = ref(null)
         const toggleMenu = (event) => {
-          localMenu.value?.toggle(event);
-        };
+          localMenu.value?.toggle(event)
+        }
 
         const items = [
           { label: t('details'), command: () => router.push(`/cvs/${rowData.id}`) },
@@ -70,62 +70,58 @@ const columnsConfig = ref([
               education: rowData.education,
               description: rowData.description,
             }
-            openDeleteConfirmation.value = true
-          } },
-        ];
+          }
+        }
+        ]
 
-        return h(
-          'div',
-          { class: 'card flex justify-center' },
-          [
-            h(LibButton, {
-              type: 'button',
-              icon: 'pi pi-ellipsis-v',
-              class: 'p-button-text p-button-secondary custom-button',
-              style: { color: '#64748b', borderColor: 'transparent' },
-              rounded: true,
-              onClick: toggleMenu,
-              'aria-haspopup': 'true',
-              'aria-controls': `menu_${rowData.id}`,
-            }),
-            h(Menu, {
-              ref: localMenu,
-              id: `menu_${rowData.id}`,
-              model: items,
-              popup: true,
-              appendTo: 'body',
-            })
-          ]
-        );
+        return h('div', { class: 'card flex justify-center' }, [
+          h(LibButton, {
+            type: 'button',
+            icon: 'pi pi-ellipsis-v',
+            class: 'p-button-text p-button-secondary custom-button',
+            style: { color: '#64748b', borderColor: 'transparent' },
+            rounded: true,
+            onClick: toggleMenu,
+            'aria-haspopup': 'true',
+            'aria-controls': `menu_${rowData.id}`
+          }),
+          h(Menu, {
+            ref: localMenu,
+            id: `menu_${rowData.id}`,
+            model: items,
+            popup: true,
+            appendTo: 'body'
+          })
+        ])
       } else {
         return h('div', [
-        h(LibButton, {
-          icon: 'pi pi-chevron-right',
-          iconPos: 'right',
-          class: 'p-button-text p-button-secondary custom-button',
-          style: { color: '#64748b', borderColor: 'transparent' },
-          rounded: true,
-          onClick: () => router.push(`/cvs/${rowData.id}`)
-        })
-      ]);
+          h(LibButton, {
+            icon: 'pi pi-chevron-right',
+            iconPos: 'right',
+            class: 'p-button-text p-button-secondary custom-button',
+            style: { color: '#64748b', borderColor: 'transparent' },
+            rounded: true,
+            onClick: () => router.push(`/cvs/${rowData.id}`)
+          })
+        ])
       }
     }
   }
 ])
 
 const filteredData = computed(() => {
-  if (!cvs.value) return [];  // Ensure `cvs.value` is defined
+  if (!cvs.value) return []; 
   return cvs.value.filter(cv => cv.name.toLowerCase().includes(search.value.toLowerCase()));
 });
 
 const deleteCV = async () => {
   await cvsStore.deleleteCVbyId(cvToDelete.value.id);
-  cvsStore.removeCV(cvToDelete.value.id);  // Modify the store
+  cvsStore.removeCV(cvToDelete.value.id);
   reset();
 };
 
 const updateData = (obj) => {
-  cvsStore.addCV(obj);  // Modify the store
+  cvsStore.addCV(obj); 
 };
 
 const reset = () => {

@@ -38,7 +38,7 @@
     </Breadcrumb>
   </div>
 </template>
-<script setup>
+<script lang="ts" setup>
 import { computed, ref, watchEffect } from 'vue'
 import Breadcrumb from 'primevue/breadcrumb'
 import { useRoute } from 'vue-router'
@@ -49,46 +49,66 @@ import { getCVNameById } from '@/service/cvs'
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+import { useToastNotifications } from '@/composables/useToast'
+import type { breadcrumbObjT } from '@/models/models'
 
 const route = useRoute()
+const { showError } = useToastNotifications()
 
 const userStore = useUserStore()
 const userFullname = computed(
   () => userStore.authedUser?.profile?.full_name || userStore.authedUser?.email
 )
+
 const userId = computed(() => userStore.authedUser?.id)
-const id = computed(() => route.params.id)
-const breadcrumbFullname = ref(`${id.value}`)
-const cvData = ref(null)
+const id = computed(() => route.params.id as string)
+const breadcrumbName = ref<{ id: string; name: string } | string | null>(
+  `${id.value}`
+)
 
 const fetchBreadcrumbName = async () => {
   if (route.path.includes(`/users/${route.params.id}`)) {
     if (id.value && id.value !== userId.value) {
-      const data = await getUserName(id.value)
-      breadcrumbFullname.value = capitalizeFullName(
-        data.profile.full_name || data.email
-      )
-    } else {
-      breadcrumbFullname.value = capitalizeFullName(userFullname.value)
+      try {
+        const data = await getUserName(id.value)
+        breadcrumbName.value = capitalizeFullName(
+          data.profile.full_name || data.email
+        )
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          console.dir(e)
+          showError('Couldnt find name of user')
+        } else {
+          showError('An unknown error occurred. Try to reload the page')
+        }
+      }
+    } else if (id.value === userId.value) {
+      breadcrumbName.value = capitalizeFullName(userFullname.value || '')
     }
   }
   if (id.value && route.path.includes(`/cvs/${route.params.id}`)) {
-    console.log(id.value, `/cvs/${route.params.id}`)
-    cvData.value = await getCVNameById(id.value)
-    // console.log(cvData.value)
-    breadcrumbFullname.value = truncateString(cvData.value.name)
+    breadcrumbName.value = await getCVNameById(id.value)
+    breadcrumbName.value = truncateString(breadcrumbName.value.name)
   }
 }
 
 watchEffect(() => {
-  fetchBreadcrumbName()
+  try {
+    fetchBreadcrumbName()
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      console.dir(e)
+      showError(e.message)
+    } else {
+      showError('An unknown error occurred. Try to reload the page')
+    }
+  }
 })
-
 const items = computed(() => {
-  let breadcrumbs = [
+  let breadcrumbs: Array<breadcrumbObjT> = [
     {
-      label: t(route.meta.breadcrumb),
-      route: { name: route.name },
+      label: t(route.meta.breadcrumb) as string,
+      route: { name: route.name as string},
       styleClass: 'text-textSec opacity-60 cursor-default'
     }
   ]
@@ -104,9 +124,8 @@ const items = computed(() => {
         }
       ]
       breadcrumbs.push({
-        label: breadcrumbFullname.value,
+        label: breadcrumbName.value as string,
         route: { name: 'Employee', params: { id: id.value } },
-        icon: 'pi pi-user',
         styleClass:
           'border-b-2 border-transparent text-primary hover:border-b-2 hover:border-primary'
       })
@@ -132,6 +151,7 @@ const items = computed(() => {
           break
       }
     }
+
     if (route.path.includes(`/cvs/${route.params.id}`)) {
       breadcrumbs = [
         {
@@ -142,7 +162,7 @@ const items = computed(() => {
         }
       ]
       breadcrumbs.push({
-        label: breadcrumbFullname.value,
+        label: breadcrumbName.value as string,
         route: { name: 'CVId', params: { id: id.value } },
         styleClass:
           'border-b-2 border-transparent text-primary hover:border-b-2 hover:border-primary'
@@ -171,6 +191,7 @@ const items = computed(() => {
     }
     breadcrumbs[breadcrumbs.length - 1].route = null
   }
+
   return breadcrumbs
 })
 </script>

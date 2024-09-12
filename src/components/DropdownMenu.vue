@@ -54,7 +54,10 @@
           <template #avatar>
             <Avatar
               v-if="!avatar"
-              label="V"
+              :label="
+                userData.profile.first_name.charAt(0) ||
+                userData.email.charAt(0)
+              "
               class="text-bgColor"
               style="background-color: var(--color-primary)"
               shape="circle"
