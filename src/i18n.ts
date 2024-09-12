@@ -107,7 +107,15 @@ const messages = {
     testTools: 'Testing frameworks and tools',
     devOps: 'DevOps',
     sourceControl: 'Source control systems',
-
+    datepicker: {
+      firstDayOfWeek: "0",
+      dayNames: "Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday",
+      dayNamesShort: "Sun | Mon | Tue | Wed | Thu | Fri | Sat",
+      monthNames: "January | February | March | April | May | June | July  | August | September | October | November | December",
+      monthNamesShort: "Jan | Feb | Mar | Apr | May | Jun | Jul  | Aug | Sep | Oct | Nov | Dec",
+      today: 'Today',
+      clear: 'Clear',
+    },
   },
   de: {
     signUpTitle: 'Register Now',
@@ -216,6 +224,15 @@ const messages = {
     testTools: 'Testing frameworks and tools',
     devOps: 'DevOps',
     sourceControl: 'Quellcodeverwaltungssysteme',
+    datepicker: {
+      firstDayOfWeek: "0",
+      dayNames: "Sunday | Monday | Tuesday | Wednesday | Thursday | Friday | Saturday",
+      dayNamesShort: "Sun | Mon | Tue | Wed | Thu | Fri | Sat",
+      monthNames: "January | February | March | April | May | June | July  | August | September | October | November | December",
+      monthNamesShort: "Jan | Feb | Mar | Apr | May | Jun | Jul  | Aug | Sep | Oct | Nov | Dec",
+      today: 'Today',
+      clear: 'Clear',
+    },
   },
   ru: {
     signUpTitle: 'Зарегистрируйтесь',
@@ -324,11 +341,21 @@ const messages = {
     testTools: 'Платформы и инструменты тестирования',
     devOps: 'DevOps',
     sourceControl: 'Системы контроля версий',
+    datepicker: {
+      firstDayOfWeek: "1",
+      dayNames: "Воскресенье | Понедельник | Вторник | Среда | Четверг | Пятница | Суббота",
+      dayNamesShort: "Вс | Пн | Вт | Ср | Чт | Пт | Сб",
+      monthNames: "Январь | Февраль | Март | Апрель | Май | Июнь | Июль  | Август | Сентябрь | Октябрь | Ноябрь | Декабрь",
+      monthNamesShort: "Янв | Фев | Мар | Апр | Май | Июн | Июл  | Авг | Сен | Окт | Ноя | Дек",
+      today: 'Сегодня',
+      clear: 'Очистить',
+    },
   }
 }
 
 export const i18n = createI18n({
   legacy: false, 
+  globalInjection: true,
   locale: 'en', 
   fallbackLocale: 'en',
   messages

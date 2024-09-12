@@ -2,7 +2,9 @@
   <main>
     <div class="field">
       <FloatLabel class="custom-float-label w-full md:w-56">
-        <DatePicker v-model="modelValue" 
+        <DatePicker 
+        :locale="datepickerLocale"
+        v-model="modelValue" 
         class="custom-select" showIcon iconDisplay="input" 
         inputId="dd-option"/>
         <label for="dd-option">{{ placeholder }}</label>
@@ -11,14 +13,24 @@
   </main>
 </template>
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
 import DatePicker from 'primevue/datepicker'
 import FloatLabel from 'primevue/floatlabel'
-
-
+import { useI18n } from 'vue-i18n';
 
 const modelValue = defineModel<String | null>()
+ 
+const { t } = useI18n();
 
+const datepickerLocale = computed(() => ({
+    firstDayOfWeek: t('datepicker.firstDayOfWeek'),
+    dayNames: t('datepicker.dayNames'),
+    dayNamesShort: t('datepicker.dayNamesShort'),
+    monthNames: t('datepicker.monthNames'),
+    monthNamesShort: t('datepicker.monthNamesShort'),
+    today: t('datepicker.today'),
+    clear: t('datepicker.clear'),
+}));
 defineProps<{
   placeholder: string
 }>()

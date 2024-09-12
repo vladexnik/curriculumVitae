@@ -3,8 +3,8 @@ import './input.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { i18n } from './i18n' // Import i18n instance
-import { useLangStore } from '@/stores/lang' // Import the lang store
+import { i18n } from './i18n' 
+import { useLangStore } from '@/stores/lang' 
 
 // Apollo client
 import { DefaultApolloClient } from '@vue/apollo-composable'
@@ -23,12 +23,6 @@ const app = createApp(App)
 
 app.provide(DefaultApolloClient, apolloClient)
 app.directive('ripple', Ripple)
-app.use(PrimeVue, {
-  theme: {
-    preset: Aura
-  },
-  ripple: true
-})
 
 app.use(router)
 app.use(createPinia())
@@ -44,4 +38,11 @@ app.component('Toast', Toast)
 const langStore = useLangStore();
 i18n.global.locale.value = langStore.selectedLang.code; 
 app.use(i18n)
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura
+  },
+  ripple: true
+})
+
 app.mount('#app')

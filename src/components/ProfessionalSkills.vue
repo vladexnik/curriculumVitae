@@ -61,7 +61,7 @@ const tableDataArray: TableDataArray[] = props.cvData.skills
   .map((skill) => {
     const categoryId = skill.categoryId || null
     let categoryName = props.skillsCategories.find((cat) => cat.id === categoryId)?.name || null
-     let category = (categories.find(el => el[0].toLowerCase() === categoryName.toLowerCase()))
+     let category = (categories.find(el => el[0]?.toLowerCase() === categoryName?.toLowerCase()))
      if (category) {
       category = category[1]
      } else {
