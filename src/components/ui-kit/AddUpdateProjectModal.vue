@@ -65,7 +65,7 @@
             color="secondary"
             @click="submitForm"
             :disabled="disableCreation"
-            >{{ type }}</Button
+            >{{ type.value === 'Add' ? $t('add') : $t('update') }}</Button
           >
         </div>
       </div>
