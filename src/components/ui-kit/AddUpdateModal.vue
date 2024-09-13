@@ -8,18 +8,18 @@
   >
     <SelectComp
       class="my-5"
-      v-model="field1"
+      v-model="capability"
       :options="reworkedData"
-      :placeholder="placeholder1"
-      :disabled="field1Disability"
+      :placeholder="capabilityPlaceholder"
+      :disabled="capabilityDisability"
       :grouped="grouped"
     />
     <SelectComp
       class="my-5"
-      v-model="field2"
+      v-model="levelProficiency"
       :options="reworkedProficiency"
-      :placeholder="placeholder2"
-      :disabled="!field1"
+      :placeholder="levelProficiencyPlaceholder"
+      :disabled="!capability"
     />
 
   <div class="flex justify-end gap-5">
@@ -76,46 +76,35 @@ const cancel = () => {
   visible.value = false
 }
 const confirm = () => {
-  emit('confirm', { field1, field2 })
+  emit('confirm', { capability, levelProficiency })
   visible.value = false
 }
 
 const reworkedData = ref<Option[]>([])
 const reworkedProficiency = ref<Option[]>([])
-const field1 = ref()
-const field2 = ref()
+const capability = ref()
+const levelProficiency = ref()
 
 const header = computed(() => type?.value === HEADER_TYPES.ADD
     ? (name?.value === 'Language' ? t('addLanguage') : t('addSkill'))
     : name?.value === 'Language' ? t('updateLanguage') : t('updateSkill')
 )
-const placeholder1 = computed(() => t(name?.value.toLowerCase()) || "")
-const placeholder2 = computed(() => {
-  let res;
-    switch (name?.value) {
-      case 'Language': 
-        res = t('langProficiency');
-        break;
-      case 'Skill':
-        res = t('skillMastery');
-        break;
-    }
-  return res;
-})
+const capabilityPlaceholder = computed(() => t(name?.value.toLowerCase()) || "")
+const levelProficiencyPlaceholder = computed(() => name?.value === 'Language' ? t('langProficiency') : t('skillMastery'))
 
-const field1Disability = computed(
-  () => !!dataToUpdate?.value && type?.value === 'Update'
+const capabilityDisability = computed(
+  () => !!dataToUpdate?.value && type?.value ===  HEADER_TYPES.UPDATE
 )
 
 const buttonDisability = computed(() => {
-  return type?.value == 'Add'
-    ? !field1.value && !field2.value
-    : !(field2.value.name !== dataToUpdate?.value?.field2)
+  return type?.value == HEADER_TYPES.ADD
+    ? !capability.value && !levelProficiency.value
+    : !(levelProficiency.value.name !== dataToUpdate?.value?.levelProficiency)
 })
 
 const onHide = () => {
-  field1.value = null
-  field2.value = null
+  capability.value = null
+  levelProficiency.value = null
 }
 const dataForGrouped = (data) => {
   const result = data.reduce((acc, item) => {
@@ -151,19 +140,19 @@ watchEffect(() => {
     })
   }
 
-  if (dataToUpdate?.value && type?.value === 'Update') {
-    field1.value = reworkedData.value.find(
-      (el) => el.name === dataToUpdate?.value?.field1
+  if (dataToUpdate?.value && type?.value === HEADER_TYPES.UPDATE) {
+    capability.value = reworkedData.value.find(
+      (el) => el.name === dataToUpdate?.value?.capability
     )
-    field2.value = reworkedProficiency.value.find(
-      (el) => el.name == dataToUpdate?.value?.field2
+    levelProficiency.value = reworkedProficiency.value.find(
+      (el) => el.name == dataToUpdate?.value?.levelProficiency
     )
   }
 })
 
-watch(field1, (newVal) => {
-  if (newVal && type?.value === 'Add') {
-    field2.value = reworkedProficiency.value[0]
+watch(capability, (newVal) => {
+  if (newVal && type?.value ===  HEADER_TYPES.ADD) {
+    levelProficiency.value = reworkedProficiency.value[0]
   }
 })
 </script>

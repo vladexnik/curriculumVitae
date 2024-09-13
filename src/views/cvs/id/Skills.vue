@@ -168,9 +168,9 @@ const updateCreateSkill = async (data) => {
   try {
     const newObj = {
       cvId: currentCvId.value,
-      name: data.field1.value.name,
-      mastery: data.field2.value.name,
-      categoryId: getCategoryId(data.field1.value)
+      name: data.capability.value.name,
+      mastery: data.levelProficiency.value.name,
+      categoryId: getCategoryId(data.capability.value)
     }
 
     let response
@@ -202,8 +202,8 @@ const invokeUpdateModal = (_, info) => {
     openModal.value = true
     type.value = 'Update'
     dataToUpdate.value = {
-      field1: info.name,
-      field2: info.mastery
+      capability: info.name,
+      levelProficiency: info.mastery
     }
   } else {
     if (arrayToDelete.value.includes(info)) {

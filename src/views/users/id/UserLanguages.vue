@@ -110,8 +110,8 @@ const updateCreateLang = async (data) => {
   try {
     const newObj = {
       userId: currentUserId.value,
-      name: data.field1.value.name,
-      proficiency: data.field2.value.name
+      name: data.capability.value.name,
+      proficiency: data.levelProficiency.value.name
     }
     let response
     if (type.value === 'Add') {
@@ -135,8 +135,8 @@ const invokeUpdateModal = (_, info) => {
     openModal.value = true;
     type.value = 'Update';
     dataToUpdate.value = {
-      field1: info.name,
-      field2: info.proficiency
+      capability: info.name,
+      levelProficiency: info.proficiency
     };
   } else {
     if (arrayToDelete.value.includes(info)) {

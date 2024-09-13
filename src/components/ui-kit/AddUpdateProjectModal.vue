@@ -65,7 +65,7 @@
             color="secondary"
             @click="submitForm"
             :disabled="disableCreation"
-            >{{ type.value === 'Add' ? $t('add') : $t('update') }}</Button
+            >{{ submitButtonName }}</Button
           >
         </div>
       </div>
@@ -84,6 +84,7 @@ import { useProjectsListStore } from '@/stores/projects'
 import { computed, reactive, toRefs, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n';
+import { HEADER_TYPES } from './constants/constants'
 
 const { t } = useI18n();
 const projectsStore = useProjectsListStore();
@@ -134,7 +135,7 @@ const submitForm = () => {
   clearFields()
 }
 const header = computed(() => {
-  return (type?.value === 'Add' ? t('add') : t('update')) + ' ' + t('project');
+  return submitButtonName.value + ' ' + t('project');
 });
 
 const disableCreation = computed(() => {
@@ -144,7 +145,9 @@ const disableCreation = computed(() => {
 
 const project = ref()
 const projectFieldDisabled = ref(false)
-const projectsNames = computed(() => (type.value === 'Add' ? projects?.value?.filter(el => !projectsToExclude?.value?.includes(el.id)) : projects?.value)?.map(el => ({ id: el.id, name: el.name})))
+const projectsNames = computed(() => (type?.value === HEADER_TYPES.ADD ? projects?.value?.filter(el => !projectsToExclude?.value?.includes(el.id)) : projects?.value)?.map(el => ({ id: el.id, name: el.name})))
+
+const submitButtonName = computed(() => HEADER_TYPES.ADD ? t('add') : t('update'))
 
 watch(project, (newVal) => {
   if (newVal) {
@@ -164,7 +167,7 @@ watch(project, (newVal) => {
 watch(openModal, (newVal) => {
   if (!newVal) clearFields()
   if (newVal) {
-      if (dataToUpdate?.value && type.value === 'Update') {
+      if (dataToUpdate?.value && type?.value === HEADER_TYPES.UPDATE) {
       formData.id = dataToUpdate.value.id
       formData.domain =  dataToUpdate.value.domain;
       formData.startDate =  dataToUpdate.value.startDate;
@@ -177,5 +180,4 @@ watch(openModal, (newVal) => {
   }
   }
 })
-
 </script>
