@@ -21,7 +21,7 @@
                 </div>
                 <div class="m-4 inline-flex gap-4">
                   <div
-                    class="rounded-[40px] border-2 border-slate-200 p-1"
+                    class="rounded-[40px] border-2 border-slate-200 p-1 custom-height"
                     v-for="(env, idx) in slotProps.data.environment"
                     :key="idx"
                   >
@@ -70,6 +70,7 @@ const uniqueKey = computed(() => props.tableData.length)
 .project-description-cell {
   margin-top: 15px;
   margin-bottom: 15px;
+  padding-bottom: 35px;
   position: static;
 }
 
@@ -80,4 +81,34 @@ const uniqueKey = computed(() => props.tableData.length)
   margin-bottom: 10px;
   font-size: 1rem;
 }
+
+.custom-height {
+  min-height: 24px;
+}
+
+:deep(.p-datatable .p-column) {
+  min-width: 100px; 
+}
+@media (min-width: 1268px) {
+  .project-description-cell {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  position: static;
+  min-height: 150px
+}
+}
+@media (max-width: 1268px) {
+  .project-description-cell {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  position: static;
+  height: 230px
+}
+
+.custom-height {
+  min-height: 26px;
+}
+
+}
+  
 </style>
