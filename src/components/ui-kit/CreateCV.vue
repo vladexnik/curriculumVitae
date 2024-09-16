@@ -1,3 +1,4 @@
+
 <template>
   <Button
     variant="outlined"
@@ -22,13 +23,13 @@
             >{{$t('cvName')}}</TextField
           >
         </div>
-
+ 
         <div class="d-flex mb-5 mr-5">
           <TextField v-model="formData.education" type="text">
             {{$t('education')}}
           </TextField>
         </div>
-
+ 
         <div class="d-flex mb-5 mr-5">
           <TextArea
             v-model="formData.description"
@@ -57,41 +58,47 @@
       </div>
     </div>
   </Dialog>
-</template>
-
-<script setup lang="ts">
-import Button from '@/components/ui-kit/Button.vue'
-import Dialog from 'primevue/dialog'
-import TextField from '@/components/ui-kit/TextField.vue'
-import TextArea from '@/components/ui-kit/TextArea.vue'
-import { useCVsStore } from '@/stores/cvs'
-import { ref, computed, reactive } from 'vue'
+ </template>
+ 
+ <script setup lang="ts">
+ import Button from '@/components/ui-kit/Button.vue'
+ import Dialog from 'primevue/dialog'
+ import TextField from '@/components/ui-kit/TextField.vue'
+ import TextArea from '@/components/ui-kit/TextArea.vue'
+ import { useCVsStore } from '@/stores/cvs'
+ import { ref, computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n';
-
+ 
 const { t } = useI18n();
-
-import useVuelidate from '@vuelidate/core'
-import { required, minLength, helpers } from '@vuelidate/validators'
-import { REQUIRED_FIELD } from '@/components/ui-kit/constants/constants'
-import { useToastNotifications } from '@/composables/useToast'
-
-const props = defineProps({
-  currentUserId: String
-})
-
-const cvsStore = useCVsStore()
-const { createNewCV } = cvsStore
-const { showError, showSuccessUpload } = useToastNotifications()
-
-const openAddModal = ref(false)
-const formData = reactive({
+ 
+ import useVuelidate from '@vuelidate/core'
+ import { required, minLength, helpers } from '@vuelidate/validators'
+ import { REQUIRED_FIELD } from '@/components/ui-kit/constants/constants'
+ import { useToastNotifications } from '@/composables/useToast'
+ 
+ 
+ const props = defineProps({
+  currentUserId: String,
+  currentUserEmail: String
+ })
+ 
+ 
+ const cvsStore = useCVsStore()
+ const { createNewCV } = cvsStore
+ const { showError } = useToastNotifications()
+ 
+ 
+ const openAddModal = ref(false)
+ const formData = reactive({
   education: '',
   description: '',
   name: '',
-  userId: props.currentUserId
-})
-
-const rules = computed(() => {
+  userId: props.currentUserId,
+  employee: props.currentUserEmail
+ })
+ 
+ 
+ const rules = computed(() => {
   return {
     name: {
       required: helpers.withMessage(REQUIRED_FIELD, required),
@@ -102,18 +109,19 @@ const rules = computed(() => {
       minLength: minLength(2)
     }
   }
-})
-
-const v$ = useVuelidate(rules, formData)
-const emit = defineEmits(['addedCV'])
-const submitForm = async () => {
+ })
+ 
+ 
+ const v$ = useVuelidate(rules, formData)
+ const emit = defineEmits(['addedCV'])
+ const submitForm = async () => {
   try {
     const result = await v$.value.$validate()
     if (result) {
       const res = await createNewCV(formData)
       if (res) {
         const { id, education, name, description } = res.createCv
-        emit('addedCV', { id, education, name, description })
+        emit('addedCV', { id, education, name, description, employee: formData.employee })
         openAddModal.value = false
         formData.name = ''
         formData.education = ''
@@ -129,10 +137,14 @@ const submitForm = async () => {
       showError('An unknown error occurred. Try to reload the page')
     }
   }
-}
-
-const disableCreation = computed(() => {
+ }
+ 
+ 
+ const disableCreation = computed(() => {
   if (formData.name || formData.description || formData.education) return false
   return true
-})
-</script>
+ })
+ </script>
+ 
+ 
+ 
