@@ -15,6 +15,8 @@ import {
 } from '@/service/cvs'
 import { getUserData } from '@/service/userData'
 
+import { Mastery } from '@/components/ui-kit/constants/constants'
+
 interface DataRow {
   id: string
   name: string
@@ -22,13 +24,7 @@ interface DataRow {
   category: string
 }
 
-enum Mastery {
-  Novice,
-  Advanced,
-  Competent,
-  Proficient,
-  Expert
-}
+
 
 export const useSkillsStore = defineStore('skills', () => {
   const skills = ref<DataRow[]>()

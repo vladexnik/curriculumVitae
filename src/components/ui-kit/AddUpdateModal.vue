@@ -41,14 +41,14 @@ import { computed, toRefs, ref, watchEffect, watch } from 'vue'
 import type { Option } from '@/components/ui-kit/SelectComp.vue'
 import { useI18n } from 'vue-i18n';
 import { HEADER_TYPES } from './constants/constants'
-
+import { Proficiency, Mastery } from './constants/constants'
 const { t } = useI18n();
 const props = defineProps({
   type: String,
   name: String,
   modelValue: Boolean,
   commonData: Array,
-  commonProficiency: Array,
+  commonProficiency: Proficiency || Mastery || Array,
   dataToUpdate: Object,
   grouped: {
     type: Boolean,

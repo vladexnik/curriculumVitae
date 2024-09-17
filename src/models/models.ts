@@ -1,6 +1,4 @@
-import type { LanguageProficiency, Mastery } from 'cv-graphql'
-
-type Nullable<T> = T | null
+import { Proficiency, Mastery } from "@/components/ui-kit/constants/constants"
 
 export type TabsAuthT = {
   route: string
@@ -139,3 +137,93 @@ export type TableDataArray = {
   experience: number | null
   lastUsed: string
 }
+
+export interface Position {
+  id: string;
+  created_at: string;
+  name: string;
+}
+
+export interface Project {
+  id: string;
+  created_at: string;
+  name: string;
+  internal_name: string;
+  description: string;
+  domain: string;
+  start_date: string;
+  end_date?: Nullable<string>;
+  team_size: number;
+  tech_stack?: Nullable<Skill[]>;
+}
+
+export interface Skill {
+  id: string;
+  created_at: string;
+  name: string;
+  category?: Nullable<string>;
+}
+
+export interface CvProject {
+  id: string;
+  project: Project;
+  name: string;
+  internal_name: string;
+  description: string;
+  domain: string;
+  start_date: string;
+  end_date?: Nullable<string>;
+  team_size: number;
+  roles: string[];
+  responsibilities: string[];
+}
+
+export interface Cv {
+  id: string;
+  created_at: string;
+  name: string;
+  education?: Nullable<string>;
+  description: string;
+  user?: Nullable<User>;
+  projects?: Nullable<CvProject[]>;
+  skills: SkillMastery[];
+  languages: LanguageProficiency[];
+}
+
+export interface Department {
+  id: string;
+  created_at: string;
+  name: string;
+}
+ 
+export interface LanguageProficiency {
+  name: string;
+  proficiency: Proficiency;
+}
+
+export interface Profile {
+  id: string;
+  created_at: string;
+  first_name?: Nullable<string>;
+  last_name?: Nullable<string>;
+  full_name?: Nullable<string>;
+  avatar?: Nullable<string>;
+  skills: SkillMastery[];
+  languages: LanguageProficiency[];
+}
+
+export interface User {
+  id: string;
+  created_at: string;
+  email: string;
+  is_verified: boolean;
+  profile: Profile;
+  cvs?: Nullable<Cv[]>;
+  department?: Nullable<Department>;
+  department_name?: Nullable<string>;
+  position?: Nullable<Position>;
+  position_name?: Nullable<string>;
+}
+
+export type Void = any;
+type Nullable<T> = T | null;

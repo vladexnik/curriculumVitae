@@ -2,22 +2,13 @@ import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getLanguages, addLanguage, updateLanguage, deleteLanguage } from '@/service/commonData'
 import { getUserData } from '@/service/userData'
+import { Proficiency } from '@/components/ui-kit/constants/constants'
 
   interface DataRow {
     id: string,
     name: string,
     nativeName: string,
     iso2: string,
-  }
-  
-  enum Proficiency {
-    A1,
-    A2,
-    B1,
-    B2,
-    C1,
-    C2,
-    Native,
   }
 
 export const useLanguagesStore = defineStore('languages', () => {
