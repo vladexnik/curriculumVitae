@@ -7,14 +7,14 @@
       <p>{{ project.description }}</p>
     </section>
     <section class="cv-preview__cv-description__right-side">
-      <p class="title">{{ $t('projectRole') }}</p>
+      <p class="title">{{ t('projectRole') }}</p>
       <p>{{ role }}</p>
-      <p class="title">{{ $t('period') }}</p>
+      <p class="title">{{ t('period') }}</p>
       <p>
         {{ formatDateToMonthYear(project.start_date) }} -
         {{ project.end_date ? formatDateToMonthYear(project.end_date) : '' }}
       </p>
-      <p class="title">{{ $t('responsibilities') }}</p>
+      <p class="title">{{ t('responsibilities') }}</p>
       <ul>
         <li
           class="ml-2 list-disc"
@@ -24,7 +24,7 @@
           {{ item }}
         </li>
       </ul>
-      <p class="title">{{ $t('environment') }}</p>
+      <p class="title">{{ t('environment') }}</p>
       <p>{{ project.environment.join(', ') }}</p>
     </section>
   </div>

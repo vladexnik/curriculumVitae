@@ -10,13 +10,13 @@
           color="primary"
           class="h-9 border-none"
           @click="() => actionOpenModal('Add')"
-          >{{ $t('addProject') }}</Button>
+          >{{ t('addProject') }}</Button>
       </div>
     </div>
     <Table v-if="data" :tableData="data" :columns="columnsConfig"/>
     <NoFound @resetSearch="() => search = ''" v-if="search && !data.length || !data.length">
       <template  #default  v-if="!data.length && !search">
-        <h2 class="text-2xl font-semibold mb-2">{{ $t('noData') }}</h2>
+        <h2 class="text-2xl font-semibold mb-2">{{ t('noData') }}</h2>
       </template>
     </NoFound>  
     <RemoveModal type="Project" :name="projectToDelete?.name" v-model="openDeleteConfirmation" @reset="reset" @remove="deleteProject"/> 

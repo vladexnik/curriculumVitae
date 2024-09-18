@@ -6,7 +6,7 @@ import {
 } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
 import { useCookie } from '@/composables/cookies'
-import type { userAuthedT, userNameT } from '@/models/models'
+import type { userAuthedT, userNameT, User } from '@/models/models'
 
 const { setCookies } = useCookie()
 
@@ -19,7 +19,7 @@ export const updateAccessToken = async () => {
   return data.updateToken?.access_token
 }
 
-export const getUserData = async (userId: string): Promise<any> => {
+export const getUserData = async (userId: string): Promise<User | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: GET_USER_DATA_BY_ID,

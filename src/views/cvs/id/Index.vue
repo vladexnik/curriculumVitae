@@ -12,7 +12,7 @@
         type="text"
         :disabled="isDisabled"
       >
-      {{  $t('cvName') }}
+      {{  t('cvName') }}
       </TextField>
       <TextField
         class="col-span-2"
@@ -20,7 +20,7 @@
         type="text"
         :disabled="isDisabled"
       >
-      {{  $t('education') }}
+      {{  t('education') }}
       </TextField>
       <TextArea
         ref="descriptionField"
@@ -30,7 +30,7 @@
         type="text"
         :disabled="isDisabled"
       >
-       {{  $t('description') }}
+       {{  t('description') }}
       </TextArea>
       <Button
         v-if="!isDisabled"
@@ -40,7 +40,7 @@
         @click.prevent="submitForm"
         :disabled="isDisabledBtn"
       >
-        {{ $t('update')}}
+        {{ t('update')}}
       </Button>
     </form>
   </div>

@@ -47,11 +47,11 @@
             style="font-size: 1rem"
           ></i>
           <span class="text-xl font-medium text-textMain">
-              {{ $t('uploadAvatar')}}
+              {{ t('uploadAvatar')}}
           </span>
         </div>
 
-        <p class="text-textSec"> {{ $t('uploadText')}}</p>
+        <p class="text-textSec"> {{ t('uploadText')}}</p>
         <input
           id="upload"
           type="file"
@@ -68,7 +68,7 @@
       <h2 class="text-textMain">{{ userData.profile.full_name }}</h2>
       <p class="mt-2 text-textSec">{{ userData.email }}</p>
       <p class="text-textMain">
-        {{ $t('memberSince')}}
+        {{ t('memberSince')}}
         {{ formatedDate }}
       </p>
     </div>
@@ -82,25 +82,25 @@
         type="text"
         :disabled="isDisabled"
       >
-      {{ $t('firstName')}}
+      {{ t('firstName')}}
       </TextField>
       <TextField
         v-model.trim="formProfile.lastName"
         type="text"
         :disabled="isDisabled"
       >
-      {{ $t('lastName')}}
+      {{ t('lastName')}}
       </TextField>
       <SelectComp
         v-model="formProfile.selectedDepartment"
         :options="departments"
-        :placeholder="$t('department')"
+        :placeholder="t('department')"
         :disabled="isDisabled"
       />
       <SelectComp
         v-model="formProfile.selectedPosition"
         :options="positions"
-        :placeholder="$t('position')"
+        :placeholder="t('position')"
         :disabled="isDisabled"
       />
       <Button
@@ -111,7 +111,7 @@
         @click.prevent="updateProfile"
         :disabled="isDisabledBtn"
       >
-        {{ $t('update')}}
+        {{ t('update')}}
       </Button>
     </form>
   </div>

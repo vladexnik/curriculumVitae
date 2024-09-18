@@ -6,6 +6,7 @@ import {
   UPDATE_CV_PROJECT
 } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
+import type { CVData } from '@/models/models'
 
 export const getProjectsList = async (): Promise<any> => {
   try {
@@ -18,7 +19,7 @@ export const getProjectsList = async (): Promise<any> => {
   }
 }
 
-export const getProjectsByCvId = async (id): Promise<any> => {
+export const getProjectsByCvId = async (id): Promise<CVData | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: CV,

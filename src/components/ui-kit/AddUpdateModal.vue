@@ -24,10 +24,10 @@
 
   <div class="flex justify-end gap-5">
     <div class="w-[150px]">
-      <Button variant="text" color="secondary" @click="cancel">{{$t('cancel')}}</Button>
+      <Button variant="text" color="secondary" @click="cancel">{{t('cancel')}}</Button>
     </div>
     <div class="w-[150px]">
-      <Button variant="contained" color="primary" @click="confirm" :disabled="buttonDisability">{{$t('confirm')}}</Button>
+      <Button variant="contained" color="primary" @click="confirm" :disabled="buttonDisability">{{t('confirm')}}</Button>
     </div>
   </div>
 </Dialog>

@@ -13,24 +13,24 @@
             v-model="project"
             :options="projectsNames"
             :disabled="projectFieldDisabled"
-            :placeholder="$t('project')"
+            :placeholder="t('project')"
           />
         </div>
 
         <div class="d-flex mb-5 mr-5 w-full">
           <TextField v-model="formData.domain" type="text" disabled>
-            {{$t('domain')}}
+            {{t('domain')}}
           </TextField>
         </div>
       </div>
 
       <div class="inline-flex w-full">
         <div class="d-flex mb-5 mr-5 w-full">
-          <CustomDatePicker v-model="formData.startDate" :placeholder="$t('startDate')"/>
+          <CustomDatePicker v-model="formData.startDate" :placeholder="t('startDate')"/>
         </div>
 
         <div class="d-flex mb-5 mr-5 w-full">
-          <CustomDatePicker v-model="formData.endDate" :placeholder="$t('endDate')"/>
+          <CustomDatePicker v-model="formData.endDate" :placeholder="t('endDate')"/>
         </div>
       </div>
 
@@ -40,7 +40,7 @@
             type="text"
             disabled
           >
-          {{$t('description')}}
+          {{t('description')}}
           </TextArea>
         </div>
 
@@ -48,7 +48,7 @@
           <TextField
             v-model="formData.responsibilities"
             type="text"
-            >{{$t('responsibilities')}}</TextField
+            >{{t('responsibilities')}}</TextField
           >
         </div>
 
@@ -56,7 +56,7 @@
       <div class="flex justify-end gap-5">
         <div class="w-[150px]">
           <Button variant="text" color="secondary" @click="openModal=false"
-            >{{$t('cancel')}}</Button
+            >{{t('cancel')}}</Button
           >
         </div>
         <div class="w-[150px]">

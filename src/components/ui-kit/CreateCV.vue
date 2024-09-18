@@ -5,12 +5,13 @@
     color="primary"
     class="h-9 border-none"
     @click="openAddModal = true"
-    >{{$t('createCV')}} +</Button
+  
+    >{{t('createCV')}} +</Button
   >
   <Dialog
     v-model:visible="openAddModal"
     modal
-    :header="$t('createCV')"
+    :header="t('createCV')"
     :style="{ width: '40rem' }"
   >
     <div class="mx-2 mb-4">
@@ -20,13 +21,13 @@
             v-model="formData.name"
             type="text"
             :error="v$.name.$errors[0]?.$message"
-            >{{$t('cvName')}}</TextField
+            >{{t('cvName')}}</TextField
           >
         </div>
  
         <div class="d-flex mb-5 mr-5">
           <TextField v-model="formData.education" type="text">
-            {{$t('education')}}
+            {{t('education')}}
           </TextField>
         </div>
  
@@ -36,14 +37,15 @@
             type="text"
             :error="v$.description.$errors[0]?.$message"
           >
-          {{$t('description')}}
+          {{t('description')}}
           </TextArea>
         </div>
+        
       </form>
       <div class="flex justify-end gap-5">
         <div class="w-[150px]">
           <Button variant="text" color="secondary" @click="openAddModal = false"
-            >{{$t('cancel')}}</Button
+            >{{t('cancel')}}</Button
           >
         </div>
         <div class="w-[150px]">
@@ -52,7 +54,7 @@
             color="secondary"
             @click="submitForm"
             :disabled="disableCreation"
-            >{{$t('create')}}</Button
+            >{{t('create')}}</Button
           >
         </div>
       </div>
@@ -76,11 +78,21 @@ const { t } = useI18n();
  import { REQUIRED_FIELD } from '@/components/ui-kit/constants/constants'
  import { useToastNotifications } from '@/composables/useToast'
  
+
+
+ export interface IFormData {
+  education: string
+  description: string
+  name: string
+  userId: string
+  employee: string
+}
+
  
- const props = defineProps({
-  currentUserId: String,
-  currentUserEmail: String
- })
+ const props = defineProps<{
+  currentUserId: string,
+  currentUserEmail: string
+ }>()
  
  
  const cvsStore = useCVsStore()
@@ -89,7 +101,7 @@ const { t } = useI18n();
  
  
  const openAddModal = ref(false)
- const formData = reactive({
+ const formData = reactive<IFormData>({
   education: '',
   description: '',
   name: '',

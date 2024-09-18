@@ -1,18 +1,21 @@
 <template>
   <div class="flex flex-col items-center justify-center mt-[10vh] text-center text-gray-600">
     <slot>
-      <h2 class="text-2xl font-semibold mb-2">{{ $t('noResultsTitle') }}</h2>
-      <p class="text-gray-500 mb-4">{{ $t('noResultsDescription') }}</p>
+      <h2 class="text-2xl font-semibold mb-2">{{ t('noResultsTitle') }}</h2>
+      <p class="text-gray-500 mb-4">{{ t('noResultsDescription') }}</p>
   
     <Button variant="text" color="secondary" class="w-[350px]" @click="$emit('resetSearch')">
-      {{ $t('resetSearch') }}
+      {{ t('resetSearch') }}
     </Button>
     </slot>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import Button from './Button.vue';
+
+const { t } = useI18n();
 </script>
 
 <style scoped>

@@ -4,12 +4,12 @@
       <SelectComp
         v-model="themeStore.selectedTheme"
         :options="themeStore.themes"
-        :placeholder="$t('appearance')"
+        :placeholder="t('appearance')"
       />
       <SelectComp
         v-model="langStore.selectedLang"
         :options="langStore.langs"
-        :placeholder="$t('language')"
+        :placeholder="t('language')"
       />
     </div>
   </div>

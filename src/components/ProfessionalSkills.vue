@@ -2,9 +2,9 @@
   <table v-if="tableDataArray" class="w-full">
     <thead class="h-14">
       <tr class="cv-preview__table-head">
-        <th class="px-4 py-2 text-left" colspan="2">{{ $t('skills') }}</th>
-        <th class="w-[90px] px-4 py-2">{{ $t('experienceInYears') }}</th>
-        <th class="w-[90px] px-4 py-2">{{ $t('lastUsed') }}</th>
+        <th class="px-4 py-2 text-left" colspan="2">{{ t('skills') }}</th>
+        <th class="w-[90px] px-4 py-2">{{ t('experienceInYears') }}</th>
+        <th class="w-[90px] px-4 py-2">{{ t('lastUsed') }}</th>
       </tr>
     </thead>
     <tbody>
