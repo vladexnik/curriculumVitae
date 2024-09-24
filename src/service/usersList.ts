@@ -1,7 +1,8 @@
 import { USERS } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
+import type { User } from '@/models/models'
 
-export const getUsersList = async (): Promise<any> => {
+export const getUsersList = async (): Promise<{users: User[]} | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: USERS

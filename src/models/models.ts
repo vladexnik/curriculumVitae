@@ -225,5 +225,39 @@ export interface User {
   position_name?: Nullable<string>;
 }
 
+export interface ISkillCategories {
+  id: string
+  name: string
+  order: string
+  parent: IParentCategory
+}
+
+export interface IParentCategory {
+  id: string
+  name: string
+  order: string
+}
+
+export interface ILanguage {
+  id: string;
+  created_at: string;
+  iso2: string;
+  name: string;
+  native_name?: Nullable<string>;
+}
+
+export interface IProfileSkill {
+  id: string;
+  full_name: string;
+  skills: SkillMastery[];
+}
+
+export interface IProfileLanguage {
+  id: string;
+  full_name: string;
+  languages: LanguageProficiency[];
+}
+
 export type Void = any;
 type Nullable<T> = T | null;
+

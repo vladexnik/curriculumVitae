@@ -54,7 +54,7 @@ import {
   return data.exportPdf
  }
  
- export const getCVById = async (cvId: string): Promise<any> => {
+ export const getCVById = async (cvId: string): Promise<CVData> => {
   const { data } = await apolloClient.query({
     query: CV,
     variables: {
@@ -80,7 +80,7 @@ import {
  
  export const getCVDetailsById = async (
   cvId: string
- ): Promise<any> => {
+ ): Promise<cvDetailsDataT> => {
   const { data } = await apolloClient.query({
     query: CV_DETAILS,
     variables: {
@@ -110,7 +110,7 @@ export const createCV = async (obj: createCVT): Promise<createCVT> => {
  
  export const updateCVDetails = async (
   cv: UpdateCvInput
- ): Promise<any> => {
+ ): Promise<cvDetailsDataT> => {
   const { data } = await apolloClient.mutate({
     mutation: UPDATE_CV_DETAILS,
     variables: {
@@ -134,7 +134,7 @@ export const createCV = async (obj: createCVT): Promise<createCVT> => {
  }
  
  
- export const addCvSkill = async (obj): Promise<any> => {
+ export const addCvSkill = async (obj): Promise<cvDetailsDataT> => {
   const { data } = await apolloClient.mutate({
     mutation: ADD_CV_SKILL,
     variables: {
@@ -158,7 +158,7 @@ export const createCV = async (obj: createCVT): Promise<createCVT> => {
  }
  
  
- export const deleteCvSkill = async (obj): Promise<any> => {
+ export const deleteCvSkill = async (obj): Promise<cvDetailsDataT> => {
   const { data } = await apolloClient.mutate({
     mutation: DELETE_CV_SKILL,
     variables: {

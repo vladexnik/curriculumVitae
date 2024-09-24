@@ -19,7 +19,7 @@ export const useDepartmentsStore = defineStore('departments', () => {
   const getDepartmentsList = async () => {
     const data = await getDepartments()
     if (data && users.value) {
-      departments.value = data.departments.map((department) => {
+      departments.value = data?.departments.map((department) => {
         const employeesAmount = users.value?.filter(
           (user) => user['department'] === department.name
         ).length

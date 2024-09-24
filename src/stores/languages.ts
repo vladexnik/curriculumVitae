@@ -20,7 +20,7 @@ export const useLanguagesStore = defineStore('languages', () => {
   const getLanguagesList = async () => {
     const data = await getLanguages();
     if (data) {
-      languages.value = data.languages.map(lang => {
+      languages.value = data?.languages?.map(lang => {
         return {
           id: lang.id,
           name: lang.name,

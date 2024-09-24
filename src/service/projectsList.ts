@@ -6,9 +6,9 @@ import {
   UPDATE_CV_PROJECT
 } from '@/graphQL'
 import apolloClient from '@/plugins/apollo'
-import type { CVData } from '@/models/models'
+import type { CVData, Project } from '@/models/models'
 
-export const getProjectsList = async (): Promise<any> => {
+export const getProjectsList = async (): Promise<{projects: Project[]} | undefined> => {
   try {
     const { data } = await apolloClient.query({
       query: PROJECTS
@@ -33,7 +33,7 @@ export const getProjectsByCvId = async (id): Promise<CVData | undefined> => {
   }
 }
 
-export const addProject = async (obj): Promise<any> => {
+export const addProject = async (obj): Promise<CVData | undefined> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: ADD_CV_PROJECT,
@@ -48,7 +48,7 @@ export const addProject = async (obj): Promise<any> => {
   }
 }
 
-export const updateProject = async (obj): Promise<any> => {
+export const updateProject = async (obj): Promise<CVData | undefined> => {
   try {
     const { data } = await apolloClient.mutate({
       mutation: UPDATE_CV_PROJECT,
@@ -66,7 +66,7 @@ export const updateProject = async (obj): Promise<any> => {
 export const deleteProject = async (
   cvId: string,
   projectId: string
-): Promise<any> => {
+): Promise<CVData | undefined> => {
   const { data } = await apolloClient.mutate({
     mutation: REMOVE_CV_PROJECT,
     variables: {
