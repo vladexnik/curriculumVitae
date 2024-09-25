@@ -42,13 +42,14 @@ import { storeToRefs } from 'pinia';
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router';
 import { useToastNotifications } from '@/composables/useToast'
+import { HEADER_TYPES } from '@/components/ui-kit/constants/constants';
 
 const route = useRoute();
 
 const { showError, showSuccessUpload, showProfileUpdate } =
   useToastNotifications()
 
-const type = ref('Add')
+const type = ref(HEADER_TYPES.ADD)
 const openModal = ref(false)
 
 const addToDelete = ref(false)
@@ -114,7 +115,7 @@ const updateCreateLang = async (data) => {
       proficiency: data.levelProficiency.value.name
     }
     let response
-    if (type.value === 'Add') {
+    if (type.value === HEADER_TYPES.ADD) {
       response = await addProfileLanguage(newObj);
       if (response) showSuccessUpload('New Language was succesfully added')
     }  else {
@@ -133,7 +134,7 @@ const dataToUpdate = ref({})
 const invokeUpdateModal = (_, info) => {
   if (!addToDelete.value) {
     openModal.value = true;
-    type.value = 'Update';
+    type.value = HEADER_TYPES.UPDATE;
     dataToUpdate.value = {
       capability: info.name,
       levelProficiency: info.proficiency
@@ -150,7 +151,7 @@ const invokeUpdateModal = (_, info) => {
 const invokeAddModal = () => {
   dataToUpdate.value = {}
   openModal.value = true;
-  type.value = 'Add';
+  type.value = HEADER_TYPES.ADD;
 }
 
 const cancel = () => {
@@ -161,7 +162,7 @@ const cancel = () => {
 const updateReworkedData = () => {
   if (currentUserLangList?.value) {
     const arr = currentUserLangList?.value?.map(lang => lang.name)
-    return type.value === 'Add' ? languages.value?.filter(lang => !arr.includes(lang.name)) : languages?.value
+    return type.value === HEADER_TYPES.ADD ? languages.value?.filter(lang => !arr.includes(lang.name)) : languages?.value
   } 
 }
 

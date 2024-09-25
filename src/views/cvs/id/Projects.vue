@@ -9,7 +9,7 @@
           variant="outlined"
           color="primary"
           class="h-9 border-none"
-          @click="() => actionOpenModal('Add')"
+          @click="() => actionOpenModal(HEADER_TYPES.ADD)"
           >{{ t('addProject') }}</Button>
       </div>
     </div>
@@ -35,11 +35,11 @@ import LibButton from 'primevue/button'
 import Menu from 'primevue/menu'
 import RemoveModal from '@/components/ui-kit/RemoveModal.vue'
 import { useProjectsListStore } from '@/stores/projects'
-import { useUserStore } from '@/stores/user'
 import { ref, h, watchEffect, watch, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToastNotifications } from '@/composables/useToast'
 import { useI18n } from 'vue-i18n';
+import { HEADER_TYPES } from '@/components/ui-kit/constants/constants'
 
 const { t } = useI18n();
 
@@ -158,10 +158,10 @@ const columnsConfig = ref([
 ])
 
 const openModal = ref(false)
-const type = ref('Add')
+const type = ref(HEADER_TYPES.ADD)
 
 const actionOpenModal = (str, el) => {
-  if (str == 'Update') dataToUpdate.value = el
+  if (str == HEADER_TYPES.UPDATE) dataToUpdate.value = el
   type.value = str
   openModal.value = true
 }
@@ -181,10 +181,10 @@ const updateData = async (obj) => {
       projectId: obj.id || Math.random()
     }
     let response
-    if (type.value === 'Add') {
+    if (type.value === HEADER_TYPES.ADD) {
       response = await addProjectbyId(newObj)
       if (response) showSuccessUpload('New Project was succesfully added')
-    } else if (type.value === 'Update') {
+    } else if (type.value === HEADER_TYPES.UPDATE) {
       response = await updateProjectbyId(newObj)
       if (response) showProfileUpdate('Data was succesfully updated')
     }

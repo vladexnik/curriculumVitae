@@ -57,7 +57,6 @@ import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { getCVDetailsById, updateCVDetails } from '@/service/cvs'
 import { useToastNotifications } from '@/composables/useToast'
-import type { fetchedCvT } from '@/models/models'
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

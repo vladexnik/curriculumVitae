@@ -43,7 +43,7 @@
     :commonData="reworkedData"
     :commonProficiency="skillsProficiency"
     :dataToUpdate="dataToUpdate"
-    :grouped="type === 'Add'"
+    :grouped="type === HEADER_TYPES.ADD"
     v-model="openModal"
     @cancel="cancel"
     @confirm="updateCreateSkill"
@@ -63,6 +63,7 @@ import { storeToRefs } from 'pinia'
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToastNotifications } from '@/composables/useToast'
+import { HEADER_TYPES } from '@/components/ui-kit/constants/constants'
 
 enum Mastery {
   Novice = 20,
@@ -83,7 +84,7 @@ const masteryColorMap = {
 const { showError, showSuccessUpload, showProfileUpdate } =
   useToastNotifications()
 
-const type = ref('Add')
+const type = ref(HEADER_TYPES.ADD)
 const openModal = ref(false)
 
 const addToDelete = ref(false)
@@ -169,7 +170,7 @@ const updateCreateSkill = async (data) => {
     }
 
     let response
-    if (type.value === 'Add') {
+    if (type.value === HEADER_TYPES.ADD) {
       response = await addProfileSkill(newObj)
       if (response) showSuccessUpload('New Skill was successfully added')
     } else {
@@ -191,7 +192,7 @@ const dataToUpdate = ref()
 const invokeUpdateModal = (_, info) => {
   if (!addToDelete.value) {
     openModal.value = true
-    type.value = 'Update'
+    type.value = HEADER_TYPES.UPDATE
     dataToUpdate.value = {
       capability: info.name,
       levelProficiency: info.mastery
@@ -208,7 +209,7 @@ const invokeUpdateModal = (_, info) => {
 const invokeAddModal = () => {
   dataToUpdate.value = {}
   openModal.value = true
-  type.value = 'Add'
+  type.value = HEADER_TYPES.ADD
 }
 
 const cancel = () => {
@@ -234,7 +235,7 @@ const getValueForMastery = (el) => {
 const updateReworkedData = () => {
   if (currentUserSkills?.value) {
     const arr = currentUserSkills?.value?.map((skill) => skill.name)
-    return type.value === 'Add'
+    return type.value === HEADER_TYPES.ADD
       ? skills.value?.filter((skill) => !arr.includes(skill.name))
       : skills.value
   }

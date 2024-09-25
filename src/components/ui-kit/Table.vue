@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed } from 'vue'
+import { defineProps } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
@@ -59,8 +59,6 @@ const props = defineProps<{
   tableData: Record<string, any>[]
   columns: ColumnConfig<Record<string, any>>[]
 }>()
-
-const uniqueKey = computed(() => props.tableData.length)
 </script>
 
 <style scoped>
