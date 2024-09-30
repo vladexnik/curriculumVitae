@@ -26,6 +26,7 @@ const { positions } = storeToRefs(positionsStore)
 interface DataRow {
   id: string
   name: string
+  employees: number
 }
 
 const search = ref<String>('')

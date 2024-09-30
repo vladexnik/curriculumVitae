@@ -146,7 +146,7 @@ const columnsConfig = ref([
 ])
 
 const updateData = (obj) => {
-  data.value?.push(obj)
+  data.value = [...data.value, obj]
   cvs.value = data.value
 }
 

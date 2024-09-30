@@ -306,16 +306,18 @@ const fetchSelectsData = async () => {
 
 const updateProfile = async () => {
   try {
-    const updatedProfile: UpdateProfileInputsT = await updateProfileInput({
-      userId: userId.value || '',
-      first_name: formProfile.firstName,
-      last_name: formProfile.lastName
-    })
-    const updatedUser: UpdateUserPosDepT = await updateUserSelects({
-      userId: userId.value || '',
-      departmentId: formProfile.selectedDepartment?.id || '',
-      positionId: formProfile.selectedPosition?.id || ''
-    })
+    const [updatedProfile, updatedUser] = await Promise.all([
+      updateProfileInput({
+        userId: userId.value || '',
+        first_name: formProfile.firstName,
+        last_name: formProfile.lastName
+      }),
+      updateUserSelects({
+        userId: userId.value || '',
+        departmentId: formProfile.selectedDepartment?.id || '',
+        positionId: formProfile.selectedPosition?.id || ''
+      })
+    ])
 
     if (userStore.authedUser) {
       userStore.authedUser = {

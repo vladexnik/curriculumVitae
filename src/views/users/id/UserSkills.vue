@@ -149,38 +149,34 @@ const enableEditMode = computed(
 const currentUserSkills = ref()
 const { getSkillListByUserId } = skillsStore
 
-const getCategoryId = (skill) => {
-  let category = skillsCategories.value.find(
-    (cat) => cat.name == skill.type || cat.name == skill.category
-  )
-  if (!category) {
-    console.error(`Category not found for skill: ${skill.name}`)
-    return null
-  }
-  return category.id
-}
+const skillCategoryMap = computed(() =>
+  skillsCategories.value.reduce((acc, cat) => {
+    acc[cat.name] = cat.id
+    return acc
+  }, {})
+)
+
+const getCategoryId = (skill) =>
+  skillCategoryMap.value[skill.type] ?? skillCategoryMap.value[skill.category]
 
 const updateCreateSkill = async (data) => {
+  const newObj = {
+    userId: currentUserId.value,
+    name: data.capability.value.name,
+    mastery: data.levelProficiency.value.name,
+    categoryId: getCategoryId(data.capability.value)
+  }
+
   try {
-    const newObj = {
-      userId: currentUserId.value,
-      name: data.capability.value.name,
-      mastery: data.levelProficiency.value.name,
-      categoryId: getCategoryId(data.capability.value)
+    const response = type.value === HEADER_TYPES.ADD
+      ? await addProfileSkill(newObj)
+      : await updateProfileSkill(newObj)
+    if (response) {
+      showSuccessUpload(type.value === HEADER_TYPES.ADD
+        ? 'New Skill was successfully added'
+        : 'Data was successfully updated')
+      currentUserSkills.value = response.skills
     }
-
-    let response
-    if (type.value === HEADER_TYPES.ADD) {
-      response = await addProfileSkill(newObj)
-      if (response) showSuccessUpload('New Skill was successfully added')
-    } else {
-      response = await updateProfileSkill(newObj)
-      if (response) showProfileUpdate('Data was successfully updated')
-    }
-
-    currentUserSkills.value = response.skills
-
-    await getData()
   } catch (e) {
     console.error(e)
     showError()
@@ -189,20 +185,13 @@ const updateCreateSkill = async (data) => {
 
 const dataToUpdate = ref()
 
-const invokeUpdateModal = (_, info) => {
+const invokeUpdateModal = (info) => {
   if (!addToDelete.value) {
     openModal.value = true
     type.value = HEADER_TYPES.UPDATE
-    dataToUpdate.value = {
-      capability: info.name,
-      levelProficiency: info.mastery
-    }
+    dataToUpdate.value = { capability: info.name, levelProficiency: info.mastery }
   } else {
-    if (arrayToDelete.value.includes(info)) {
-      arrayToDelete.value = arrayToDelete.value.filter((el) => el !== info)
-    } else {
-      arrayToDelete.value.push(info)
-    }
+    arrayToDelete.value = arrayToDelete.value.toggle(info)
   }
 }
 
@@ -217,20 +206,11 @@ const cancel = () => {
   dataToUpdate.value = {}
 }
 
-const getProgressBarStyle = (el) => {
-  const color = arrayToDelete.value.includes(el)
-    ? 'grey'
-    : masteryColorMap[Mastery[el.mastery as keyof typeof Mastery]]
-  return {
-    '--progress-bar-fill-color': color
-  }
-}
+const getProgressBarStyle = (el) => ({
+  '--progress-bar-fill-color': arrayToDelete.value.includes(el) ? 'grey' : masteryColorMap[el.mastery],
+})
 
-const getValueForMastery = (el) => {
-  return arrayToDelete.value.includes(el)
-    ? 0
-    : Mastery[el.mastery as keyof typeof Mastery]
-}
+const getValueForMastery = (el) => (arrayToDelete.value.includes(el) ? 0 : Mastery[el.mastery]);
 
 const updateReworkedData = () => {
   if (currentUserSkills?.value) {
@@ -249,20 +229,22 @@ const updateUISKillsData = () => {
     return
   }
 
-  const result = currentUserSkills.value.reduce((acc, skill) => {
-    const category = skillsCategories.value.find(
-      (cat) => cat.id === skill.categoryId
-    ) || { name: 'Others' }
+  const categoryMap = skillsCategories.value.reduce((map, cat) => {
+    map[cat.id] = cat.name
+    return map
+  }, {} as Record<number, string>)
 
-    let categoryGroup = acc.find((group) => group.category === category.name)
-    if (!categoryGroup) {
-      categoryGroup = { category: category.name, skills: [] }
-      acc.push(categoryGroup)
+  const result: { category: string; skills: typeof currentUserSkills.value[number][] }[] = []
+
+  currentUserSkills.value.forEach((skill) => {
+    const category = categoryMap[skill.categoryId] || 'Others'
+    const categoryGroup = result.find((group) => group.category === category)
+    if (categoryGroup) {
+      categoryGroup.skills.push(skill)
+    } else {
+      result.push({ category, skills: [skill] })
     }
-
-    categoryGroup.skills.push(skill)
-    return acc
-  }, [])
+  })
 
   uiData.value = result
 }
@@ -270,15 +252,14 @@ const updateUISKillsData = () => {
 const uiData = ref()
 
 const getData = async () => {
-  try {
-    currentUserSkills.value = await getSkillListByUserId(currentUserId.value)
-    skillsCategories.value = await getSkillsCategories()
-    if (currentUserSkills.value && skillsCategories.value) {
-      updateUISKillsData()
-    }
-  } catch (error) {
-    console.error('Error loading skills or categories:', error)
-  }
+  const [skills, categories] = await Promise.all([
+    getSkillListByUserId(currentUserId.value),
+    getSkillsCategories(),
+  ])
+  currentUserSkills.value = skills
+  skillsCategories.value = categories
+  updateUISKillsData()
+  return { skills, categories }
 }
 
 onMounted(async () => {

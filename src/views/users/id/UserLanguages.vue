@@ -108,44 +108,36 @@ const currentUserLangList = ref();
 const { getLangListByUserId } = langStore;
 
 const updateCreateLang = async (data) => {
+  const newObj = {
+    userId: currentUserId.value,
+    name: data.capability.value.name,
+    proficiency: data.levelProficiency.value.name
+  }
   try {
-    const newObj = {
-      userId: currentUserId.value,
-      name: data.capability.value.name,
-      proficiency: data.levelProficiency.value.name
+    const response = type.value === HEADER_TYPES.ADD
+      ? await addProfileLanguage(newObj)
+      : await updateProfileLanguage(newObj)
+    if (response) {
+      currentUserLangList.value = response.languages
+      type.value === HEADER_TYPES.ADD
+        ? showSuccessUpload('New Language was succesfully added')
+        : showProfileUpdate('Data was succesfully updated')
     }
-    let response
-    if (type.value === HEADER_TYPES.ADD) {
-      response = await addProfileLanguage(newObj);
-      if (response) showSuccessUpload('New Language was succesfully added')
-    }  else {
-      response = await updateProfileLanguage(newObj);
-      if (response) showProfileUpdate('Data was succesfully updated')
-    } 
-    currentUserLangList.value = response.languages
   } catch (e) {
-    console.log(e)
+    console.error(e)
     showError()
   }
 }
 
 const dataToUpdate = ref({})
 
-const invokeUpdateModal = (_, info) => {
-  if (!addToDelete.value) {
-    openModal.value = true;
-    type.value = HEADER_TYPES.UPDATE;
-    dataToUpdate.value = {
-      capability: info.name,
-      levelProficiency: info.proficiency
-    };
-  } else {
-    if (arrayToDelete.value.includes(info)) {
-      arrayToDelete.value = arrayToDelete.value.filter(el => el !== info)
-    } else {
-      arrayToDelete.value.push(info)
-    }
-  }
+const invokeUpdateModal = (info) => {
+  openModal.value = !addToDelete.value;
+  type.value = addToDelete.value ? HEADER_TYPES.DELETE : HEADER_TYPES.UPDATE;
+  dataToUpdate.value = addToDelete.value ? {} : { capability: info.name, levelProficiency: info.proficiency };
+  arrayToDelete.value = addToDelete.value
+    ? arrayToDelete.value.filter(el => el !== info)
+    : [...arrayToDelete.value, info];
 }
 
 const invokeAddModal = () => {
